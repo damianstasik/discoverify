@@ -1,5 +1,3 @@
-const path = require('path');
-
 const sharedRules = {
   'no-console': 'off',
   'import/prefer-default-export': 'off',
@@ -10,10 +8,6 @@ const sharedRules = {
 
 const sharedReactRules = {
   'react/react-in-jsx-scope': 'off',
-  'react/no-unknown-property': [
-    'error',
-    { ignore: ['stroke-width', 'stroke-linecap', 'stroke-linejoin'] },
-  ],
 };
 
 module.exports = {
@@ -46,7 +40,8 @@ module.exports = {
       ],
 
       parserOptions: {
-        project: path.resolve('./tsconfig.json'),
+        project: './tsconfig.json',
+        tsconfigRootDir: __dirname,
       },
 
       rules: sharedRules,
@@ -57,7 +52,8 @@ module.exports = {
       extends: ['airbnb', 'airbnb-typescript', 'plugin:prettier/recommended'],
 
       parserOptions: {
-        project: path.resolve('./tsconfig.json'),
+        project: './tsconfig.json',
+        tsconfigRootDir: __dirname,
       },
 
       rules: Object.assign(sharedRules, sharedReactRules),
