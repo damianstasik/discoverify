@@ -1,10 +1,13 @@
 import { memo } from 'react';
 import AudioPlayer from 'react-h5-audio-player';
 import { useAtom } from 'jotai';
-import { trackPreviewState } from '../store';
+import { trackPreviewState, loadingTrackPreview } from '../store';
 
 export const Player = memo(() => {
   const [trackPreview, setTrackPreview] = useAtom(trackPreviewState);
+
+  const [isLoadingTrackPreview, setLoadingTrackPreview] =
+    useAtom(loadingTrackPreview);
 
   // const [playTrackPreviews, setPlayTrackPreviews] = useAtom(
   //   playTrackPreviewsState,
@@ -72,6 +75,14 @@ export const Player = memo(() => {
       }
       src={trackPreview?.url}
       onEnded={() => setTrackPreview(null)}
+      onPlay={() =>
+        setTrackPreview((current) => ({ ...current, state: 'playing' }))
+      }
+      onPause={() =>
+        setTrackPreview((current) => ({ ...current, state: 'pause' }))
+      }
+      onLoadStart={() => setLoadingTrackPreview(true)}
+      onLoadedData={() => setLoadingTrackPreview(false)}
     />
   );
 });

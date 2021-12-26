@@ -12,9 +12,13 @@ import { useAtomValue } from 'jotai/utils';
 import { useAtom } from 'jotai';
 import { Breadcrumbs, Link } from '@mui/material';
 import { useMutation, useQuery } from 'react-query';
-import { mdiCardsHeartOutline, mdiPlayCircleOutline } from '@mdi/js';
+import {
+  mdiCardsHeartOutline,
+  mdiPlayCircleOutline,
+  mdiPauseCircleOutline,
+} from '@mdi/js';
 import Icon from '@mdi/react';
-import { tokenIdState, trackPreviewState } from '../store';
+import { loadingTrackPreview, tokenIdState, trackPreviewState } from '../store';
 import { Layout } from '../components/Layout';
 
 const columns: GridColumns = [
@@ -26,16 +30,32 @@ const columns: GridColumns = [
     sortable: false,
     getActions: (params) => {
       const apiRef = useGridApiContext();
+      const trackPreview = useAtomValue(trackPreviewState);
+      const isLoadingTrackPreview = useAtomValue(loadingTrackPreview);
+      const isCurrentlyPlaying =
+        trackPreview?.url === params.row.preview_url &&
+        trackPreview?.context === params.row;
 
       return [
         <GridActionsCellItem
-          icon={<Icon path={mdiPlayCircleOutline} size={1} />}
+          color={isCurrentlyPlaying ? 'primary' : 'default'}
+          icon={
+            <Icon
+              path={
+                isCurrentlyPlaying && trackPreview?.state === 'playing'
+                  ? mdiPauseCircleOutline
+                  : mdiPlayCircleOutline
+              }
+              size={1}
+            />
+          }
           onClick={() =>
             apiRef.current.publishEvent('playTrackPreview', {
               url: params.row.preview_url,
               track: params.row,
             })
           }
+          disabled={isLoadingTrackPreview}
           label="Play"
         />,
       ];
@@ -44,12 +64,12 @@ const columns: GridColumns = [
   {
     field: 'name',
     sortable: false,
-    headerName: 'Name',
+    headerName: 'Track name',
     flex: 0.3,
   },
   {
     field: 'artists',
-    headerName: 'Artists',
+    headerName: 'Artist(s)',
     flex: 0.7,
     sortable: false,
     renderCell: (params) => (
@@ -124,6 +144,7 @@ export function FollowedArtistsTopTracks() {
       setTrackPreview({
         url: params.url,
         context: params.track,
+        state: 'playing',
       });
     });
 

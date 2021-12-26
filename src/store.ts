@@ -3,9 +3,13 @@ import { atomWithStorage } from 'jotai/utils';
 
 export const loadingState = atom(false);
 
-export const trackPreviewState = atom<{ url: string; context: any } | null>(
-  null,
-);
+export const loadingTrackPreview = atom(false);
+
+export const trackPreviewState = atom<{
+  url: string;
+  context: any;
+  state: 'playing' | 'pause';
+} | null>(null);
 
 export const deviceIdState = atom('');
 
