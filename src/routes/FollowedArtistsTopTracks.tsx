@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { Link as RouterLink, useSearchParams } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import {
   DataGridPro,
   GridActionsCellItem,
@@ -13,8 +12,7 @@ import { useAtomValue } from 'jotai/utils';
 import { useAtom } from 'jotai';
 import { Breadcrumbs, Link } from '@mui/material';
 import { useMutation, useQuery } from 'react-query';
-import PlayCircleIcon from '@mui/icons-material/PlayCircle';
-import { mdiCardsHeartOutline } from '@mdi/js';
+import { mdiCardsHeartOutline, mdiPlayCircleOutline } from '@mdi/js';
 import Icon from '@mdi/react';
 import { tokenIdState, trackPreviewState } from '../store';
 import { Layout } from '../components/Layout';
@@ -25,12 +23,13 @@ const columns: GridColumns = [
     field: 'actionss',
     headerName: '',
     width: 50,
+    sortable: false,
     getActions: (params) => {
       const apiRef = useGridApiContext();
 
       return [
         <GridActionsCellItem
-          icon={<PlayCircleIcon />}
+          icon={<Icon path={mdiPlayCircleOutline} size={1} />}
           onClick={() =>
             apiRef.current.publishEvent('playTrackPreview', {
               url: params.row.preview_url,
@@ -42,11 +41,17 @@ const columns: GridColumns = [
       ];
     },
   },
-  { field: 'name', headerName: 'Name', width: 300 },
+  {
+    field: 'name',
+    sortable: false,
+    headerName: 'Name',
+    flex: 0.3,
+  },
   {
     field: 'artists',
     headerName: 'Artists',
-    width: 500,
+    flex: 0.7,
+    sortable: false,
     renderCell: (params) => (
       <Breadcrumbs>
         {(params.value as any[]).map((artist) => (
@@ -57,22 +62,15 @@ const columns: GridColumns = [
       </Breadcrumbs>
     ),
   },
-
   {
     type: 'actions',
     field: 'actions',
     headerName: 'Actions',
-
+    sortable: false,
     getActions: (params) => {
       const apiRef = useGridApiContext();
 
       return [
-        <GridActionsCellItem
-          icon={<VisibilityOffIcon />}
-          onClick={() => {}}
-          label="Hide"
-        />,
-
         <GridActionsCellItem
           icon={<Icon path={mdiCardsHeartOutline} size={1} />}
           onClick={() => apiRef.current.publishEvent('saveTrack', params.row)}
@@ -139,6 +137,7 @@ export function FollowedArtistsTopTracks() {
       <Typography variant="h5" gutterBottom sx={{ mb: 2 }}>
         Top songs from followed artists
       </Typography>
+
       <Typography variant="subtitle1" gutterBottom sx={{ mb: 2 }}>
         Here are tracks that come from top 10 lists of the artists that you
         follow. The list does not include tracks that you have already saved in
@@ -148,10 +147,24 @@ export function FollowedArtistsTopTracks() {
       <div style={{ height: 800, width: '100%' }}>
         <DataGridPro
           disableSelectionOnClick
+          disableColumnResize
+          disableColumnMenu
+          disableColumnReorder
+          disableColumnSelector
+          disableDensitySelector
+          disableMultipleColumnsSorting
+          disableColumnFilter
+          disableMultipleColumnsFiltering
+          hideFooter
           apiRef={apiRef}
           rows={tracks}
           columns={columns}
           loading={isLoading}
+          initialState={{
+            pinnedColumns: {
+              right: ['actions'],
+            },
+          }}
         />
       </div>
     </Layout>
