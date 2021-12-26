@@ -1,9 +1,9 @@
-import { Layout } from '../components/Layout';
 import Button from '@mui/material/Button';
 import { useEffect, useState } from 'react';
-import { tokenIdState } from '../store';
 import { useParams } from 'react-router-dom';
 import { useAtomValue } from 'jotai/utils';
+import { tokenIdState } from '../store';
+import { Layout } from '../components/Layout';
 
 function ArtistCardSkeleton() {
   return (
@@ -25,7 +25,9 @@ export function Artist() {
   const params = useParams() as any;
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL}/artist/${params.id}?tokenId=${tokenId}`)
+    fetch(
+      `${import.meta.env.VITE_API_URL}/artist/${params.id}?tokenId=${tokenId}`,
+    )
       .then((res) => res.json())
       .then((res) => {
         setLoading(false);
@@ -39,13 +41,7 @@ export function Artist() {
         {artist.name}
       </h3>
       <div className="grid grid-cols-5 gap-4 ">
-        {isLoading ? (
-          <>
-            <ArtistCardSkeleton />
-          </>
-        ) : (
-          <div>loaded</div>
-        )}
+        {isLoading ? <ArtistCardSkeleton /> : <div>loaded</div>}
       </div>
     </Layout>
   );

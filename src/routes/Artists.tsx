@@ -1,6 +1,4 @@
-import { Layout } from '../components/Layout';
 import { useEffect, useState } from 'react';
-import { tokenIdState, trackPreviewState } from '../store';
 import { Link as RouterLink } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
@@ -13,17 +11,16 @@ import IconButton from '@mui/material/IconButton';
 import LoadingButton from '@mui/lab/LoadingButton';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
 import PlayCircleFilledTwoToneIcon from '@mui/icons-material/PlayCircleFilledTwoTone';
 import StopCircleTwoToneIcon from '@mui/icons-material/StopCircleTwoTone';
-import Avatar from '@mui/material/Avatar';
 import Skeleton from '@mui/material/Skeleton';
-import Drawer from '@mui/material/Drawer';
 import CardActionArea from '@mui/material/CardActionArea';
 import { useAtomValue } from 'jotai/utils';
 import { useAtom } from 'jotai';
+import { tokenIdState, trackPreviewState } from '../store';
+import { Layout } from '../components/Layout';
 
 function ArtistCardSkeleton() {
   return (
@@ -31,7 +28,7 @@ function ArtistCardSkeleton() {
       <Skeleton variant="rectangular" height={300} animation="wave" />
       <CardContent>
         <Typography variant="h6">
-          <Skeleton animation="wave"></Skeleton>
+          <Skeleton animation="wave" />
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
@@ -54,11 +51,13 @@ function ArtistCard({ artist }: { artist: any }) {
     setLoading(true);
 
     fetch(
-      `${import.meta.env.VITE_API_URL}/follow?tokenId=${tokenId}&artistId=${artist.id}`,
+      `${import.meta.env.VITE_API_URL}/follow?tokenId=${tokenId}&artistId=${
+        artist.id
+      }`,
       { method: 'put' },
     )
       .then((res) => res.json())
-      .then((res) => {
+      .then(() => {
         setLoading(false);
         setFollowingState(true);
       });
@@ -90,9 +89,12 @@ function ArtistCard({ artist }: { artist: any }) {
                 <IconButton
                   edge="end"
                   aria-label="delete"
-                  onClick={() => setTrackPreview({ url: tr.preview_url, context: artist })}
+                  onClick={() =>
+                    setTrackPreview({ url: tr.preview_url, context: artist })
+                  }
                 >
-                  {tr.preview_url === trackPreview?.url && trackPreview?.context === artist ? (
+                  {tr.preview_url === trackPreview?.url &&
+                  trackPreview?.context === artist ? (
                     <StopCircleTwoToneIcon />
                   ) : (
                     <PlayCircleFilledTwoToneIcon />

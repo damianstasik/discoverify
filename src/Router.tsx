@@ -1,5 +1,6 @@
-import { Route, RouteObject, Routes, useRoutes} from 'react-router-dom';
+import { RouteObject, useRoutes } from 'react-router-dom';
 import { lazy } from 'react';
+import { useAtomValue } from 'jotai/utils';
 import { Login } from './routes/Login';
 import { Authorize } from './routes/Authorize';
 import { Artists } from './routes/Artists';
@@ -9,7 +10,7 @@ import { FollowedArtistsGenres } from './routes/FollowedArtistsGenres';
 import { userSelector } from './store';
 import { Liked } from './routes/Liked';
 import { Recommendations } from './routes/Recommendations';
-import { useAtomValue } from 'jotai/utils';
+
 const Dashboard = lazy(() => import('./routes/Dashboard'));
 
 export function Router() {
@@ -20,48 +21,48 @@ export function Router() {
   if (user) {
     routes.push(
       {
-        path: "/",
+        path: '/',
         element: <Dashboard />,
       },
       {
-        path: "/liked",
+        path: '/liked',
         element: <Liked />,
       },
       {
-        path: "/recommendations",
+        path: '/recommendations',
         element: <Recommendations />,
       },
       {
-        path: "/artists",
+        path: '/artists',
         element: <Artists />,
       },
       {
-        path: "/followed-artists/top-tracks",
+        path: '/followed-artists/top-tracks',
         element: <FollowedArtistsTopTracks />,
       },
       {
-        path: "/followed-artists/genres",
+        path: '/followed-artists/genres',
         element: <FollowedArtistsGenres />,
       },
       {
-        path: "/artist/:id",
+        path: '/artist/:id',
         element: <Artist />,
       },
-    )
+    );
   }
 
-  const element = useRoutes(routes.concat([
-    {
-      path: "/login",
-      element: <Login />,
-    },
-    {
-      path: "/authorize",
-      element: <Authorize />,
-    },
-  ]));
-
-  return (
-    element
+  const element = useRoutes(
+    routes.concat([
+      {
+        path: '/login',
+        element: <Login />,
+      },
+      {
+        path: '/authorize',
+        element: <Authorize />,
+      },
+    ]),
   );
+
+  return element;
 }

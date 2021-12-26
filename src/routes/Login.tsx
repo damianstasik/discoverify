@@ -7,7 +7,7 @@ export function Login() {
 
   const handleClick = () => {
     setLoading(true);
-    fetch('${import.meta.env.VITE_API_URL}/login')
+    fetch(`${import.meta.env.VITE_API_URL}/login`)
       .then((res) => {
         return res.json();
       })

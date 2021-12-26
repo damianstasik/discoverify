@@ -1,10 +1,10 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
-import { tokenIdState, userSelector } from './store';
-import { Router } from './Router';
 import { LicenseInfo } from '@mui/x-data-grid-pro';
 import { useAtomValue } from 'jotai/utils';
 import { useAtom } from 'jotai';
+import { Router } from './Router';
+import { tokenIdState, userSelector } from './store';
 
 const muiLicenseKey = import.meta.env.VITE_MUI_LICENSE_KEY;
 

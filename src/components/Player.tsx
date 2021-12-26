@@ -1,33 +1,16 @@
 import { memo } from 'react';
 import AudioPlayer from 'react-h5-audio-player';
 import { useAtom } from 'jotai';
-import { useAtomValue } from 'jotai/utils';
-import { useQuery } from 'react-query';
-import {
-  Checkbox,
-  FormControl,
-  FormControlLabel,
-  FormGroup,
-  InputLabel,
-  MenuItem,
-  Select,
-  Switch,
-} from '@mui/material';
-import {
-  deviceIdState,
-  playTrackPreviewsState,
-  tokenIdState,
-  trackPreviewState,
-} from '../store';
+import { trackPreviewState } from '../store';
 
 export const Player = memo(() => {
   const [trackPreview, setTrackPreview] = useAtom(trackPreviewState);
 
-  const [playTrackPreviews, setPlayTrackPreviews] = useAtom(
-    playTrackPreviewsState,
-  );
-  const [deviceId, setDeviceId] = useAtom(deviceIdState);
-  const tokenId = useAtomValue(tokenIdState);
+  // const [playTrackPreviews, setPlayTrackPreviews] = useAtom(
+  //   playTrackPreviewsState,
+  // );
+  // const [deviceId, setDeviceId] = useAtom(deviceIdState);
+  // const tokenId = useAtomValue(tokenIdState);
 
   // const { data: player } = useQuery(
   //   ['player', tokenId],

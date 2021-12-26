@@ -1,13 +1,9 @@
-import { Layout } from '../components/Layout';
-
 import { useState } from 'react';
-import { tokenIdState, trackPreviewUrlSelector } from '../store';
 import {
   Link,
   Link as RouterLink,
   useNavigate,
   useLocation,
-  useParams,
 } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 
@@ -26,21 +22,23 @@ import PlayCircleFilledTwoToneIcon from '@mui/icons-material/PlayCircleFilledTwo
 import StopCircleTwoToneIcon from '@mui/icons-material/StopCircleTwoTone';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import { RecommendationAttributes } from '../components/RecommendationAttributes';
 import { useAtomValue } from 'jotai/utils';
 import { useAtom } from 'jotai';
+import { RecommendationAttributes } from '../components/RecommendationAttributes';
+import { tokenIdState, trackPreviewUrlSelector } from '../store';
+import { Layout } from '../components/Layout';
 
 function msToTime(duration: number) {
   const seconds = Math.floor((duration / 1000) % 60);
   const minutes = Math.floor((duration / (1000 * 60)) % 60);
 
-  const m = minutes < 10 ? '0' + minutes : minutes;
-  const s = seconds < 10 ? '0' + seconds : seconds;
+  const m = minutes < 10 ? `0${minutes}` : minutes;
+  const s = seconds < 10 ? `0${seconds}` : seconds;
 
-  return m + ':' + s;
+  return `${m}:${s}`;
 }
 
-const PreviewColumn = (params: GridCellParams) => {
+function PreviewColumn(params: GridCellParams) {
   const [trackPreviewUrl, setTrackPreviewUrl] = useAtom(
     trackPreviewUrlSelector,
   );
@@ -58,9 +56,9 @@ const PreviewColumn = (params: GridCellParams) => {
       )}
     </IconButton>
   );
-};
+}
 
-const LikeColumn = (params: GridCellParams) => {
+function LikeColumn(params: GridCellParams) {
   const tokenId = useAtomValue(tokenIdState);
 
   const { mutate, isSuccess, isLoading } = useMutation<void, Error, string>(
@@ -93,9 +91,9 @@ const LikeColumn = (params: GridCellParams) => {
       {params.value ? 'Saved' : 'Save'}
     </LoadingButton>
   );
-};
+}
 
-const ArtistColumn = (params: GridCellParams) => {
+function ArtistColumn(params: GridCellParams) {
   return (
     <Breadcrumbs>
       {(params.value as any[]).map((artist) => (
@@ -105,13 +103,15 @@ const ArtistColumn = (params: GridCellParams) => {
       ))}
     </Breadcrumbs>
   );
-};
+}
 
-const AlbumColumn = (params: any) => (
-  <Link component={RouterLink} to={`/album/${params.value.id}`}>
-    {params.value.name}
-  </Link>
-);
+function AlbumColumn(params: any) {
+  return (
+    <Link component={RouterLink} to={`/album/${params.value.id}`}>
+      {params.value.name}
+    </Link>
+  );
+}
 
 export function Recommendations() {
   const tokenId = useAtomValue(tokenIdState);
@@ -142,7 +142,9 @@ export function Recommendations() {
 
       q.append('tokenId', tokenId);
 
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/recommended?${q}`);
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/recommended?${q}`,
+      );
       const body = await res.json();
 
       return body.songs;

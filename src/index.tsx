@@ -2,13 +2,13 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Provider, useAtom } from 'jotai';
-import { LayoutSkeleton } from './components/LayoutSkeleton';
-import { App } from './App';
 import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { LayoutSkeleton } from './components/LayoutSkeleton';
+import { App } from './App';
 import { tokenIdState } from './store';
 // import { SnackbarProvider } from 'notistack';
-import { QueryClient, QueryClientProvider } from 'react-query';
 
 const queryClient = new QueryClient({
   defaultOptions: {

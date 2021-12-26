@@ -1,10 +1,6 @@
-import Button from '@mui/material/Button';
+import { type ReactNode } from 'react';
 
-export function LayoutSkeleton({
-  children,
-}: {
-  children: JSX.Element | JSX.Element[];
-}) {
+export function LayoutSkeleton({ children }: { children: ReactNode }) {
   return (
     <div className="container mx-auto">
       {/* <Navbar className="mt-8 mb-6 rounded-md bp3-dark">

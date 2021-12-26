@@ -18,11 +18,7 @@ import Breadcrumbs from '@mui/material/Breadcrumbs';
 import { useAtom } from 'jotai';
 import { useAtomValue } from 'jotai/utils';
 import { Layout } from '../components/Layout';
-
-import {
-  tokenIdState,
-  trackPreviewUrlSelector,
-} from '../store';
+import { tokenIdState, trackPreviewUrlSelector } from '../store';
 
 function msToTime(duration: number) {
   const seconds = Math.floor((duration / 1000) % 60);
@@ -34,7 +30,7 @@ function msToTime(duration: number) {
   return `${m}:${s}`;
 }
 
-const PreviewColumn = (params: GridCellParams) => {
+function PreviewColumn(params: GridCellParams) {
   const [trackPreviewUrl, setTrackPreviewUrl] = useAtom(
     trackPreviewUrlSelector,
   );
@@ -52,9 +48,9 @@ const PreviewColumn = (params: GridCellParams) => {
       )}
     </IconButton>
   );
-};
+}
 
-const ArtistColumn = (params: GridCellParams) => {
+function ArtistColumn(params: GridCellParams) {
   return (
     <Breadcrumbs>
       {(params.value as any[]).map((artist) => (
@@ -64,13 +60,15 @@ const ArtistColumn = (params: GridCellParams) => {
       ))}
     </Breadcrumbs>
   );
-};
+}
 
-const AlbumColumn = (params: GridCellParams) => (
-  <Link component={RouterLink} to={`/album/${params.value.id}`}>
-    {params.value.name}
-  </Link>
-);
+function AlbumColumn(params: GridCellParams) {
+  return (
+    <Link component={RouterLink} to={`/album/${params.value.id}`}>
+      {params.value.name}
+    </Link>
+  );
+}
 
 const columns: GridColumns = [
   {
@@ -119,7 +117,9 @@ export function Liked() {
     'liked',
     async ({ pageParam = 1 }) => {
       const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/liked?tokenId=${tokenId}&page=${pageParam}`,
+        `${
+          import.meta.env.VITE_API_URL
+        }/liked?tokenId=${tokenId}&page=${pageParam}`,
       );
 
       const body = await res.json();

@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { tokenIdState } from '../store';
 // import { useSnackbar } from 'notistack';
 import Card from '@mui/material/Card';
 import { useUpdateAtom } from 'jotai/utils';
+import { tokenIdState } from '../store';
 
 export function Authorize() {
   const query = new URLSearchParams(useLocation().search);
@@ -19,7 +19,9 @@ export function Authorize() {
       });
       navigate('/');
     } else {
-      fetch(`${import.meta.env.VITE_API_URL}/authorize?code=${query.get('code')}`)
+      fetch(
+        `${import.meta.env.VITE_API_URL}/authorize?code=${query.get('code')}`,
+      )
         .then((res) => res.json())
         .then((res) => {
           if (res.error) {
@@ -43,7 +45,7 @@ export function Authorize() {
 
   return (
     <div className="max-w-md mx-auto mt-24">
-      <Card></Card>
+      <Card />
     </div>
   );
 }

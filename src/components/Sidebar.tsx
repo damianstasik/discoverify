@@ -2,38 +2,27 @@ import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import ListSubheader from '@mui/material/ListSubheader';
-import Toolbar from '@mui/material/Toolbar';
 import DashboardTwoTone from '@mui/icons-material/DashboardTwoTone';
-import ThumbUpAltTwoTone from '@mui/icons-material/ThumbUpAltTwoTone';
-import FavoriteTwoToneIcon from '@mui/icons-material/FavoriteTwoTone';
-import PeopleAltTwoToneIcon from '@mui/icons-material/PeopleAltTwoTone';
-import TrendingUpTwoToneIcon from '@mui/icons-material/TrendingUpTwoTone';
 import { useMatch, Link as RouterLink } from 'react-router-dom';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import RecommendIcon from '@mui/icons-material/Recommend';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import { memo, useState } from 'react';
-import styled from '@emotion/styled';
-import GroupIcon from '@mui/icons-material/Group';
-import SwitchAccountIcon from '@mui/icons-material/SwitchAccount';
+import { memo } from 'react';
 import {
   mdiAccountHeart,
   mdiAccountMultipleOutline,
   mdiTagText,
-  mdiTagTextOutline,
   mdiAccountMusic,
   mdiAccountMusicOutline,
 } from '@mdi/js';
-import Icon, { Stack } from '@mdi/react';
-import { Navbar } from './Navbar';
+import Icon from '@mdi/react';
 import { useAtomValue } from 'jotai/utils';
-import { userSelector } from '../store';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
+import { userSelector } from '../store';
+import { Navbar } from './Navbar';
 
 function RouterListItem({ to, label, icon }: any) {
   const match = useMatch(to);
@@ -49,17 +38,7 @@ function RouterListItem({ to, label, icon }: any) {
 const drawerWidth = 300;
 
 export const Sidebar = memo(() => {
-
   const user = useAtomValue(userSelector)!;
-  const [anchorEl, setAnchorEl] = useState(null);
-
-  const handleMenu = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
   return (
     <Drawer
@@ -69,18 +48,16 @@ export const Sidebar = memo(() => {
         '& .MuiDrawer-paper': {
           width: drawerWidth,
         },
-
       }}
       PaperProps={{
         sx: {
-          backgroundColor: '#f3f4f6'
-        }
+          backgroundColor: '#f3f4f6',
+        },
       }}
       variant="permanent"
       anchor="left"
     >
-
-        <Navbar />
+      <Navbar />
 
       <Divider />
       <List dense>
@@ -99,7 +76,11 @@ export const Sidebar = memo(() => {
       <Divider />
       <List
         dense
-        subheader={<ListSubheader sx={{ background: 'none'}} component="div">Artists</ListSubheader>}
+        subheader={
+          <ListSubheader sx={{ background: 'none' }} component="div">
+            Artists
+          </ListSubheader>
+        }
       >
         <RouterListItem
           label="From liked songs"
@@ -115,7 +96,11 @@ export const Sidebar = memo(() => {
       <Divider />
       <List
         dense
-        subheader={<ListSubheader sx={{ background: 'none'}} component="div">Songs</ListSubheader>}
+        subheader={
+          <ListSubheader sx={{ background: 'none' }} component="div">
+            Songs
+          </ListSubheader>
+        }
       >
         <RouterListItem
           label="Top from followed artists"
@@ -131,7 +116,11 @@ export const Sidebar = memo(() => {
       <Divider />
       <List
         dense
-        subheader={<ListSubheader sx={{ background: 'none'}} component="div">Genres</ListSubheader>}
+        subheader={
+          <ListSubheader sx={{ background: 'none' }} component="div">
+            Genres
+          </ListSubheader>
+        }
       >
         <RouterListItem
           label="From followed artists"
@@ -140,21 +129,15 @@ export const Sidebar = memo(() => {
         />
       </List>
       <Divider />
-      <List
-        dense
-sx={{mt:'auto'}}
-      >
-        
-      <ListItem button       >
-      <ListItemAvatar>
-      <Avatar src={user.photoUrl!} style={{ marginRight: '8px' }} />
-        </ListItemAvatar>
+      <List dense sx={{ mt: 'auto' }}>
+        <ListItem button>
+          <ListItemAvatar>
+            <Avatar src={user.photoUrl!} style={{ marginRight: '8px' }} />
+          </ListItemAvatar>
 
-      <ListItemText primary={user.displayName} secondary={'My account'} />
-    </ListItem>
-
-    </List>
- 
+          <ListItemText primary={user.displayName} secondary="My account" />
+        </ListItem>
+      </List>
     </Drawer>
   );
 });

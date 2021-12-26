@@ -3,7 +3,9 @@ import { atomWithStorage } from 'jotai/utils';
 
 export const loadingState = atom(false);
 
-export const trackPreviewState = atom<{ url: string; context: any } | null>(null);
+export const trackPreviewState = atom<{ url: string; context: any } | null>(
+  null,
+);
 
 export const deviceIdState = atom('');
 
@@ -35,7 +37,9 @@ export const userSelector = atom<{
     return null;
   }
 
-  const req = await fetch(`${import.meta.env.VITE_API_URL}/me?tokenId=${tokenId}`);
+  const req = await fetch(
+    `${import.meta.env.VITE_API_URL}/me?tokenId=${tokenId}`,
+  );
 
   if (!req.ok) {
     return null;
