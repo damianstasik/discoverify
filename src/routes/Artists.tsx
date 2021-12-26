@@ -147,7 +147,7 @@ export function Artists() {
   return (
     <Layout>
       <Typography variant="h5" gutterBottom>
-        Artists from liked songs
+        Artists from liked tracks
       </Typography>
 
       <Grid container spacing={3}>

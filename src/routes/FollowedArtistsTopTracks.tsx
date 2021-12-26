@@ -156,7 +156,7 @@ export function FollowedArtistsTopTracks() {
   return (
     <Layout>
       <Typography variant="h5" gutterBottom sx={{ mb: 2 }}>
-        Top songs from followed artists
+        Top tracks from followed artists
       </Typography>
 
       <Typography variant="subtitle1" gutterBottom sx={{ mb: 2 }}>

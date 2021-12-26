@@ -63,7 +63,7 @@ export const Sidebar = memo(() => {
       <List dense>
         <RouterListItem label="Dashboard" to="/" icon={<DashboardTwoTone />} />
         <RouterListItem
-          label="Liked songs"
+          label="Liked tracks"
           to="/liked"
           icon={<FavoriteIcon />}
         />
@@ -83,7 +83,7 @@ export const Sidebar = memo(() => {
         }
       >
         <RouterListItem
-          label="From liked songs"
+          label="From liked tracks"
           to="/artists"
           icon={<Icon path={mdiAccountHeart} size={1} />}
         />
@@ -98,7 +98,7 @@ export const Sidebar = memo(() => {
         dense
         subheader={
           <ListSubheader sx={{ background: 'none' }} component="div">
-            Songs
+            Tracks
           </ListSubheader>
         }
       >

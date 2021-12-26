@@ -142,7 +142,7 @@ export function Liked() {
   return (
     <Layout>
       <Typography variant="h5" gutterBottom>
-        Liked songs
+        Liked tracks
       </Typography>
 
       {selectedSongs.length > 0 && (
