@@ -11,7 +11,7 @@ import {
 import { useAtomValue } from 'jotai/utils';
 import { useAtom } from 'jotai';
 import { Breadcrumbs, Link } from '@mui/material';
-import { useMutation, useQuery } from 'react-query';
+import { useInfiniteQuery, useMutation, useQuery } from 'react-query';
 import {
   mdiCardsHeartOutline,
   mdiPlayCircleOutline,
@@ -120,25 +120,29 @@ export function FollowedArtistsTopTracks() {
     },
   );
 
-  const { data: tracks, isLoading } = useQuery(
+  const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery(
     ['top-tracks', genre],
-    async () => {
+    async ({ pageParam = 0 }) => {
       const res = await fetch(
         `${
           import.meta.env.VITE_API_URL
         }/followed-artists/top-tracks?tokenId=${tokenId}&genre=${searchParams.get(
           'genre',
-        )}`,
+        )}&page=${pageParam}`,
       );
 
       const body = await res.json();
 
       return body;
     },
+    {
+      getNextPageParam: (lastPage, pages) =>
+        lastPage.hasNextPage ? pages.length : false,
+    },
   );
 
   useEffect(() => {
-    if (!apiRef.current || isLoading) return;
+    if (!apiRef.current || isFetching) return;
 
     apiRef.current.subscribeEvent('playTrackPreview', (params) => {
       setTrackPreview({
@@ -151,7 +155,7 @@ export function FollowedArtistsTopTracks() {
     apiRef.current.subscribeEvent('saveTrack', (params) => {
       saveTrack(params.id);
     });
-  }, [apiRef, isLoading]);
+  }, [apiRef, isFetching]);
 
   return (
     <Layout>
@@ -167,6 +171,14 @@ export function FollowedArtistsTopTracks() {
 
       <div style={{ height: 800, width: '100%' }}>
         <DataGridPro
+          pagination
+          paginationMode="server"
+          hideFooterPagination
+          onRowsScrollEnd={() => {
+            if (hasNextPage) {
+              fetchNextPage();
+            }
+          }}
           disableSelectionOnClick
           disableColumnResize
           disableColumnMenu
@@ -178,9 +190,9 @@ export function FollowedArtistsTopTracks() {
           disableMultipleColumnsFiltering
           hideFooter
           apiRef={apiRef}
-          rows={tracks}
+          rows={data?.pages.map((page) => page.data).flat()}
           columns={columns}
-          loading={isLoading}
+          loading={isFetching}
           initialState={{
             pinnedColumns: {
               right: ['actions'],
