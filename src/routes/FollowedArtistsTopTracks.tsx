@@ -10,12 +10,13 @@ import {
 } from '@mui/x-data-grid-pro';
 import { useAtomValue } from 'jotai/utils';
 import { useAtom } from 'jotai';
-import { Breadcrumbs, Link } from '@mui/material';
+import { Breadcrumbs, IconButton, Link } from '@mui/material';
 import { useInfiniteQuery, useMutation, useQuery } from 'react-query';
 import {
   mdiCardsHeartOutline,
   mdiPlayCircleOutline,
   mdiPauseCircleOutline,
+  mdiSpotify,
 } from '@mdi/js';
 import Icon from '@mdi/react';
 import { loadingTrackPreview, tokenIdState, trackPreviewState } from '../store';
@@ -91,6 +92,15 @@ const columns: GridColumns = [
       const apiRef = useGridApiContext();
 
       return [
+        <IconButton
+          size="small"
+          aria-label="Open in Spotify"
+          href={params.row.uri}
+          target="_blank"
+        >
+          <Icon path={mdiSpotify} size={1} />
+        </IconButton>,
+
         <GridActionsCellItem
           icon={<Icon path={mdiCardsHeartOutline} size={1} />}
           onClick={() => apiRef.current.publishEvent('saveTrack', params.row)}
