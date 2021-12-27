@@ -40,6 +40,10 @@ const columns: GridColumns = [
         trackPreview?.url === params.row.preview_url &&
         trackPreview?.context === params.row;
 
+      if (!params.row.preview_url) {
+        return [];
+      }
+
       return [
         <GridActionsCellItem
           color={isCurrentlyPlaying ? 'primary' : 'default'}
@@ -117,8 +121,6 @@ const columns: GridColumns = [
 
 export function FollowedArtistsTopTracks() {
   const tokenId = useAtomValue(tokenIdState);
-  const [trackPreview, setTrackPreview] = useAtom(trackPreviewState);
-
   const [searchParams] = useSearchParams();
   const apiRef = useGridApiRef();
   const genre = searchParams.get('genre');

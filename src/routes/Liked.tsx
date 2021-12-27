@@ -17,6 +17,7 @@ import { mdiPauseCircleOutline, mdiPlayCircleOutline } from '@mdi/js';
 import { Layout } from '../components/Layout';
 import { loadingTrackPreview, tokenIdState, trackPreviewState } from '../store';
 import { useSeedSelection } from '../hooks/useSeedSelection';
+import { RecommendationToolbar } from '../components/RecommendationToolbar';
 
 function msToTime(duration: number) {
   const seconds = Math.floor((duration / 1000) % 60);
@@ -61,6 +62,10 @@ const columns: GridColumns = [
       const isCurrentlyPlaying =
         trackPreview?.url === params.row.preview_url &&
         trackPreview?.context === params.row;
+
+      if (!params.row.preview_url) {
+        return [];
+      }
 
       return [
         <GridActionsCellItem
@@ -173,6 +178,9 @@ export function Liked() {
           rows={(data?.pages || []).map((page) => page.songs).flat()}
           loading={isFetching}
           onRowsScrollEnd={() => hasNextPage && fetchNextPage()}
+          components={{
+            Toolbar: RecommendationToolbar,
+          }}
         />
       </div>
     </Layout>
