@@ -4,14 +4,14 @@ import Typography from '@mui/material/Typography';
 import {
   DataGridPro,
   GridActionsCellItem,
-  GridColumns,
+  type GridColumns,
   useGridApiContext,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import { useAtomValue } from 'jotai/utils';
 import { useAtom } from 'jotai';
 import { Breadcrumbs, IconButton, Link } from '@mui/material';
-import { useInfiniteQuery, useMutation, useQuery } from 'react-query';
+import { useInfiniteQuery, useMutation } from 'react-query';
 import {
   mdiCardsHeartOutline,
   mdiPlayCircleOutline,
@@ -21,6 +21,10 @@ import {
 import Icon from '@mdi/react';
 import { loadingTrackPreview, tokenIdState, trackPreviewState } from '../store';
 import { Layout } from '../components/Layout';
+import * as trackApi from '../api/track';
+import * as artistApi from '../api/artist';
+import { useSeedSelection } from '../hooks/useSeedSelection';
+import { RecommendationToolbar } from '../components/RecommendationToolbar';
 
 const columns: GridColumns = [
   {
@@ -30,8 +34,7 @@ const columns: GridColumns = [
     width: 50,
     sortable: false,
     getActions: (params) => {
-      const apiRef = useGridApiContext();
-      const trackPreview = useAtomValue(trackPreviewState);
+      const [trackPreview, setTrackPreview] = useAtom(trackPreviewState);
       const isLoadingTrackPreview = useAtomValue(loadingTrackPreview);
       const isCurrentlyPlaying =
         trackPreview?.url === params.row.preview_url &&
@@ -51,9 +54,10 @@ const columns: GridColumns = [
             />
           }
           onClick={() =>
-            apiRef.current.publishEvent('playTrackPreview', {
+            setTrackPreview({
               url: params.row.preview_url,
-              track: params.row,
+              context: params.row,
+              state: 'playing',
             })
           }
           disabled={isLoadingTrackPreview}
@@ -120,31 +124,17 @@ export function FollowedArtistsTopTracks() {
   const genre = searchParams.get('genre');
 
   const { mutateAsync: saveTrack } = useMutation<void, Error, string>(
-    async (id) => {
-      await fetch(
-        `${import.meta.env.VITE_API_URL}/save?tokenId=${tokenId}&trackId=${id}`,
-        {
-          method: 'put',
-        },
-      );
-    },
+    async (id) => trackApi.saveTrack(tokenId, id),
   );
 
   const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery(
     ['top-tracks', genre],
-    async ({ pageParam = 0 }) => {
-      const res = await fetch(
-        `${
-          import.meta.env.VITE_API_URL
-        }/followed-artists/top-tracks?tokenId=${tokenId}&genre=${searchParams.get(
-          'genre',
-        )}&page=${pageParam}`,
-      );
-
-      const body = await res.json();
-
-      return body;
-    },
+    async ({ pageParam = 0 }) =>
+      artistApi.getFollowedArtistsTopTracks(
+        tokenId,
+        searchParams.get('genre'),
+        pageParam,
+      ),
     {
       getNextPageParam: (lastPage, pages) =>
         lastPage.hasNextPage ? pages.length : false,
@@ -154,18 +144,13 @@ export function FollowedArtistsTopTracks() {
   useEffect(() => {
     if (!apiRef.current || isFetching) return;
 
-    apiRef.current.subscribeEvent('playTrackPreview', (params) => {
-      setTrackPreview({
-        url: params.url,
-        context: params.track,
-        state: 'playing',
-      });
-    });
-
     apiRef.current.subscribeEvent('saveTrack', (params) => {
       saveTrack(params.id);
     });
   }, [apiRef, isFetching]);
+
+  const { selectedSeeds, setSelectedSeeds, isSeedSelectable } =
+    useSeedSelection();
 
   return (
     <Layout>
@@ -189,6 +174,12 @@ export function FollowedArtistsTopTracks() {
               fetchNextPage();
             }
           }}
+          checkboxSelection
+          onSelectionModelChange={(newSelection) =>
+            setSelectedSeeds(newSelection)
+          }
+          selectionModel={selectedSeeds}
+          isRowSelectable={isSeedSelectable}
           disableSelectionOnClick
           disableColumnResize
           disableColumnMenu
@@ -207,6 +198,9 @@ export function FollowedArtistsTopTracks() {
             pinnedColumns: {
               right: ['actions'],
             },
+          }}
+          components={{
+            Toolbar: RecommendationToolbar,
           }}
         />
       </div>

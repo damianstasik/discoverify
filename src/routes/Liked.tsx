@@ -1,4 +1,3 @@
-import { useState, useCallback } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import { formatRelative } from 'date-fns';
@@ -6,19 +5,18 @@ import {
   GridCellParams,
   DataGridPro,
   GridColumns,
-  GridRowParams,
+  GridActionsCellItem,
 } from '@mui/x-data-grid-pro';
 import { useInfiniteQuery } from 'react-query';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutlineOutlined';
-import StopCircleOutlinedIcon from '@mui/icons-material/StopCircleOutlined';
 import Link from '@mui/material/Link';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import { useAtom } from 'jotai';
 import { useAtomValue } from 'jotai/utils';
+import Icon from '@mdi/react';
+import { mdiPauseCircleOutline, mdiPlayCircleOutline } from '@mdi/js';
 import { Layout } from '../components/Layout';
-import { tokenIdState, trackPreviewUrlSelector } from '../store';
+import { loadingTrackPreview, tokenIdState, trackPreviewState } from '../store';
+import { useSeedSelection } from '../hooks/useSeedSelection';
 
 function msToTime(duration: number) {
   const seconds = Math.floor((duration / 1000) % 60);
@@ -28,26 +26,6 @@ function msToTime(duration: number) {
   const s = seconds < 10 ? `0${seconds}` : seconds;
 
   return `${m}:${s}`;
-}
-
-function PreviewColumn(params: GridCellParams) {
-  const [trackPreviewUrl, setTrackPreviewUrl] = useAtom(
-    trackPreviewUrlSelector,
-  );
-
-  return (
-    <IconButton
-      edge="end"
-      aria-label="delete"
-      onClick={() => setTrackPreviewUrl(params.value as string)}
-    >
-      {params.value === trackPreviewUrl ? (
-        <StopCircleOutlinedIcon />
-      ) : (
-        <PlayCircleOutlineOutlinedIcon />
-      )}
-    </IconButton>
-  );
 }
 
 function ArtistColumn(params: GridCellParams) {
@@ -72,10 +50,43 @@ function AlbumColumn(params: GridCellParams) {
 
 const columns: GridColumns = [
   {
-    field: 'preview_url',
-    headerName: 'Preview',
-    flex: 0.1,
-    renderCell: PreviewColumn,
+    type: 'actions',
+    field: 'actionss',
+    headerName: '',
+    width: 50,
+    sortable: false,
+    getActions: (params) => {
+      const [trackPreview, setTrackPreview] = useAtom(trackPreviewState);
+      const isLoadingTrackPreview = useAtomValue(loadingTrackPreview);
+      const isCurrentlyPlaying =
+        trackPreview?.url === params.row.preview_url &&
+        trackPreview?.context === params.row;
+
+      return [
+        <GridActionsCellItem
+          color={isCurrentlyPlaying ? 'primary' : 'default'}
+          icon={
+            <Icon
+              path={
+                isCurrentlyPlaying && trackPreview?.state === 'playing'
+                  ? mdiPauseCircleOutline
+                  : mdiPlayCircleOutline
+              }
+              size={1}
+            />
+          }
+          onClick={() =>
+            setTrackPreview({
+              url: params.row.preview_url,
+              context: params.row,
+              state: 'playing',
+            })
+          }
+          disabled={isLoadingTrackPreview}
+          label="Play"
+        />,
+      ];
+    },
   },
   { field: 'title', headerName: 'Title', flex: 0.2, sortable: false },
   {
@@ -131,33 +142,14 @@ export function Liked() {
     },
   );
 
-  const [selectedSongs, setSelectedSongs] = useState([]);
-
-  const isRowSelectable = useCallback(
-    (params: GridRowParams) =>
-      selectedSongs.includes(params.id) ? true : selectedSongs.length < 5,
-    [selectedSongs],
-  );
+  const { selectedSeeds, setSelectedSeeds, isSeedSelectable } =
+    useSeedSelection();
 
   return (
     <Layout>
-      <Typography variant="h5" gutterBottom>
+      <Typography variant="h5" gutterBottom sx={{ mb: 2 }}>
         Liked tracks
       </Typography>
-
-      {selectedSongs.length > 0 && (
-        <Button
-          component={RouterLink}
-          to={{
-            pathname: '/recommendations',
-            search: `?${selectedSongs
-              .map((selectedSong) => `trackId=${selectedSong}`)
-              .join('&')}`,
-          }}
-        >
-          Generate recommendation
-        </Button>
-      )}
 
       <div style={{ height: 800 }}>
         <DataGridPro
@@ -174,10 +166,10 @@ export function Liked() {
           hideFooter
           checkboxSelection
           onSelectionModelChange={(newSelection) =>
-            setSelectedSongs(newSelection)
+            setSelectedSeeds(newSelection)
           }
-          selectionModel={selectedSongs}
-          isRowSelectable={isRowSelectable}
+          selectionModel={selectedSeeds}
+          isRowSelectable={isSeedSelectable}
           rows={(data?.pages || []).map((page) => page.songs).flat()}
           loading={isFetching}
           onRowsScrollEnd={() => hasNextPage && fetchNextPage()}
