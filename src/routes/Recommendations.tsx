@@ -24,6 +24,7 @@ import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlin
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useAtomValue } from 'jotai/utils';
 import { useAtom } from 'jotai';
+import Slider from '@mui/material/Slider';
 import { RecommendationAttributes } from '../components/RecommendationAttributes';
 import { tokenIdState, trackPreviewUrlSelector } from '../store';
 import { Layout } from '../components/Layout';
@@ -224,7 +225,21 @@ export function Recommendations() {
         autoHighlight
         style={{ width: 300 }}
         renderOption={(option: any, a: any) => {
-          return <MenuItem {...option}>{a.title}</MenuItem>;
+          return (
+            <MenuItem
+              {...option}
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'flex-start',
+              }}
+            >
+              <Typography display="block">{a.title}</Typography>
+              <Typography variant="caption" display="block">
+                {a.artist.map((ar) => ar.name).join(' / ')}
+              </Typography>
+            </MenuItem>
+          );
         }}
         getOptionLabel={(option) => option.title}
         options={autosongs || []}
@@ -288,6 +303,15 @@ export function Recommendations() {
       </>
 
       <Divider />
+
+      <Slider
+        defaultValue={[20, 37, 50]}
+        disableSwap
+        valueLabelDisplay="on"
+        valueLabelFormat={(_, index) =>
+          index === 0 ? 'Min' : index === 2 ? 'Max' : 'Target'
+        }
+      />
 
       <RecommendationAttributes
         attributes={{
