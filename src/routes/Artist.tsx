@@ -1,39 +1,28 @@
 import Button from '@mui/material/Button';
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link as RouterLink, useParams } from 'react-router-dom';
 import { useAtomValue } from 'jotai/utils';
+import { useQuery } from 'react-query';
 import { tokenIdState } from '../store';
 import { Layout } from '../components/Layout';
 
-function ArtistCardSkeleton() {
-  return (
-    <div className="bp3-elevation-1 bg-white rounded flex flex-col">
-      <div className="rounded-t h-40 bp3-skeleton" />
-      <div className="p-3 flex flex-col flex-1">
-        <h5 className="bp3-heading bp3-skeleton">Artist Name</h5>
-
-        <Button className="mt-auto bp3-skeleton">Follow</Button>
-      </div>
-    </div>
-  );
-}
-
 export function Artist() {
-  const [isLoading, setLoading] = useState(true);
-  const [artist, setArtist] = useState({} as any);
   const tokenId = useAtomValue(tokenIdState);
-  const params = useParams() as any;
+  const params = useParams();
 
-  useEffect(() => {
-    fetch(
-      `${import.meta.env.VITE_API_URL}/artist/${params.id}?tokenId=${tokenId}`,
-    )
-      .then((res) => res.json())
-      .then((res) => {
-        setLoading(false);
-        setArtist(res.artist);
-      });
-  }, []);
+  const { data } = useQuery(
+    ['artist', params.id],
+    async () => {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/artist/${
+          params.id
+        }?tokenId=${tokenId}`,
+      );
+      const body = await res.json();
+
+      return body.artist;
+    },
+    { suspense: true },
+  );
 
   return (
     <Layout>
