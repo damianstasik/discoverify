@@ -7,7 +7,12 @@ import {
 } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 
-import { GridCellParams, DataGridPro } from '@mui/x-data-grid-pro';
+import {
+  GridCellParams,
+  DataGridPro,
+  GridColumns,
+  GridActionsCellItem,
+} from '@mui/x-data-grid-pro';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Autocomplete from '@mui/material/Autocomplete';
@@ -16,18 +21,17 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Chip from '@mui/material/Chip';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
-import PlayCircleFilledTwoToneIcon from '@mui/icons-material/PlayCircleFilledTwoTone';
-import StopCircleTwoToneIcon from '@mui/icons-material/StopCircleTwoTone';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useAtomValue } from 'jotai/utils';
 import { useAtom } from 'jotai';
 import Slider from '@mui/material/Slider';
-import { useDebounce, useDebouncedCallback } from 'use-debounce';
+import Icon from '@mdi/react';
+import { mdiPauseCircleOutline, mdiPlayCircleOutline } from '@mdi/js';
+import { useDebounce } from 'use-debounce';
 import { RecommendationAttributes } from '../components/RecommendationAttributes';
-import { tokenIdState, trackPreviewUrlSelector } from '../store';
+import { loadingTrackPreview, tokenIdState, trackPreviewState } from '../store';
 import { Layout } from '../components/Layout';
 
 function msToTime(duration: number) {
@@ -38,26 +42,6 @@ function msToTime(duration: number) {
   const s = seconds < 10 ? `0${seconds}` : seconds;
 
   return `${m}:${s}`;
-}
-
-function PreviewColumn(params: GridCellParams) {
-  const [trackPreviewUrl, setTrackPreviewUrl] = useAtom(
-    trackPreviewUrlSelector,
-  );
-
-  return (
-    <IconButton
-      edge="end"
-      aria-label="delete"
-      onClick={() => setTrackPreviewUrl(params.value as string)}
-    >
-      {params.value === trackPreviewUrl ? (
-        <StopCircleTwoToneIcon />
-      ) : (
-        <PlayCircleFilledTwoToneIcon />
-      )}
-    </IconButton>
-  );
 }
 
 function LikeColumn(params: GridCellParams) {
@@ -114,6 +98,79 @@ function AlbumColumn(params: any) {
     </Link>
   );
 }
+
+const columns: GridColumns = [
+  {
+    type: 'actions',
+    field: 'actionss',
+    headerName: '',
+    width: 50,
+    sortable: false,
+    getActions: (params) => {
+      const [trackPreview, setTrackPreview] = useAtom(trackPreviewState);
+      const isLoadingTrackPreview = useAtomValue(loadingTrackPreview);
+      const isCurrentlyPlaying =
+        trackPreview?.url === params.row.preview_url &&
+        trackPreview?.context === params.row;
+
+      if (!params.row.preview_url) {
+        return [];
+      }
+
+      return [
+        <GridActionsCellItem
+          color={isCurrentlyPlaying ? 'primary' : 'default'}
+          icon={
+            <Icon
+              path={
+                isCurrentlyPlaying && trackPreview?.state === 'playing'
+                  ? mdiPauseCircleOutline
+                  : mdiPlayCircleOutline
+              }
+              size={1}
+            />
+          }
+          onClick={() =>
+            setTrackPreview({
+              url: params.row.preview_url,
+              context: params.row,
+              state: 'playing',
+            })
+          }
+          disabled={isLoadingTrackPreview}
+          label="Play"
+        />,
+      ];
+    },
+  },
+  {
+    field: 'isSaved',
+    headerName: 'Like',
+    flex: 0.1,
+    renderCell: LikeColumn,
+  },
+  { field: 'title', headerName: 'Title', flex: 0.2 },
+  {
+    field: 'artist',
+    headerName: 'Artist',
+    flex: 0.2,
+    renderCell: ArtistColumn,
+  },
+  {
+    field: 'album',
+    headerName: 'Album',
+    flex: 0.2,
+    renderCell: AlbumColumn,
+  },
+  {
+    field: 'duration',
+    headerName: 'Duration',
+    flex: 0.1,
+    valueFormatter: (params: any) => {
+      return msToTime(params.value);
+    },
+  },
+];
 
 export function Recommendations() {
   const tokenId = useAtomValue(tokenIdState);
@@ -173,12 +230,10 @@ export function Recommendations() {
   const { data: autosongs, isLoading: isLoadingAutocomplete } = useQuery<
     Array<{ id: string; title: string }>
   >(
-    ['search', query],
     ['search', debouncedQuery],
     async () => {
       const q = new URLSearchParams();
 
-      q.append('q', query);
       q.append('q', debouncedQuery);
 
       q.append('tokenId', tokenId);
@@ -188,7 +243,6 @@ export function Recommendations() {
       return body.songs;
     },
     {
-      enabled: !!query,
       enabled: !!debouncedQuery,
     },
   );
@@ -330,41 +384,7 @@ export function Recommendations() {
       <p>Presets: przycisk przycisk</p>
       <div style={{ height: 800 }}>
         <DataGridPro
-          columns={[
-            {
-              field: 'preview_url',
-              headerName: 'Preview',
-              flex: 0.1,
-              renderCell: PreviewColumn,
-            },
-            {
-              field: 'isSaved',
-              headerName: 'Like',
-              flex: 0.1,
-              renderCell: LikeColumn,
-            },
-            { field: 'title', headerName: 'Title', flex: 0.2 },
-            {
-              field: 'artist',
-              headerName: 'Artist',
-              flex: 0.2,
-              renderCell: ArtistColumn,
-            },
-            {
-              field: 'album',
-              headerName: 'Album',
-              flex: 0.2,
-              renderCell: AlbumColumn,
-            },
-            {
-              field: 'duration',
-              headerName: 'Duration',
-              flex: 0.1,
-              valueFormatter: (params: any) => {
-                return msToTime(params.value);
-              },
-            },
-          ]}
+          columns={columns}
           disableColumnResize
           disableColumnMenu
           disableColumnReorder
