@@ -11,6 +11,7 @@ import { FollowedArtistsGenres } from './routes/FollowedArtistsGenres';
 import { userSelector } from './store';
 import { Liked } from './routes/Liked';
 import { Recommendations } from './routes/Recommendations';
+import { RelatedArtistsTopTracks } from './routes/RelatedArtistsTopTracks';
 
 const Dashboard = lazy(() => import('./routes/Dashboard'));
 
@@ -40,6 +41,14 @@ export function Router() {
       {
         path: '/followed-artists/top-tracks',
         element: <FollowedArtistsTopTracks />,
+      },
+      {
+        path: '/related-artists/top-tracks/:id',
+        element: <RelatedArtistsTopTracks />,
+      },
+      {
+        path: '/related-artists/top-tracks',
+        element: <RelatedArtistsTopTracks />,
       },
       {
         path: '/followed-artists/genres',

@@ -60,20 +60,25 @@ export const Sidebar = memo(() => {
       <Navbar />
 
       <Divider />
+
       <List dense>
         <RouterListItem label="Dashboard" to="/" icon={<DashboardTwoTone />} />
+
         <RouterListItem
           label="Liked tracks"
           to="/liked"
           icon={<FavoriteIcon />}
         />
+
         <RouterListItem
           label="Recommendations"
           to="/recommendations"
           icon={<RecommendIcon />}
         />
       </List>
+
       <Divider />
+
       <List
         dense
         subheader={
@@ -87,13 +92,16 @@ export const Sidebar = memo(() => {
           to="/artists"
           icon={<Icon path={mdiAccountHeart} size={1} />}
         />
+
         <RouterListItem
           label="Related to followed"
           to="/similar"
           icon={<Icon path={mdiAccountMultipleOutline} size={1} />}
         />
       </List>
+
       <Divider />
+
       <List
         dense
         subheader={
@@ -107,13 +115,16 @@ export const Sidebar = memo(() => {
           to="/followed-artists/top-tracks"
           icon={<Icon path={mdiAccountMusic} size={1} />}
         />
+
         <RouterListItem
           label="Top from related artists"
-          to="/similar"
+          to="/related-artists/top-tracks"
           icon={<Icon path={mdiAccountMusicOutline} size={1} />}
         />
       </List>
+
       <Divider />
+
       <List
         dense
         subheader={
@@ -128,7 +139,9 @@ export const Sidebar = memo(() => {
           icon={<Icon path={mdiTagText} size={1} />}
         />
       </List>
+
       <Divider />
+
       <List dense sx={{ mt: 'auto' }}>
         <ListItem button>
           <ListItemAvatar>
