@@ -1,6 +1,7 @@
 import { RouteObject, useRoutes } from 'react-router-dom';
-import { lazy } from 'react';
+import { lazy, Suspense } from 'react';
 import { useAtomValue } from 'jotai/utils';
+import CircularProgress from '@mui/material/CircularProgress';
 import { Login } from './routes/Login';
 import { Authorize } from './routes/Authorize';
 import { Artists } from './routes/Artists';
@@ -46,7 +47,11 @@ export function Router() {
       },
       {
         path: '/artist/:id',
-        element: <Artist />,
+        element: (
+          <Suspense fallback={<CircularProgress />}>
+            <Artist />
+          </Suspense>
+        ),
       },
     );
   }
