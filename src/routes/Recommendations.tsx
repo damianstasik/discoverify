@@ -25,6 +25,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useAtomValue } from 'jotai/utils';
 import { useAtom } from 'jotai';
 import Slider from '@mui/material/Slider';
+import { useDebounce, useDebouncedCallback } from 'use-debounce';
 import { RecommendationAttributes } from '../components/RecommendationAttributes';
 import { tokenIdState, trackPreviewUrlSelector } from '../store';
 import { Layout } from '../components/Layout';
@@ -155,6 +156,7 @@ export function Recommendations() {
   const [selectedSongs, setSelectedSongs] = useState([]);
 
   const [query, setQuery] = useState('');
+  const [debouncedQuery] = useDebounce(query, 500);
 
   const { data: songs, isLoading: isLoadingSongs } = useQuery<
     Array<{ id: string; title: string }>
@@ -172,10 +174,12 @@ export function Recommendations() {
     Array<{ id: string; title: string }>
   >(
     ['search', query],
+    ['search', debouncedQuery],
     async () => {
       const q = new URLSearchParams();
 
       q.append('q', query);
+      q.append('q', debouncedQuery);
 
       q.append('tokenId', tokenId);
       const req = await fetch(`${import.meta.env.VITE_API_URL}/search?${q}`);
@@ -185,6 +189,7 @@ export function Recommendations() {
     },
     {
       enabled: !!query,
+      enabled: !!debouncedQuery,
     },
   );
 
