@@ -4,10 +4,21 @@ import { memo } from 'react';
 
 export const Navbar = memo(() => {
   return (
-    <Toolbar>
-      <Typography variant="h6" noWrap>
+    <Toolbar
+      sx={{
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+        justifyContent: 'center',
+        py: 1,
+        '&': {
+          px: 2,
+        },
+      }}
+    >
+      <Typography variant="h6" display="block">
         Discoverify.app
       </Typography>
+      <Typography variant="caption">Made with ❤️ by @ds</Typography>
     </Toolbar>
   );
 });
