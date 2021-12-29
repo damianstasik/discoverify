@@ -26,12 +26,14 @@ export function Artist() {
 
   return (
     <Layout>
-      <h3 className={`bp3-heading ${isLoading ? 'bp3-skeleton' : ''}`}>
-        {artist.name}
-      </h3>
-      <div className="grid grid-cols-5 gap-4 ">
-        {isLoading ? <ArtistCardSkeleton /> : <div>loaded</div>}
-      </div>
+      <h3>{data.name}</h3>
+
+      <Button
+        component={RouterLink}
+        to={`/related-artists/top-tracks/${data.id}`}
+      >
+        Related artists' top tracks
+      </Button>
     </Layout>
   );
 }
