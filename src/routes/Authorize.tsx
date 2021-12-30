@@ -1,51 +1,40 @@
-import { useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-// import { useSnackbar } from 'notistack';
-import Card from '@mui/material/Card';
+import { Navigate, useSearchParams } from 'react-router-dom';
 import { useUpdateAtom } from 'jotai/utils';
+import { useQuery } from 'react-query';
 import { tokenIdState } from '../store';
 
 export function Authorize() {
-  const query = new URLSearchParams(useLocation().search);
-  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const setTokenId = useUpdateAtom(tokenIdState);
 
-  // const { enqueueSnackbar } = useSnackbar();
+  const code = searchParams.get('code');
 
-  useEffect(() => {
-    if (!query.has('code')) {
-      console.error('Authorization code is missing', {
-        variant: 'error',
-      });
-      navigate('/');
-    } else {
-      fetch(
-        `${import.meta.env.VITE_API_URL}/authorize?code=${query.get('code')}`,
-      )
-        .then((res) => res.json())
-        .then((res) => {
-          if (res.error) {
-            console.error(res.message, {
-              variant: 'error',
-            });
-            navigate('/login');
+  const { isSuccess } = useQuery<void, Error, string>(
+    ['authorize', code],
+    async () => {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/authorize?code=${code}`,
+      );
 
-            return;
-          }
+      const body = await res.json();
 
-          setTokenId(res.tokenId);
-          console.error('Logged in!', {
-            variant: 'success',
-          });
-          navigate('/');
-        })
-        .catch((e) => console.error('e', e));
-    }
-  }, []);
+      if (body?.tokenId) {
+        return body.tokenId;
+      }
 
-  return (
-    <div className="max-w-md mx-auto mt-24">
-      <Card />
-    </div>
+      throw new Error();
+    },
+    {
+      enabled: !!code,
+      suspense: true,
+      onSuccess(tokenId) {
+        setTokenId(tokenId);
+      },
+      onError(e) {
+        console.error('Authorize error', e);
+      },
+    },
   );
+
+  return <Navigate to={isSuccess ? '/' : '/login'} />;
 }

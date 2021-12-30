@@ -1,4 +1,4 @@
-import { RouteObject, useRoutes } from 'react-router-dom';
+import { Navigate, RouteObject, useRoutes } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 import { useAtomValue } from 'jotai/utils';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -18,10 +18,10 @@ const Dashboard = lazy(() => import('./routes/Dashboard'));
 export function Router() {
   const user = useAtomValue(userAtom);
 
-  const routes: RouteObject[] = [];
+  let routes: RouteObject[] = [];
 
   if (user) {
-    routes.push(
+    routes = [
       {
         path: '/',
         element: <Dashboard />,
@@ -62,21 +62,37 @@ export function Router() {
           </Suspense>
         ),
       },
-    );
-  }
-
-  const element = useRoutes(
-    routes.concat([
+      {
+        path: '/login',
+        element: <Navigate to="/" replace />,
+      },
+      {
+        path: '/login',
+        element: <Navigate to="/" replace />,
+      },
+    ];
+  } else {
+    routes = [
+      {
+        path: '/',
+        element: <Navigate to="/login" replace />,
+      },
       {
         path: '/login',
         element: <Login />,
       },
       {
         path: '/authorize',
-        element: <Authorize />,
+        element: (
+          <Suspense fallback={<CircularProgress />}>
+            <Authorize />
+          </Suspense>
+        ),
       },
-    ]),
-  );
+    ];
+  }
+
+  const element = useRoutes(routes);
 
   return element;
 }
