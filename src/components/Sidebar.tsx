@@ -21,7 +21,10 @@ import Icon from '@mdi/react';
 import { useAtomValue } from 'jotai/utils';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
-import { userAtom } from '../store';
+import Collapse from '@mui/material/Collapse';
+import ListItemButton from '@mui/material/ListItemButton';
+import { useQuery } from 'react-query';
+import { tokenIdState, userAtom } from '../store';
 import { Navbar } from './Navbar';
 
 function RouterListItem({ to, label, icon }: any) {
@@ -39,6 +42,16 @@ const drawerWidth = 300;
 
 export const Sidebar = memo(() => {
   const user = useAtomValue(userAtom)!;
+  const tokenId = useAtomValue(tokenIdState);
+
+  const { data } = useQuery(['playlists'], async () => {
+    const res = await fetch(
+      `${import.meta.env.VITE_API_URL}/playlists?tokenId=${tokenId}`,
+    );
+    const body = await res.json();
+
+    return body.playlists;
+  });
 
   return (
     <Drawer
@@ -138,6 +151,28 @@ export const Sidebar = memo(() => {
           to="/followed-artists/genres"
           icon={<Icon path={mdiTagText} size={1} />}
         />
+      </List>
+
+      <Divider />
+
+      <List
+        dense
+        subheader={
+          <ListSubheader sx={{ background: 'none' }} component="div">
+            Playlists
+          </ListSubheader>
+        }
+      >
+        <Collapse in timeout="auto" unmountOnExit>
+          <List component="div" disablePadding dense>
+            {(data || []).map((playlist) => (
+              <RouterListItem
+                label={playlist.name}
+                to={`/playlist/${playlist.id}`}
+              />
+            ))}
+          </List>
+        </Collapse>
       </List>
 
       <Divider />
