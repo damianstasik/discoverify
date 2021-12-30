@@ -16,6 +16,7 @@ import {
   mdiTagText,
   mdiAccountMusic,
   mdiAccountMusicOutline,
+  mdiMusicNotePlus,
 } from '@mdi/js';
 import Icon from '@mdi/react';
 import { useAtomValue } from 'jotai/utils';
@@ -123,6 +124,12 @@ export const Sidebar = memo(() => {
           </ListSubheader>
         }
       >
+        <RouterListItem
+          label="My top tracks"
+          to="/top-tracks"
+          icon={<Icon path={mdiMusicNotePlus} size={1} />}
+        />
+
         <RouterListItem
           label="Top from followed artists"
           to="/followed-artists/top-tracks"

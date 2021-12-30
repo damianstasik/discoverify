@@ -12,6 +12,7 @@ import { userAtom } from './store';
 import { Liked } from './routes/Liked';
 import { Recommendations } from './routes/Recommendations';
 import { RelatedArtistsTopTracks } from './routes/RelatedArtistsTopTracks';
+import { TopTracks } from './routes/TopTracks';
 
 const Dashboard = lazy(() => import('./routes/Dashboard'));
 
@@ -37,6 +38,10 @@ export function Router() {
       {
         path: '/artists',
         element: <Artists />,
+      },
+      {
+        path: '/top-tracks',
+        element: <TopTracks />,
       },
       {
         path: '/followed-artists/top-tracks',

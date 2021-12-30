@@ -11,3 +11,19 @@ export async function saveTrack(
     },
   );
 }
+
+export async function getTopTracks(
+  tokenId: string,
+  timeRange: string,
+  page: number,
+): any {
+  const res = await fetch(
+    `${
+      import.meta.env.VITE_API_URL
+    }/top-tracks?tokenId=${tokenId}&page=${page}&timeRange=${timeRange}`,
+  );
+
+  const body = await res.json();
+
+  return body;
+}
