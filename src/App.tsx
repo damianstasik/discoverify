@@ -4,7 +4,7 @@ import { LicenseInfo } from '@mui/x-data-grid-pro';
 import { useAtomValue } from 'jotai/utils';
 import { useAtom } from 'jotai';
 import { Router } from './Router';
-import { tokenIdState, userSelector } from './store';
+import { tokenIdState, userAtom } from './store';
 
 const muiLicenseKey = import.meta.env.VITE_MUI_LICENSE_KEY;
 
@@ -13,7 +13,7 @@ if (muiLicenseKey) {
 }
 
 export function App() {
-  const user = useAtomValue(userSelector);
+  const user = useAtomValue(userAtom);
   const location = useLocation();
   const navigate = useNavigate();
   const [tokenId, setTokenId] = useAtom(tokenIdState);

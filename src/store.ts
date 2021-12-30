@@ -1,5 +1,6 @@
 import { atom } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
+import { atomWithQuery } from 'jotai/query';
 
 export const loadingState = atom(false);
 
@@ -29,27 +30,19 @@ export const trackPreviewUrlSelector = atom(
 
 export const tokenIdState = atomWithStorage('tid', '');
 
-export const userSelector = atom<{
-  id: string;
-  displayName: string;
-  email: string;
-  photoUrl: string | null;
-} | null>(async (get) => {
-  const tokenId = get(tokenIdState);
+export const userAtom = atomWithQuery((get) => ({
+  queryKey: ['user', get(tokenIdState)],
+  queryFn: async ({ queryKey: [, tokenId] }) => {
+    const req = await fetch(
+      `${import.meta.env.VITE_API_URL}/me?tokenId=${tokenId}`,
+    );
 
-  if (!tokenId) {
-    return null;
-  }
+    if (!req.ok) {
+      return null;
+    }
 
-  const req = await fetch(
-    `${import.meta.env.VITE_API_URL}/me?tokenId=${tokenId}`,
-  );
+    const res = req.json();
 
-  if (!req.ok) {
-    return null;
-  }
-
-  const res = req.json();
-
-  return res;
-});
+    return res;
+  },
+}));

@@ -8,7 +8,7 @@ import { Artists } from './routes/Artists';
 import { Artist } from './routes/Artist';
 import { FollowedArtistsTopTracks } from './routes/FollowedArtistsTopTracks';
 import { FollowedArtistsGenres } from './routes/FollowedArtistsGenres';
-import { userSelector } from './store';
+import { userAtom } from './store';
 import { Liked } from './routes/Liked';
 import { Recommendations } from './routes/Recommendations';
 import { RelatedArtistsTopTracks } from './routes/RelatedArtistsTopTracks';
@@ -16,7 +16,7 @@ import { RelatedArtistsTopTracks } from './routes/RelatedArtistsTopTracks';
 const Dashboard = lazy(() => import('./routes/Dashboard'));
 
 export function Router() {
-  const user = useAtomValue(userSelector);
+  const user = useAtomValue(userAtom);
 
   const routes: RouteObject[] = [];
 

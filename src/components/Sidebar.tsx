@@ -21,7 +21,7 @@ import Icon from '@mdi/react';
 import { useAtomValue } from 'jotai/utils';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
-import { userSelector } from '../store';
+import { userAtom } from '../store';
 import { Navbar } from './Navbar';
 
 function RouterListItem({ to, label, icon }: any) {
@@ -38,7 +38,7 @@ function RouterListItem({ to, label, icon }: any) {
 const drawerWidth = 300;
 
 export const Sidebar = memo(() => {
-  const user = useAtomValue(userSelector)!;
+  const user = useAtomValue(userAtom)!;
 
   return (
     <Drawer
