@@ -37,12 +37,32 @@ export default function Dashboard() {
                 through Discoverify
               </Typography>
               <Typography variant="h6">
-                {data?.likedTracks || <Skeleton />}
+                {data?.likedTracks ?? <Skeleton />}
               </Typography>
             </CardContent>
             <CardActions>
               <Button size="small" component={RouterLink} to="/liked">
                 All liked tracks
+              </Button>
+            </CardActions>
+          </Card>
+        </Grid>
+        <Grid item xs={4}>
+          <Card>
+            <CardContent>
+              <Typography variant="h5" component="div">
+                Followed artists
+              </Typography>
+              <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                through Discoverify
+              </Typography>
+              <Typography variant="h6">
+                {data?.followedArtists ?? <Skeleton />}
+              </Typography>
+            </CardContent>
+            <CardActions>
+              <Button size="small" component={RouterLink} to="/artists">
+                All followed artists
               </Button>
             </CardActions>
           </Card>
