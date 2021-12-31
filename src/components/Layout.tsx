@@ -14,13 +14,10 @@ interface Props {
 
 export function Layout({ children }: Props) {
   return (
-    <div style={{ display: 'flex' }}>
+    <div style={{ display: 'flex', minHeight: '100vh', background: '#f3f4f6' }}>
       <Sidebar />
 
-      <Box
-        component="main"
-        sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 }}
-      >
+      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         {children}
       </Box>
 
