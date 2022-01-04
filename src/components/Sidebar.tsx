@@ -18,6 +18,7 @@ import {
   mdiAccountMusicOutline,
   mdiAccountStar,
   mdiMusicNotePlus,
+  mdiPlaylistMusic,
 } from '@mdi/js';
 import Icon from '@mdi/react';
 import { useAtomValue } from 'jotai/utils';
@@ -52,13 +53,17 @@ export const Sidebar = memo(() => {
   const user = useAtomValue(userAtom)!;
   const tokenId = useAtomValue(tokenIdState);
 
-  const { data } = useQuery(['playlists'], async () => {
+  const { data } = useQuery<
+    void,
+    Error,
+    { playlists: any[]; hasNextPage: boolean }
+  >(['playlists'], async () => {
     const res = await fetch(
-      `${import.meta.env.VITE_API_URL}/playlists?tokenId=${tokenId}`,
+      `${import.meta.env.VITE_API_URL}/playlists?tokenId=${tokenId}&limit=5`,
     );
     const body = await res.json();
 
-    return body.playlists;
+    return body;
   });
 
   return (
@@ -190,12 +195,18 @@ export const Sidebar = memo(() => {
         >
           <Collapse in timeout="auto" unmountOnExit>
             <List component="div" disablePadding dense>
-              {(data || []).map((playlist) => (
+              {(data?.playlists || []).map((playlist) => (
                 <RouterListItem
                   label={playlist.name}
                   to={`/playlist/${playlist.id}`}
                 />
               ))}
+
+              <RouterListItem
+                label="All playlists"
+                to="/playlists"
+                icon={<Icon path={mdiPlaylistMusic} size={1} />}
+              />
             </List>
           </Collapse>
         </List>
