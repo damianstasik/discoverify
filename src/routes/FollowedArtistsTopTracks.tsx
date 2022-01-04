@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { Link as RouterLink, useSearchParams } from 'react-router-dom';
+import { memo, useEffect, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import {
   DataGridPro,
@@ -9,71 +9,58 @@ import {
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import { useAtomValue } from 'jotai/utils';
-import { useAtom } from 'jotai';
-import { Breadcrumbs, IconButton, Link } from '@mui/material';
+import { IconButton } from '@mui/material';
 import { useInfiniteQuery, useMutation } from 'react-query';
-import {
-  mdiCardsHeartOutline,
-  mdiPlayCircleOutline,
-  mdiPauseCircleOutline,
-  mdiSpotify,
-} from '@mdi/js';
+import { mdiCardsHeartOutline, mdiSpotify } from '@mdi/js';
 import Icon from '@mdi/react';
-import { loadingTrackPreview, tokenIdState, trackPreviewState } from '../store';
+import { tokenIdState } from '../store';
 import { Layout } from '../components/Layout';
 import * as trackApi from '../api/track';
 import * as artistApi from '../api/artist';
 import { useSeedSelection } from '../hooks/useSeedSelection';
 import { TrackSelectionToolbar } from '../components/TrackSelectionToolbar';
+import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
+import { ArtistColumn } from '../components/ArtistColumn';
+
+const OpenInSpotify = memo(({ row }) => {
+  return (
+    <IconButton
+      size="small"
+      aria-label="Open in Spotify"
+      href={row.uri}
+      target="_blank"
+    >
+      <Icon path={mdiSpotify} size={1} />
+    </IconButton>
+  );
+});
+
+const Save = memo(({ row }) => {
+  const apiRef = useGridApiContext();
+  return (
+    <GridActionsCellItem
+      icon={<Icon path={mdiCardsHeartOutline} size={1} />}
+      onClick={() => apiRef.current.publishEvent('saveTrack', row)}
+      label="Save"
+    />
+  );
+});
 
 const columns: GridColumns = [
   {
     type: 'actions',
-    field: 'actionss',
+    field: 'preview_url',
     headerName: '',
     width: 50,
     sortable: false,
-    getActions: (params) => {
-      const [trackPreview, setTrackPreview] = useAtom(trackPreviewState);
-      const isLoadingTrackPreview = useAtomValue(loadingTrackPreview);
-      const isCurrentlyPlaying =
-        trackPreview?.url === params.row.preview_url &&
-        trackPreview?.context === params.row;
-
-      if (!params.row.preview_url) {
-        return [];
-      }
-
-      return [
-        <GridActionsCellItem
-          color={isCurrentlyPlaying ? 'primary' : 'default'}
-          icon={
-            <Icon
-              path={
-                isCurrentlyPlaying && trackPreview?.state === 'playing'
-                  ? mdiPauseCircleOutline
-                  : mdiPlayCircleOutline
-              }
-              size={1}
-            />
-          }
-          onClick={() =>
-            setTrackPreview({
-              url: params.row.preview_url,
-              context: params.row,
-              state: 'playing',
-            })
-          }
-          disabled={isLoadingTrackPreview}
-          label="Play"
-        />,
-      ];
-    },
+    renderCell: (params) => (
+      <TrackPreviewColumn url={params.value} context={params.row} />
+    ),
   },
   {
     field: 'name',
     sortable: false,
-    headerName: 'Track name',
+    headerName: 'Name',
     flex: 0.3,
   },
   {
@@ -81,41 +68,19 @@ const columns: GridColumns = [
     headerName: 'Artist(s)',
     flex: 0.7,
     sortable: false,
-    renderCell: (params) => (
-      <Breadcrumbs>
-        {(params.value as any[]).map((artist) => (
-          <Link component={RouterLink} to={`/artist/${artist.id}`}>
-            {artist.name}
-          </Link>
-        ))}
-      </Breadcrumbs>
-    ),
+    renderCell: (params) => <ArtistColumn artists={params.value} />,
   },
   {
     type: 'actions',
     field: 'actions',
     headerName: 'Actions',
     sortable: false,
-    getActions: (params) => {
-      const apiRef = useGridApiContext();
-
-      return [
-        <IconButton
-          size="small"
-          aria-label="Open in Spotify"
-          href={params.row.uri}
-          target="_blank"
-        >
-          <Icon path={mdiSpotify} size={1} />
-        </IconButton>,
-
-        <GridActionsCellItem
-          icon={<Icon path={mdiCardsHeartOutline} size={1} />}
-          onClick={() => apiRef.current.publishEvent('saveTrack', params.row)}
-          label="Save"
-        />,
-      ];
-    },
+    renderCell: (params) => (
+      <>
+        <OpenInSpotify row={params.row} />
+        <Save row={params.row} />
+      </>
+    ),
   },
 ];
 
@@ -138,8 +103,7 @@ export function FollowedArtistsTopTracks() {
         pageParam,
       ),
     {
-      getNextPageParam: (lastPage, pages) =>
-        lastPage.hasNextPage ? pages.length : false,
+      getNextPageParam: (lastPage) => lastPage.nextPage,
     },
   );
 
@@ -150,6 +114,11 @@ export function FollowedArtistsTopTracks() {
       saveTrack(params.id);
     });
   }, [apiRef, isFetching]);
+
+  const rows = useMemo(
+    () => (data?.pages || []).map((page) => page.tracks).flat(),
+    [data],
+  );
 
   const { selectedSeeds, setSelectedSeeds } = useSeedSelection();
 
@@ -191,7 +160,7 @@ export function FollowedArtistsTopTracks() {
           disableMultipleColumnsFiltering
           hideFooter
           apiRef={apiRef}
-          rows={data?.pages.map((page) => page.data).flat()}
+          rows={rows}
           columns={columns}
           loading={isFetching}
           initialState={{
