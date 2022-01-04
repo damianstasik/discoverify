@@ -62,18 +62,18 @@ const columns: GridColumns = [
     width: 50,
     sortable: false,
     renderCell: (params) => (
-      <TrackPreviewColumn url={params.row.preview_url} context={params.row} />
+      <TrackPreviewColumn url={params.value} context={params.row} />
     ),
   },
   {
-    field: 'title',
-    headerName: 'Title',
+    field: 'name',
+    headerName: 'Name',
     flex: 0.2,
     sortable: false,
   },
   {
     field: 'artist',
-    headerName: 'Artist',
+    headerName: 'Artist(s)',
     flex: 0.2,
     renderCell: (params) => <ArtistColumn artists={params.value} />,
   },
@@ -122,7 +122,7 @@ export function Liked() {
 
   const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery(
     ['liked', tokenId],
-    async ({ pageParam = 1 }) => {
+    async ({ pageParam = 0 }) => {
       const res = await fetch(
         `${
           import.meta.env.VITE_API_URL
@@ -139,7 +139,7 @@ export function Liked() {
   );
 
   const rows = useMemo(
-    () => (data?.pages || []).map((page) => page.songs).flat(),
+    () => (data?.pages || []).map((page) => page.tracks).flat(),
     [data],
   );
 
