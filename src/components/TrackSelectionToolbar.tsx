@@ -10,20 +10,21 @@ export function TrackSelectionToolbar() {
   return (
     <GridToolbarContainer>
       <Collapse in={selectedRows.size > 0}>
+        {selectedRows.size < 5 && (
+          <Button
+            component={RouterLink}
+            to={{
+              pathname: '/recommendations',
+              search: `?${[...selectedRows.keys()]
+                .map((selectedRow) => `trackId=${selectedRow}`)
+                .join('&')}`,
+            }}
+          >
+            Generate recommendations
+          </Button>
+        )}
+
         <Button
-          variant="outlined"
-          component={RouterLink}
-          to={{
-            pathname: '/recommendations',
-            search: `?${[...selectedRows.keys()]
-              .map((selectedRow) => `trackId=${selectedRow}`)
-              .join('&')}`,
-          }}
-        >
-          Generate recommendations
-        </Button>
-        <Button
-          variant="outlined"
           component={RouterLink}
           to={{
             pathname: '/playlist/create',
