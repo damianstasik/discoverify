@@ -32,7 +32,7 @@ import { loadingTrackPreview, tokenIdState, trackPreviewState } from '../store';
 import { Layout } from '../components/Layout';
 import * as trackApi from '../api/track';
 import { useSeedSelection } from '../hooks/useSeedSelection';
-import { RecommendationToolbar } from '../components/RecommendationToolbar';
+import { TrackSelectionToolbar } from '../components/TrackSelectionToolbar';
 
 const columns: GridColumns = [
   {
@@ -155,8 +155,7 @@ export function TopTracks() {
     });
   }, [apiRef, isFetching]);
 
-  const { selectedSeeds, setSelectedSeeds, isSeedSelectable } =
-    useSeedSelection();
+  const { selectedSeeds, setSelectedSeeds } = useSeedSelection();
 
   return (
     <Layout>
@@ -210,7 +209,6 @@ export function TopTracks() {
             setSelectedSeeds(newSelection)
           }
           selectionModel={selectedSeeds}
-          isRowSelectable={isSeedSelectable}
           disableSelectionOnClick
           disableColumnResize
           disableColumnMenu
@@ -231,7 +229,7 @@ export function TopTracks() {
             },
           }}
           components={{
-            Toolbar: RecommendationToolbar,
+            Toolbar: TrackSelectionToolbar,
           }}
         />
       </div>
