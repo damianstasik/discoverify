@@ -1,23 +1,23 @@
-import { Link as RouterLink } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import { formatRelative } from 'date-fns';
 import {
-  GridCellParams,
   DataGridPro,
   GridColumns,
   GridActionsCellItem,
+  useGridApiContext,
 } from '@mui/x-data-grid-pro';
 import { useInfiniteQuery } from 'react-query';
-import Link from '@mui/material/Link';
-import Breadcrumbs from '@mui/material/Breadcrumbs';
-import { useAtom } from 'jotai';
 import { useAtomValue } from 'jotai/utils';
 import Icon from '@mdi/react';
-import { mdiPauseCircleOutline, mdiPlayCircleOutline } from '@mdi/js';
+import { mdiCardsHeartOutline, mdiSpotify } from '@mdi/js';
+import IconButton from '@mui/material/IconButton';
+import { memo, useMemo } from 'react';
 import { Layout } from '../components/Layout';
-import { loadingTrackPreview, tokenIdState, trackPreviewState } from '../store';
+import { tokenIdState } from '../store';
 import { useSeedSelection } from '../hooks/useSeedSelection';
-import { RecommendationToolbar } from '../components/RecommendationToolbar';
+import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
+import { ArtistColumn } from '../components/ArtistColumn';
+import { AlbumColumn } from '../components/AlbumColumn';
 
 function msToTime(duration: number) {
   const seconds = Math.floor((duration / 1000) % 60);
@@ -29,82 +29,60 @@ function msToTime(duration: number) {
   return `${m}:${s}`;
 }
 
-function ArtistColumn(params: GridCellParams) {
+const OpenInSpotify = memo(({ row }) => {
   return (
-    <Breadcrumbs>
-      {(params.value as any[]).map((artist) => (
-        <Link component={RouterLink} to={`/artist/${artist.id}`}>
-          {artist.name}
-        </Link>
-      ))}
-    </Breadcrumbs>
+    <IconButton
+      size="small"
+      aria-label="Open in Spotify"
+      href={row.uri}
+      target="_blank"
+    >
+      <Icon path={mdiSpotify} size={1} />
+    </IconButton>
   );
-}
+});
 
-function AlbumColumn(params: GridCellParams) {
+const Save = memo(({ row }) => {
+  const apiRef = useGridApiContext();
   return (
-    <Link component={RouterLink} to={`/album/${params.value.id}`}>
-      {params.value.name}
-    </Link>
+    <GridActionsCellItem
+      icon={<Icon path={mdiCardsHeartOutline} size={1} />}
+      onClick={() => apiRef.current.publishEvent('saveTrack', row)}
+      label="Save"
+    />
   );
-}
+});
 
 const columns: GridColumns = [
   {
     type: 'actions',
-    field: 'actionss',
+    field: 'preview_url',
     headerName: '',
     width: 50,
     sortable: false,
-    getActions: (params) => {
-      const [trackPreview, setTrackPreview] = useAtom(trackPreviewState);
-      const isLoadingTrackPreview = useAtomValue(loadingTrackPreview);
-      const isCurrentlyPlaying =
-        trackPreview?.url === params.row.preview_url &&
-        trackPreview?.context === params.row;
-
-      if (!params.row.preview_url) {
-        return [];
-      }
-
-      return [
-        <GridActionsCellItem
-          color={isCurrentlyPlaying ? 'primary' : 'default'}
-          icon={
-            <Icon
-              path={
-                isCurrentlyPlaying && trackPreview?.state === 'playing'
-                  ? mdiPauseCircleOutline
-                  : mdiPlayCircleOutline
-              }
-              size={1}
-            />
-          }
-          onClick={() =>
-            setTrackPreview({
-              url: params.row.preview_url,
-              context: params.row,
-              state: 'playing',
-            })
-          }
-          disabled={isLoadingTrackPreview}
-          label="Play"
-        />,
-      ];
-    },
+    renderCell: (params) => (
+      <TrackPreviewColumn url={params.row.preview_url} context={params.row} />
+    ),
   },
-  { field: 'title', headerName: 'Title', flex: 0.2, sortable: false },
+  {
+    field: 'title',
+    headerName: 'Title',
+    flex: 0.2,
+    sortable: false,
+  },
   {
     field: 'artist',
     headerName: 'Artist',
     flex: 0.2,
-    renderCell: ArtistColumn,
+    renderCell: (params) => <ArtistColumn artists={params.value} />,
   },
   {
     field: 'album',
     headerName: 'Album',
     flex: 0.2,
-    renderCell: AlbumColumn,
+    renderCell: (params) => (
+      <AlbumColumn id={params.value.id} name={params.value.name} />
+    ),
   },
   {
     field: 'added_at',
@@ -124,13 +102,25 @@ const columns: GridColumns = [
       return msToTime(params.value);
     },
   },
+  {
+    type: 'actions',
+    field: 'actions',
+    headerName: 'Actions',
+    sortable: false,
+    renderCell: (params) => (
+      <>
+        <OpenInSpotify row={params.row} />
+        <Save row={params.row} />
+      </>
+    ),
+  },
 ];
 
 export function Liked() {
   const tokenId = useAtomValue(tokenIdState);
 
   const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery(
-    'liked',
+    ['liked', tokenId],
     async ({ pageParam = 1 }) => {
       const res = await fetch(
         `${
@@ -147,8 +137,12 @@ export function Liked() {
     },
   );
 
-  const { selectedSeeds, setSelectedSeeds, isSeedSelectable } =
-    useSeedSelection();
+  const rows = useMemo(
+    () => (data?.pages || []).map((page) => page.songs).flat(),
+    [data],
+  );
+
+  const { selectedSeeds, setSelectedSeeds } = useSeedSelection();
 
   return (
     <Layout>
@@ -174,8 +168,7 @@ export function Liked() {
             setSelectedSeeds(newSelection)
           }
           selectionModel={selectedSeeds}
-          isRowSelectable={isSeedSelectable}
-          rows={(data?.pages || []).map((page) => page.songs).flat()}
+          rows={rows}
           loading={isFetching}
           onRowsScrollEnd={() => hasNextPage && fetchNextPage()}
           components={{
