@@ -28,7 +28,7 @@ import { Layout } from '../components/Layout';
 import * as trackApi from '../api/track';
 import * as artistApi from '../api/artist';
 import { useSeedSelection } from '../hooks/useSeedSelection';
-import { RecommendationToolbar } from '../components/RecommendationToolbar';
+import { TrackSelectionToolbar } from '../components/TrackSelectionToolbar';
 
 const columns: GridColumns = [
   {
@@ -152,8 +152,7 @@ export function RelatedArtistsTopTracks() {
   //   });
   // }, [apiRef, isFetching]);
 
-  const { selectedSeeds, setSelectedSeeds, isSeedSelectable } =
-    useSeedSelection();
+  const { selectedSeeds, setSelectedSeeds } = useSeedSelection();
 
   return (
     <Layout>
@@ -183,7 +182,6 @@ export function RelatedArtistsTopTracks() {
             setSelectedSeeds(newSelection)
           }
           selectionModel={selectedSeeds}
-          isRowSelectable={isSeedSelectable}
           disableSelectionOnClick
           disableColumnResize
           disableColumnMenu
@@ -204,7 +202,7 @@ export function RelatedArtistsTopTracks() {
             },
           }}
           components={{
-            Toolbar: RecommendationToolbar,
+            Toolbar: TrackSelectionToolbar,
           }}
         />
       </div>

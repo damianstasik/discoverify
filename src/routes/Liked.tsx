@@ -18,6 +18,7 @@ import { useSeedSelection } from '../hooks/useSeedSelection';
 import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
 import { ArtistColumn } from '../components/ArtistColumn';
 import { AlbumColumn } from '../components/AlbumColumn';
+import { TrackSelectionToolbar } from '../components/TrackSelectionToolbar';
 
 function msToTime(duration: number) {
   const seconds = Math.floor((duration / 1000) % 60);
@@ -172,7 +173,7 @@ export function Liked() {
           loading={isFetching}
           onRowsScrollEnd={() => hasNextPage && fetchNextPage()}
           components={{
-            Toolbar: RecommendationToolbar,
+            Toolbar: TrackSelectionToolbar,
           }}
         />
       </div>
