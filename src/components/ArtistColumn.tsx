@@ -11,7 +11,11 @@ export const ArtistColumn = memo(({ artists }: Props) => {
   return (
     <Breadcrumbs>
       {artists.map((artist) => (
-        <Link component={RouterLink} to={`/artist/${artist.id}`}>
+        <Link
+          component={RouterLink}
+          to={`/artist/${artist.id}`}
+          key={artist.id}
+        >
           {artist.name}
         </Link>
       ))}

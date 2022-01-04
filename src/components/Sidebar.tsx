@@ -197,6 +197,7 @@ export const Sidebar = memo(() => {
             <List component="div" disablePadding dense>
               {(data?.playlists || []).map((playlist) => (
                 <RouterListItem
+                  key={playlist.id}
                   label={playlist.name}
                   to={`/playlist/${playlist.id}`}
                 />
