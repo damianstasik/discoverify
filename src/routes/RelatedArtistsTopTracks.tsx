@@ -29,6 +29,7 @@ import * as trackApi from '../api/track';
 import * as artistApi from '../api/artist';
 import { useSeedSelection } from '../hooks/useSeedSelection';
 import { TrackSelectionToolbar } from '../components/TrackSelectionToolbar';
+import { TrackNameColumn } from '../components/TrackNameColumn';
 
 const columns: GridColumns = [
   {
@@ -79,6 +80,9 @@ const columns: GridColumns = [
     sortable: false,
     headerName: 'Track name',
     flex: 0.3,
+    renderCell: (params) => (
+      <TrackNameColumn id={params.row.id} name={params.value} />
+    ),
   },
   {
     field: 'artists',

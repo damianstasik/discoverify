@@ -27,6 +27,7 @@ import { useSeedSelection } from '../hooks/useSeedSelection';
 import { TrackSelectionToolbar } from '../components/TrackSelectionToolbar';
 import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
 import { ArtistColumn } from '../components/ArtistColumn';
+import { TrackNameColumn } from '../components/TrackNameColumn';
 
 const OpenInSpotify = memo(({ row }) => {
   return (
@@ -68,6 +69,9 @@ const columns: GridColumns = [
     sortable: false,
     headerName: 'Name',
     flex: 0.3,
+    renderCell: (params) => (
+      <TrackNameColumn id={params.row.id} name={params.value} />
+    ),
   },
   {
     field: 'artists',

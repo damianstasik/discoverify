@@ -19,6 +19,7 @@ import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
 import { ArtistColumn } from '../components/ArtistColumn';
 import { AlbumColumn } from '../components/AlbumColumn';
 import { TrackSelectionToolbar } from '../components/TrackSelectionToolbar';
+import { TrackNameColumn } from '../components/TrackNameColumn';
 
 function msToTime(duration: number) {
   const seconds = Math.floor((duration / 1000) % 60);
@@ -70,6 +71,9 @@ const columns: GridColumns = [
     headerName: 'Name',
     flex: 0.2,
     sortable: false,
+    renderCell: (params) => (
+      <TrackNameColumn id={params.row.id} name={params.value} />
+    ),
   },
   {
     field: 'artist',

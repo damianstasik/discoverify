@@ -44,6 +44,7 @@ import { Layout } from '../components/Layout';
 import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
 import { ArtistColumn } from '../components/ArtistColumn';
 import { AlbumColumn } from '../components/AlbumColumn';
+import { TrackNameColumn } from '../components/TrackNameColumn';
 
 function msToTime(duration: number) {
   const seconds = Math.floor((duration / 1000) % 60);
@@ -93,7 +94,12 @@ const columns: GridColumns = [
   {
     field: 'title',
     headerName: 'Title',
+    field: 'name',
+    headerName: 'Name',
     flex: 0.2,
+    renderCell: (params) => (
+      <TrackNameColumn id={params.row.id} name={params.value} />
+    ),
   },
   {
     field: 'artist',
