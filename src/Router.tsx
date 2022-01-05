@@ -13,6 +13,7 @@ import { Liked } from './routes/Liked';
 import { Recommendations } from './routes/Recommendations';
 import { RelatedArtistsTopTracks } from './routes/RelatedArtistsTopTracks';
 import { TopTracks } from './routes/TopTracks';
+import { RecentlyPlayed } from './routes/RecentlyPlayed';
 
 const Dashboard = lazy(() => import('./routes/Dashboard'));
 
@@ -42,6 +43,10 @@ export function Router() {
       {
         path: '/top-tracks',
         element: <TopTracks />,
+      },
+      {
+        path: '/recently-played',
+        element: <RecentlyPlayed />,
       },
       {
         path: '/followed-artists/top-tracks',
