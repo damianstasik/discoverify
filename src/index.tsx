@@ -1,14 +1,14 @@
-import * as React from 'react';
+import { StrictMode, Suspense } from 'react';
 import * as ReactDOM from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { Provider, useAtom } from 'jotai';
+import { Provider } from 'jotai';
 import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { LayoutSkeleton } from './components/LayoutSkeleton';
+import { SnackbarProvider } from 'notistack';
+import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
 import { App } from './App';
-import { tokenIdState } from './store';
-// import { SnackbarProvider } from 'notistack';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -20,48 +20,51 @@ const queryClient = new QueryClient({
   },
 });
 
-const darkTheme = createTheme({
+const theme = createTheme({
   palette: {
     // mode: 'dark',
+    neutral: {
+      main: '#64748B',
+      contrastText: '#fff',
+    },
   },
 });
 
 function SuspensedApp() {
-  const tokenId = useAtom(tokenIdState);
-
   return (
-    <React.Suspense
+    <Suspense
       fallback={
-        tokenId ? (
-          <LayoutSkeleton>
-            <p className="bp3-skeleton w-64">test</p>
-            <p className="bp3-skeleton w-48 my-2">test</p>
-            <p className="bp3-skeleton w-72">test</p>
-          </LayoutSkeleton>
-        ) : (
-          <div>without token</div>
-        )
+        <Box
+          sx={{
+            height: '100vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <CircularProgress />
+        </Box>
       }
     >
       <App />
-    </React.Suspense>
+    </Suspense>
   );
 }
 
 ReactDOM.render(
-  <React.StrictMode>
+  <StrictMode>
     <CssBaseline />
-    <ThemeProvider theme={darkTheme}>
-      {/* <SnackbarProvider maxSnack={3}> */}
-      <QueryClientProvider client={queryClient}>
-        <Provider>
-          <Router>
-            <SuspensedApp />
-          </Router>
-        </Provider>
-      </QueryClientProvider>
-      {/* </SnackbarProvider> */}
+    <ThemeProvider theme={theme}>
+      <SnackbarProvider maxSnack={3}>
+        <QueryClientProvider client={queryClient}>
+          <Provider>
+            <Router>
+              <SuspensedApp />
+            </Router>
+          </Provider>
+        </QueryClientProvider>
+      </SnackbarProvider>
     </ThemeProvider>
-  </React.StrictMode>,
+  </StrictMode>,
   document.getElementById('root'),
 );
