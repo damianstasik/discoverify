@@ -628,25 +628,25 @@
     prop-types "^15.7.2"
     react-is "^17.0.2"
 
-"@mui/x-data-grid-pro@^5.2.1":
-  version "5.2.1"
-  resolved "https://registry.yarnpkg.com/@mui/x-data-grid-pro/-/x-data-grid-pro-5.2.1.tgz#781f9fee1d89923678b5ed1ddc5d3266cfdc5e7d"
-  integrity sha512-KbeWPKyprso6zRS7Dkx5Y6T2lCeeu6dpDVxrknbDn51MNg+K1cviiNgYCiGtWrdrxCMFfTk0Vl4qKNcKjADQMg==
+"@mui/x-data-grid-pro@^5.2.2":
+  version "5.2.2"
+  resolved "https://registry.yarnpkg.com/@mui/x-data-grid-pro/-/x-data-grid-pro-5.2.2.tgz#c1999d974e9f8aff179fc832b8506ffe2fde2f51"
+  integrity sha512-tfY/CEii2jgpwvnQWqMnWXp6+w7GYg6k+YJZmK3i5dOeGleNEJSyPAZb9vpnf99cZpN+N55VyY2KBgzQlsq2zg==
   dependencies:
     "@mui/utils" "^5.2.3"
-    "@mui/x-license-pro" "5.2.1"
+    "@mui/x-license-pro" "5.2.2"
     clsx "^1.0.4"
-    prop-types "^15.7.2"
+    prop-types "^15.8.0"
     reselect "^4.1.5"
 
-"@mui/x-license-pro@5.2.1":
-  version "5.2.1"
-  resolved "https://registry.yarnpkg.com/@mui/x-license-pro/-/x-license-pro-5.2.1.tgz#907802d5d5dbdbfc063bab33f0bc84bea2f39a97"
-  integrity sha512-HgqnygyDxZYH7OWei2ULNnEUifapb74Aqpicpp+khtRB6fZZEAi4DHWktZ2mVQZ1xOZKIFTWv/xroYBfpkpQEg==
+"@mui/x-license-pro@5.2.2":
+  version "5.2.2"
+  resolved "https://registry.yarnpkg.com/@mui/x-license-pro/-/x-license-pro-5.2.2.tgz#8868924e9ac3fdb74ef5d65167e183d2fdc6bbbd"
+  integrity sha512-wvamuRSMXEBcOMXv2snRW5I7a4wfFi9txGI3zBkAnGvyFjtuBNMDXI6AHVBh4vA62TJ0J8ju2CLWpNmRXn3kiQ==
   dependencies:
     "@mui/utils" "^5.2.3"
     esm "^3.2.25"
-    yargs "^17.3.0"
+    yargs "^17.3.1"
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
@@ -2501,6 +2501,15 @@ prop-types@^15.6.2, prop-types@^15.7.2:
     object-assign "^4.1.1"
     react-is "^16.13.1"
 
+prop-types@^15.8.0:
+  version "15.8.1"
+  resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
+  integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
+  dependencies:
+    loose-envify "^1.4.0"
+    object-assign "^4.1.1"
+    react-is "^16.13.1"
+
 punycode@^2.1.0:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.1.1.tgz#b58b010ac40c22c5657616c8d2c2c02c7bf479ec"
@@ -2972,7 +2981,7 @@ yargs-parser@^21.0.0:
   resolved "https://registry.yarnpkg.com/yargs-parser/-/yargs-parser-21.0.0.tgz#a485d3966be4317426dd56bdb6a30131b281dc55"
   integrity sha512-z9kApYUOCwoeZ78rfRYYWdiU/iNL6mwwYlkkZfJoyMR1xps+NEBX5X7XmRpxkZHhXJ6+Ey00IwKxBBSW9FIjyA==
 
-yargs@^17.3.0:
+yargs@^17.3.1:
   version "17.3.1"
   resolved "https://registry.yarnpkg.com/yargs/-/yargs-17.3.1.tgz#da56b28f32e2fd45aefb402ed9c26f42be4c07b9"
   integrity sha512-WUANQeVgjLbNsEmGk20f+nlHgOqzRFpiGWVaBrYGYIGANIIu3lWjoyi0fNlFmJkvfhCZ6BXINe7/W2O2bV4iaA==
