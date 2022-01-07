@@ -1,25 +1,25 @@
 import Typography from '@mui/material/Typography';
 import { formatRelative } from 'date-fns';
 import {
-  DataGridPro,
-  GridColumns,
+  type GridColumns,
   GridActionsCellItem,
   useGridApiContext,
+  type GridRowId,
 } from '@mui/x-data-grid-pro';
 import { useInfiniteQuery } from 'react-query';
 import { useAtomValue } from 'jotai/utils';
 import Icon from '@mdi/react';
 import { mdiCardsHeartOutline, mdiSpotify } from '@mdi/js';
 import IconButton from '@mui/material/IconButton';
-import { memo, useMemo } from 'react';
+import { memo, useMemo, useState } from 'react';
 import { Layout } from '../components/Layout';
 import { tokenIdState } from '../store';
-import { useSeedSelection } from '../hooks/useSeedSelection';
 import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
 import { ArtistColumn } from '../components/ArtistColumn';
 import { AlbumColumn } from '../components/AlbumColumn';
 import { TrackSelectionToolbar } from '../components/TrackSelectionToolbar';
 import { TrackNameColumn } from '../components/TrackNameColumn';
+import { Table } from '../components/Table';
 
 function msToTime(duration: number) {
   const seconds = Math.floor((duration / 1000) % 60);
@@ -57,10 +57,9 @@ const Save = memo(({ row }) => {
 
 const columns: GridColumns = [
   {
-    type: 'actions',
     field: 'preview_url',
     headerName: '',
-    width: 50,
+    width: 60,
     sortable: false,
     renderCell: (params) => (
       <TrackPreviewColumn url={params.value} context={params.row} />
@@ -108,7 +107,6 @@ const columns: GridColumns = [
     },
   },
   {
-    type: 'actions',
     field: 'actions',
     headerName: 'Actions',
     sortable: false,
@@ -147,32 +145,20 @@ export function Liked() {
     [data],
   );
 
-  const { selectedSeeds, setSelectedSeeds } = useSeedSelection();
+  const [selectedTracks, setSelectedTracks] = useState<Array<GridRowId>>([]);
 
   return (
     <Layout>
-      <Typography variant="h5" gutterBottom sx={{ mb: 2 }}>
+      <Typography variant="h5" sx={{ mb: 2 }}>
         Liked tracks
       </Typography>
 
       <div style={{ height: 800 }}>
-        <DataGridPro
+        <Table
           columns={columns}
-          disableColumnResize
-          disableColumnMenu
-          disableColumnReorder
-          disableColumnSelector
-          disableDensitySelector
-          disableMultipleColumnsSorting
-          disableSelectionOnClick
-          disableColumnFilter
-          disableMultipleColumnsFiltering
-          hideFooter
           checkboxSelection
-          onSelectionModelChange={(newSelection) =>
-            setSelectedSeeds(newSelection)
-          }
-          selectionModel={selectedSeeds}
+          onSelectionModelChange={(value) => setSelectedTracks(value)}
+          selectionModel={selectedTracks}
           rows={rows}
           loading={isFetching}
           onRowsScrollEnd={() => hasNextPage && fetchNextPage()}

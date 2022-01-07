@@ -49,10 +49,9 @@ const Save = memo(({ row }) => {
 
 const columns: GridColumns = [
   {
-    type: 'actions',
     field: 'preview_url',
     headerName: '',
-    width: 50,
+    width: 60,
     sortable: false,
     renderCell: (params) => (
       <TrackPreviewColumn

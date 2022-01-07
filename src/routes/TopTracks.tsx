@@ -1,12 +1,11 @@
 import { memo, useEffect, useMemo, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import {
-  DataGridPro,
   GridActionsCellItem,
   type GridColumns,
   useGridApiContext,
   useGridApiRef,
+  type GridRowId,
 } from '@mui/x-data-grid-pro';
 import { useAtomValue } from 'jotai/utils';
 import {
@@ -23,11 +22,11 @@ import Icon from '@mdi/react';
 import { tokenIdState } from '../store';
 import { Layout } from '../components/Layout';
 import * as trackApi from '../api/track';
-import { useSeedSelection } from '../hooks/useSeedSelection';
 import { TrackSelectionToolbar } from '../components/TrackSelectionToolbar';
 import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
 import { ArtistColumn } from '../components/ArtistColumn';
 import { TrackNameColumn } from '../components/TrackNameColumn';
+import { Table } from '../components/Table';
 
 const OpenInSpotify = memo(({ row }) => {
   return (
@@ -55,10 +54,9 @@ const Save = memo(({ row }) => {
 
 const columns: GridColumns = [
   {
-    type: 'actions',
     field: 'preview_url',
     headerName: '',
-    width: 50,
+    width: 60,
     sortable: false,
     renderCell: (params) => (
       <TrackPreviewColumn url={params.value} context={params.row} />
@@ -81,7 +79,6 @@ const columns: GridColumns = [
     renderCell: (params) => <ArtistColumn artists={params.value} />,
   },
   {
-    type: 'actions',
     field: 'actions',
     headerName: 'Actions',
     sortable: false,
@@ -96,7 +93,6 @@ const columns: GridColumns = [
 
 export function TopTracks() {
   const tokenId = useAtomValue(tokenIdState);
-  const [searchParams] = useSearchParams();
   const apiRef = useGridApiRef();
   const [timeRange, setTimeRange] = useState('short_term');
 
@@ -126,24 +122,23 @@ export function TopTracks() {
     [data],
   );
 
-  const { selectedSeeds, setSelectedSeeds } = useSeedSelection();
+  const [selectedTracks, setSelectedTracks] = useState<Array<GridRowId>>([]);
 
   return (
     <Layout>
-      <Typography variant="h5" gutterBottom sx={{ mb: 2 }}>
+      <Typography variant="h5" sx={{ mb: 1 }}>
         Top tracks
       </Typography>
 
-      <Typography variant="subtitle1" gutterBottom sx={{ mb: 2 }}>
+      <Typography variant="subtitle1" sx={{ mb: 2 }}>
         Here are tracks based on calculated affinity.
       </Typography>
 
-      <FormControl component="fieldset" disabled={isFetching}>
+      <FormControl component="fieldset" disabled={isFetching} sx={{ mb: 2 }}>
         <FormLabel component="legend">Time range</FormLabel>
         <RadioGroup
           row
-          aria-label="gender"
-          name="row-radio-buttons-group"
+          name="timeRange"
           value={timeRange}
           onChange={(e) => setTimeRange(e.target.value)}
         >
@@ -165,40 +160,18 @@ export function TopTracks() {
         </RadioGroup>
       </FormControl>
 
-      <div style={{ height: 800, width: '100%' }}>
-        <DataGridPro
+      <div style={{ height: 750 }}>
+        <Table
           pagination
           paginationMode="server"
-          hideFooterPagination
-          onRowsScrollEnd={() => {
-            if (hasNextPage) {
-              fetchNextPage();
-            }
-          }}
+          onRowsScrollEnd={() => hasNextPage && fetchNextPage()}
           checkboxSelection
-          onSelectionModelChange={(newSelection) =>
-            setSelectedSeeds(newSelection)
-          }
-          selectionModel={selectedSeeds}
-          disableSelectionOnClick
-          disableColumnResize
-          disableColumnMenu
-          disableColumnReorder
-          disableColumnSelector
-          disableDensitySelector
-          disableMultipleColumnsSorting
-          disableColumnFilter
-          disableMultipleColumnsFiltering
-          hideFooter
+          onSelectionModelChange={(value) => setSelectedTracks(value)}
+          selectionModel={selectedTracks}
           apiRef={apiRef}
           rows={rows}
           columns={columns}
           loading={isFetching}
-          initialState={{
-            pinnedColumns: {
-              right: ['actions'],
-            },
-          }}
           components={{
             Toolbar: TrackSelectionToolbar,
           }}

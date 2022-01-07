@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import {
   Link as RouterLink,
   useParams,
@@ -7,31 +7,20 @@ import {
 import Typography from '@mui/material/Typography';
 import {
   DataGridPro,
-  GridActionsCellItem,
   type GridColumns,
-  useGridApiContext,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import { useAtomValue } from 'jotai/utils';
-import { useAtom } from 'jotai';
-import { Breadcrumbs, Button, IconButton, Link } from '@mui/material';
+import { IconButton, Link } from '@mui/material';
 import { useInfiniteQuery, useMutation, useQueryClient } from 'react-query';
-import {
-  mdiCardsHeartOutline,
-  mdiPlayCircleOutline,
-  mdiPauseCircleOutline,
-  mdiSpotify,
-  mdiCardsHeart,
-} from '@mdi/js';
+import { mdiSpotify } from '@mdi/js';
 import Icon from '@mdi/react';
-import { useSnackbar } from 'notistack';
-import produce from 'immer';
-import { loadingTrackPreview, tokenIdState, trackPreviewState } from '../store';
+import { tokenIdState } from '../store';
 import { Layout } from '../components/Layout';
 import * as trackApi from '../api/track';
 import * as playlistApi from '../api/playlist';
 import { useSeedSelection } from '../hooks/useSeedSelection';
-import { TrackSelectionToolbar } from '../components/TrackSelectionToolbar';
+import { Table } from '../components/Table';
 
 const columns: GridColumns = [
   {
@@ -52,28 +41,24 @@ const columns: GridColumns = [
     ),
   },
   {
-    type: 'actions',
     field: 'actions',
     headerName: 'Actions',
     sortable: false,
-    getActions: (params) => {
-      return [
-        <IconButton
-          size="small"
-          aria-label="Open in Spotify"
-          href={params.row.uri}
-          target="_blank"
-        >
-          <Icon path={mdiSpotify} size={1} />
-        </IconButton>,
-      ];
-    },
+    renderCell: (params) => (
+      <IconButton
+        size="small"
+        aria-label="Open in Spotify"
+        href={params.row.uri}
+        target="_blank"
+      >
+        <Icon path={mdiSpotify} size={1} />
+      </IconButton>
+    ),
   },
 ];
 
 export function Playlists() {
   const tokenId = useAtomValue(tokenIdState);
-  const [searchParams] = useSearchParams();
   const apiRef = useGridApiRef();
   const { id } = useParams<{ id: string }>();
 
@@ -92,9 +77,7 @@ export function Playlists() {
     async (trackId) => trackApi.saveTrack(tokenId, trackId),
     {
       onSuccess(trackId) {
-        console.log('success');
         queryClient.setQueryData(['related-artists-top-tracks', id], (old) => {
-          console.log('cos');
           return old;
         });
       },
@@ -113,44 +96,26 @@ export function Playlists() {
     });
   }, [apiRef, isFetching]);
 
-  const { selectedSeeds, setSelectedSeeds, isSeedSelectable } =
-    useSeedSelection();
+  const rows = useMemo(
+    () => (data?.pages || []).map((page) => page.playlists).flat(),
+    [data],
+  );
 
   return (
     <Layout>
-      <Typography variant="h5" gutterBottom sx={{ mb: 2 }}>
+      <Typography variant="h5" sx={{ mb: 2 }}>
         Playlists
       </Typography>
 
-      <div style={{ height: 800, width: '100%' }}>
-        <DataGridPro
+      <div style={{ height: 800 }}>
+        <Table
           pagination
           paginationMode="server"
-          hideFooterPagination
-          onRowsScrollEnd={() => {
-            if (hasNextPage) {
-              fetchNextPage();
-            }
-          }}
-          disableSelectionOnClick
-          disableColumnResize
-          disableColumnMenu
-          disableColumnReorder
-          disableColumnSelector
-          disableDensitySelector
-          disableMultipleColumnsSorting
-          disableColumnFilter
-          disableMultipleColumnsFiltering
-          hideFooter
+          onRowsScrollEnd={() => hasNextPage && fetchNextPage()}
           apiRef={apiRef}
-          rows={data?.pages.map((page) => page.playlists).flat()}
+          rows={rows}
           columns={columns}
           loading={isFetching}
-          initialState={{
-            pinnedColumns: {
-              right: ['actions'],
-            },
-          }}
         />
       </div>
     </Layout>

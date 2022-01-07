@@ -2,8 +2,7 @@ import { memo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import {
-  DataGridPro,
-  GridColumns,
+  type GridColumns,
   GridActionsCellItem,
   useGridApiContext,
 } from '@mui/x-data-grid-pro';
@@ -24,6 +23,7 @@ import { ArtistColumn } from '../components/ArtistColumn';
 import { AlbumColumn } from '../components/AlbumColumn';
 import { TrackNameColumn } from '../components/TrackNameColumn';
 import { RecommendationAttribute } from '../components/RecommendationAttribute';
+import { Table } from '../components/Table';
 
 function msToTime(duration: number) {
   const seconds = Math.floor((duration / 1000) % 60);
@@ -61,10 +61,9 @@ const Save = memo(({ row }) => {
 
 const columns: GridColumns = [
   {
-    type: 'actions',
     field: 'preview_url',
     headerName: '',
-    width: 50,
+    width: 60,
     sortable: false,
     renderCell: (params) => (
       <TrackPreviewColumn url={params.value} context={params.row} />
@@ -101,7 +100,6 @@ const columns: GridColumns = [
     },
   },
   {
-    type: 'actions',
     field: 'actions',
     headerName: 'Actions',
     sortable: false,
@@ -563,28 +561,14 @@ export function Recommendations() {
       ))}
 
       <p>Presets: przycisk przycisk</p>
-      <div style={{ height: 800 }}>
-        <DataGridPro
+      <div style={{ height: 650 }}>
+        <Table
           columns={columns}
-          disableColumnResize
-          disableColumnMenu
-          disableColumnReorder
-          disableColumnSelector
-          disableDensitySelector
-          disableExtendRowFullWidth
-          disableMultipleColumnsSorting
-          disableSelectionOnClick
-          hideFooter
-          hideFooterRowCount
-          hideFooterSelectedRowCount
           checkboxSelection
-          onSelectionModelChange={(newSelection) =>
-            setSelectedSongs(newSelection)
-          }
+          onSelectionModelChange={(value) => setSelectedSongs(value)}
           selectionModel={selectedSongs}
           rows={data || []}
           loading={isFetching}
-          hideFooterPagination
         />
       </div>
     </Layout>

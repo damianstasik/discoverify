@@ -1,79 +1,61 @@
-import { useEffect } from 'react';
-import {
-  Link as RouterLink,
-  useParams,
-  useSearchParams,
-} from 'react-router-dom';
+import { memo, useEffect, useMemo, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import {
-  DataGridPro,
   GridActionsCellItem,
   type GridColumns,
   useGridApiContext,
   useGridApiRef,
+  type GridRowId,
 } from '@mui/x-data-grid-pro';
 import { useAtomValue } from 'jotai/utils';
-import { useAtom } from 'jotai';
-import { Breadcrumbs, IconButton, Link } from '@mui/material';
-import { useInfiniteQuery, useMutation } from 'react-query';
-import {
-  mdiCardsHeartOutline,
-  mdiPlayCircleOutline,
-  mdiPauseCircleOutline,
-  mdiSpotify,
-} from '@mdi/js';
+import { IconButton } from '@mui/material';
+import { useInfiniteQuery, useMutation, useQueryClient } from 'react-query';
+import { mdiCardsHeartOutline, mdiSpotify } from '@mdi/js';
 import Icon from '@mdi/react';
-import { loadingTrackPreview, tokenIdState, trackPreviewState } from '../store';
+import { tokenIdState } from '../store';
 import { Layout } from '../components/Layout';
 import * as trackApi from '../api/track';
 import * as artistApi from '../api/artist';
-import { useSeedSelection } from '../hooks/useSeedSelection';
 import { TrackSelectionToolbar } from '../components/TrackSelectionToolbar';
 import { TrackNameColumn } from '../components/TrackNameColumn';
+import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
+import { ArtistColumn } from '../components/ArtistColumn';
+import { Table } from '../components/Table';
+
+const OpenInSpotify = memo(({ row }) => {
+  return (
+    <IconButton
+      size="small"
+      aria-label="Open in Spotify"
+      href={row.uri}
+      target="_blank"
+    >
+      <Icon path={mdiSpotify} size={1} />
+    </IconButton>
+  );
+});
+
+const Save = memo(({ row }) => {
+  const apiRef = useGridApiContext();
+  return (
+    <GridActionsCellItem
+      icon={<Icon path={mdiCardsHeartOutline} size={1} />}
+      onClick={() => apiRef.current.publishEvent('saveTrack', row)}
+      label="Save"
+    />
+  );
+});
 
 const columns: GridColumns = [
   {
-    type: 'actions',
-    field: 'actionss',
+    field: 'preview_url',
     headerName: '',
-    width: 50,
+    width: 60,
     sortable: false,
-    getActions: (params) => {
-      const [trackPreview, setTrackPreview] = useAtom(trackPreviewState);
-      const isLoadingTrackPreview = useAtomValue(loadingTrackPreview);
-      const isCurrentlyPlaying =
-        trackPreview?.url === params.row.preview_url &&
-        trackPreview?.context === params.row;
-
-      if (!params.row.preview_url) {
-        return [];
-      }
-
-      return [
-        <GridActionsCellItem
-          color={isCurrentlyPlaying ? 'primary' : 'default'}
-          icon={
-            <Icon
-              path={
-                isCurrentlyPlaying && trackPreview?.state === 'playing'
-                  ? mdiPauseCircleOutline
-                  : mdiPlayCircleOutline
-              }
-              size={1}
-            />
-          }
-          onClick={() =>
-            setTrackPreview({
-              url: params.row.preview_url,
-              context: params.row,
-              state: 'playing',
-            })
-          }
-          disabled={isLoadingTrackPreview}
-          label="Play"
-        />,
-      ];
-    },
+    renderCell: (params) => (
+      <TrackPreviewColumn url={params.value} context={params.row} />
+    ),
   },
   {
     field: 'name',
@@ -89,54 +71,27 @@ const columns: GridColumns = [
     headerName: 'Artist(s)',
     flex: 0.7,
     sortable: false,
-    renderCell: (params) => (
-      <Breadcrumbs>
-        {(params.value as any[]).map((artist) => (
-          <Link component={RouterLink} to={`/artist/${artist.id}`}>
-            {artist.name}
-          </Link>
-        ))}
-      </Breadcrumbs>
-    ),
+    renderCell: (params) => <ArtistColumn artists={params.value} />,
   },
   {
-    type: 'actions',
     field: 'actions',
     headerName: 'Actions',
     sortable: false,
-    getActions: (params) => {
-      const apiRef = useGridApiContext();
-
-      return [
-        <IconButton
-          size="small"
-          aria-label="Open in Spotify"
-          href={params.row.uri}
-          target="_blank"
-        >
-          <Icon path={mdiSpotify} size={1} />
-        </IconButton>,
-
-        <GridActionsCellItem
-          icon={<Icon path={mdiCardsHeartOutline} size={1} />}
-          onClick={() => apiRef.current.publishEvent('saveTrack', params.row)}
-          label="Save"
-        />,
-      ];
-    },
+    renderCell: (params) => (
+      <>
+        <OpenInSpotify row={params.row} />
+        <Save row={params.row} />
+      </>
+    ),
   },
 ];
 
 export function RelatedArtistsTopTracks() {
   const tokenId = useAtomValue(tokenIdState);
-  const [searchParams] = useSearchParams();
   const apiRef = useGridApiRef();
-  const genre = searchParams.get('genre');
   const { id } = useParams<{ id: string }>();
 
-  const { mutateAsync: saveTrack } = useMutation<void, Error, string>(
-    async (id) => trackApi.saveTrack(tokenId, id),
-  );
+  const queryClient = useQueryClient();
 
   const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery(
     ['related-artists-top-tracks', id],
@@ -148,63 +103,61 @@ export function RelatedArtistsTopTracks() {
     },
   );
 
-  // useEffect(() => {
-  //   if (!apiRef.current || isFetching) return;
+  const { mutateAsync: saveTrack } = useMutation<void, Error, string>(
+    async (trackId) => trackApi.saveTrack(tokenId, trackId),
+    {
+      onSuccess(trackId) {
+        queryClient.setQueryData(['related-artists-top-tracks', id], (old) => {
+          return old;
+        });
+      },
+    },
+  );
 
-  //   apiRef.current.subscribeEvent('saveTrack', (params) => {
-  //     saveTrack(params.id);
-  //   });
-  // }, [apiRef, isFetching]);
+  useEffect(() => {
+    if (!apiRef.current || isFetching) return;
 
-  const { selectedSeeds, setSelectedSeeds } = useSeedSelection();
+    apiRef.current.subscribeEvent('saveTrack', (params) => {
+      saveTrack(params.id);
+    });
+
+    apiRef.current.subscribeEvent('removeTrack', (params) => {
+      saveTrack(params.id);
+    });
+  }, [apiRef, isFetching]);
+
+  const rows = useMemo(
+    () => (data?.pages || []).map((page) => page.data).flat(),
+    [data],
+  );
+
+  const [selectedTracks, setSelectedTracks] = useState<Array<GridRowId>>([]);
 
   return (
     <Layout>
-      <Typography variant="h5" gutterBottom sx={{ mb: 2 }}>
+      <Typography variant="h5" sx={{ mb: 1 }}>
         Top tracks from artists similar to a given artist
       </Typography>
 
-      <Typography variant="subtitle1" gutterBottom sx={{ mb: 2 }}>
+      <Typography variant="subtitle1" sx={{ mb: 2 }}>
         Here are tracks that come from top 10 lists of the artists that are
         similar to a given artist. The list does not include tracks that you
         have already saved in your library. Similarity is based on analysis of
         the Spotify community's listening history.
       </Typography>
 
-      <div style={{ height: 800, width: '100%' }}>
-        <DataGridPro
+      <div style={{ height: 800 }}>
+        <Table
           pagination
           paginationMode="server"
-          hideFooterPagination
-          onRowsScrollEnd={() => {
-            if (hasNextPage) {
-              fetchNextPage();
-            }
-          }}
+          onRowsScrollEnd={() => hasNextPage && fetchNextPage()}
           checkboxSelection
-          onSelectionModelChange={(newSelection) =>
-            setSelectedSeeds(newSelection)
-          }
-          selectionModel={selectedSeeds}
-          disableSelectionOnClick
-          disableColumnResize
-          disableColumnMenu
-          disableColumnReorder
-          disableColumnSelector
-          disableDensitySelector
-          disableMultipleColumnsSorting
-          disableColumnFilter
-          disableMultipleColumnsFiltering
-          hideFooter
+          onSelectionModelChange={(value) => setSelectedTracks(value)}
+          selectionModel={selectedTracks}
           apiRef={apiRef}
-          rows={data?.pages.map((page) => page.data).flat()}
+          rows={rows}
           columns={columns}
           loading={isFetching}
-          initialState={{
-            pinnedColumns: {
-              right: ['actions'],
-            },
-          }}
           components={{
             Toolbar: TrackSelectionToolbar,
           }}

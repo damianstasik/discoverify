@@ -1,12 +1,12 @@
-import { memo, useEffect, useMemo } from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import {
-  DataGridPro,
   GridActionsCellItem,
   type GridColumns,
   useGridApiContext,
   useGridApiRef,
+  type GridRowId,
 } from '@mui/x-data-grid-pro';
 import { useAtomValue } from 'jotai/utils';
 import { IconButton } from '@mui/material';
@@ -17,11 +17,11 @@ import { tokenIdState } from '../store';
 import { Layout } from '../components/Layout';
 import * as trackApi from '../api/track';
 import * as artistApi from '../api/artist';
-import { useSeedSelection } from '../hooks/useSeedSelection';
 import { TrackSelectionToolbar } from '../components/TrackSelectionToolbar';
 import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
 import { ArtistColumn } from '../components/ArtistColumn';
 import { TrackNameColumn } from '../components/TrackNameColumn';
+import { Table } from '../components/Table';
 
 const OpenInSpotify = memo(({ row }) => {
   return (
@@ -49,10 +49,9 @@ const Save = memo(({ row }) => {
 
 const columns: GridColumns = [
   {
-    type: 'actions',
     field: 'preview_url',
     headerName: '',
-    width: 50,
+    width: 60,
     sortable: false,
     renderCell: (params) => (
       <TrackPreviewColumn url={params.value} context={params.row} />
@@ -75,7 +74,6 @@ const columns: GridColumns = [
     renderCell: (params) => <ArtistColumn artists={params.value} />,
   },
   {
-    type: 'actions',
     field: 'actions',
     headerName: 'Actions',
     sortable: false,
@@ -124,54 +122,32 @@ export function FollowedArtistsTopTracks() {
     [data],
   );
 
-  const { selectedSeeds, setSelectedSeeds } = useSeedSelection();
+  const [selectedTracks, setSelectedTracks] = useState<Array<GridRowId>>([]);
 
   return (
     <Layout>
-      <Typography variant="h5" gutterBottom sx={{ mb: 2 }}>
+      <Typography variant="h5" sx={{ mb: 1 }}>
         Top tracks from followed artists
       </Typography>
 
-      <Typography variant="subtitle1" gutterBottom sx={{ mb: 2 }}>
+      <Typography variant="subtitle1" sx={{ mb: 2 }}>
         Here are tracks that come from top 10 lists of the artists that you
         follow. The list does not include tracks that you have already saved in
         your library.
       </Typography>
 
-      <div style={{ height: 800, width: '100%' }}>
-        <DataGridPro
+      <div style={{ height: 800 }}>
+        <Table
           pagination
           paginationMode="server"
-          hideFooterPagination
-          onRowsScrollEnd={() => {
-            if (hasNextPage) {
-              fetchNextPage();
-            }
-          }}
+          onRowsScrollEnd={() => hasNextPage && fetchNextPage()}
           checkboxSelection
-          onSelectionModelChange={(newSelection) =>
-            setSelectedSeeds(newSelection)
-          }
-          selectionModel={selectedSeeds}
-          disableSelectionOnClick
-          disableColumnResize
-          disableColumnMenu
-          disableColumnReorder
-          disableColumnSelector
-          disableDensitySelector
-          disableMultipleColumnsSorting
-          disableColumnFilter
-          disableMultipleColumnsFiltering
-          hideFooter
+          onSelectionModelChange={(value) => setSelectedTracks(value)}
+          selectionModel={selectedTracks}
           apiRef={apiRef}
           rows={rows}
           columns={columns}
           loading={isFetching}
-          initialState={{
-            pinnedColumns: {
-              right: ['actions'],
-            },
-          }}
           components={{
             Toolbar: TrackSelectionToolbar,
           }}
