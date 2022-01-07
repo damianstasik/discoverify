@@ -1,12 +1,12 @@
-import { memo, useEffect, useMemo } from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import {
-  DataGridPro,
   GridActionsCellItem,
   type GridColumns,
   useGridApiContext,
   useGridApiRef,
+  type GridRowId,
 } from '@mui/x-data-grid-pro';
 import { useAtomValue } from 'jotai/utils';
 import { IconButton } from '@mui/material';
@@ -17,12 +17,11 @@ import { formatRelative } from 'date-fns';
 import { tokenIdState } from '../store';
 import { Layout } from '../components/Layout';
 import * as trackApi from '../api/track';
-import * as artistApi from '../api/artist';
-import { useSeedSelection } from '../hooks/useSeedSelection';
 import { TrackSelectionToolbar } from '../components/TrackSelectionToolbar';
 import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
 import { ArtistColumn } from '../components/ArtistColumn';
 import { TrackNameColumn } from '../components/TrackNameColumn';
+import { Table } from '../components/Table';
 
 const OpenInSpotify = memo(({ row }) => {
   return (
@@ -88,7 +87,6 @@ const columns: GridColumns = [
     },
   },
   {
-    type: 'actions',
     field: 'actions',
     headerName: 'Actions',
     sortable: false,
@@ -105,7 +103,6 @@ export function RecentlyPlayed() {
   const tokenId = useAtomValue(tokenIdState);
   const [searchParams] = useSearchParams();
   const apiRef = useGridApiRef();
-  const genre = searchParams.get('genre');
 
   const { mutateAsync: saveTrack } = useMutation<void, Error, string>(
     async (id) => trackApi.saveTrack(tokenId, id),
@@ -143,52 +140,30 @@ export function RecentlyPlayed() {
     [data],
   );
 
-  const { selectedSeeds, setSelectedSeeds } = useSeedSelection();
+  const [selectedTracks, setSelectedTracks] = useState<Array<GridRowId>>([]);
 
   return (
     <Layout>
-      <Typography variant="h5" gutterBottom sx={{ mb: 2 }}>
+      <Typography variant="h5" sx={{ mb: 1 }}>
         Recently played tracks
       </Typography>
 
-      <Typography variant="subtitle1" gutterBottom sx={{ mb: 2 }}>
+      <Typography variant="subtitle1" sx={{ mb: 2 }}>
         Here are tracks that you recently played.
       </Typography>
 
-      <div style={{ height: 800, width: '100%' }}>
-        <DataGridPro
+      <div style={{ height: 800 }}>
+        <Table
           pagination
           paginationMode="server"
-          hideFooterPagination
-          onRowsScrollEnd={() => {
-            if (hasNextPage) {
-              fetchNextPage();
-            }
-          }}
+          onRowsScrollEnd={() => hasNextPage && fetchNextPage()}
           checkboxSelection
-          onSelectionModelChange={(newSelection) =>
-            setSelectedSeeds(newSelection)
-          }
-          selectionModel={selectedSeeds}
-          disableSelectionOnClick
-          disableColumnResize
-          disableColumnMenu
-          disableColumnReorder
-          disableColumnSelector
-          disableDensitySelector
-          disableMultipleColumnsSorting
-          disableColumnFilter
-          disableMultipleColumnsFiltering
-          hideFooter
+          onSelectionModelChange={(value) => setSelectedTracks(value)}
+          selectionModel={selectedTracks}
           apiRef={apiRef}
           rows={rows}
           columns={columns}
           loading={isFetching}
-          initialState={{
-            pinnedColumns: {
-              right: ['actions'],
-            },
-          }}
           components={{
             Toolbar: TrackSelectionToolbar,
           }}

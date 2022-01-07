@@ -9,7 +9,7 @@ interface Props {
 
 export const ArtistColumn = memo(({ artists }: Props) => {
   return (
-    <Breadcrumbs>
+    <Breadcrumbs sx={{ fontSize: 'inherit' }}>
       {artists.map((artist) => (
         <Link
           component={RouterLink}
