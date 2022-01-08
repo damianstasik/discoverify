@@ -147,6 +147,7 @@ function useAttributes(config: Record<string, any>) {
       return {
         name: attr.name,
         label: attr.label,
+        marks: attr.marks,
         description: attr.description,
         minValue: values[minKey] ?? attr.defaultMin,
         targetValue: values[targetKey] ?? attr.defaultTarget,
