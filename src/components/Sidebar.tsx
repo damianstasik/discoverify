@@ -35,8 +35,23 @@ function RouterListItem({ to, label, icon }: any) {
   const match = useMatch(to);
 
   return (
-    <ListItem button component={RouterLink} to={to} selected={!!match}>
-      {icon && <ListItemIcon>{icon}</ListItemIcon>}
+    <ListItem
+      button
+      component={RouterLink}
+      to={to}
+      selected={!!match}
+      sx={{
+        margin: 1,
+        width: 'auto',
+        borderRadius: 1,
+        ':hover': {},
+
+        '&.Mui-selected': {
+          background: '#111827',
+        },
+      }}
+    >
+      {icon && <ListItemIcon sx={{ color: '#6B7280' }}>{icon}</ListItemIcon>}
       <ListItemText primary={label} />
     </ListItem>
   );
