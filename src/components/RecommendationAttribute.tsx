@@ -46,7 +46,11 @@ export function RecommendationAttribute({ attr }: Props) {
       <Button
         aria-describedby={attr.name}
         size="small"
-        color="neutral"
+        color={
+          attr.minEnabled || attr.targetEnabled || attr.maxEnabled
+            ? 'warning'
+            : 'neutral'
+        }
         onClick={handleClick}
         endIcon={<Icon path={mdiMenuDown} size={1} />}
       >
