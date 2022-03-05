@@ -15,6 +15,7 @@ import { RelatedArtistsTopTracks } from './routes/RelatedArtistsTopTracks';
 import { TopTracks } from './routes/TopTracks';
 import { Playlists } from './routes/Playlists';
 import { RecentlyPlayed } from './routes/RecentlyPlayed';
+import { Playlist } from './routes/Playlist';
 
 const Dashboard = lazy(() => import('./routes/Dashboard'));
 
@@ -40,6 +41,14 @@ export function Router() {
       {
         path: '/playlists',
         element: <Playlists />,
+      },
+      {
+        path: '/playlist/:id',
+        element: (
+          <Suspense fallback={<CircularProgress />}>
+            <Playlist />
+          </Suspense>
+        ),
       },
       {
         path: '/artists',
