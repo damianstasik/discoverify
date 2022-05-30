@@ -5,7 +5,7 @@ import {
   GridActionsCellItem,
   useGridApiContext,
   type GridRowId,
-} from '@mui/x-data-grid-pro';
+} from '@mui/x-data-grid-premium';
 import { useInfiniteQuery } from 'react-query';
 import { useAtomValue } from 'jotai/utils';
 import Icon from '@mdi/react';

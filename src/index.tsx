@@ -8,7 +8,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { SnackbarProvider } from 'notistack';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
-import { LicenseInfo } from '@mui/x-data-grid-pro';
+import { LicenseInfo } from '@mui/x-data-grid-premium';
 import { Router } from './Router';
 
 const queryClient = new QueryClient({

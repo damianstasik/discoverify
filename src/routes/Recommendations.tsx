@@ -5,7 +5,7 @@ import {
   type GridColumns,
   GridActionsCellItem,
   useGridApiContext,
-} from '@mui/x-data-grid-pro';
+} from '@mui/x-data-grid-premium';
 import { useQuery, useQueryClient } from 'react-query';
 import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';

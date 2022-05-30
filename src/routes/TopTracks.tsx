@@ -6,8 +6,8 @@ import {
   useGridApiContext,
   useGridApiRef,
   type GridRowId,
-} from '@mui/x-data-grid-pro';
 import { useAtomValue } from 'jotai/utils';
+} from '@mui/x-data-grid-premium';
 import {
   FormControl,
   FormControlLabel,

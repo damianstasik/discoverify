@@ -2,7 +2,7 @@ import { Divider } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Collapse from '@mui/material/Collapse';
-import { useGridApiContext } from '@mui/x-data-grid-pro';
+import { useGridApiContext } from '@mui/x-data-grid-premium';
 import { Link as RouterLink } from 'react-router-dom';
 
 export function TrackSelectionToolbar() {

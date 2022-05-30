@@ -1,8 +1,8 @@
 import Button from '@mui/material/Button';
 import { Link as RouterLink } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
-import { type GridColumns } from '@mui/x-data-grid-pro';
 import { useAtomValue } from 'jotai/utils';
+import { type GridColumns } from '@mui/x-data-grid-premium';
 import { useQuery } from 'react-query';
 import { tokenIdState } from '../store';
 import { Layout } from '../components/Layout';

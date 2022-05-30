@@ -6,11 +6,11 @@ import {
 } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import {
-  DataGridPro,
+  DataGridPremium,
   type GridColumns,
   useGridApiRef,
-} from '@mui/x-data-grid-pro';
 import { useAtomValue } from 'jotai/utils';
+} from '@mui/x-data-grid-premium';
 import { IconButton, Link } from '@mui/material';
 import { useInfiniteQuery, useMutation, useQueryClient } from 'react-query';
 import { mdiSpotify } from '@mdi/js';

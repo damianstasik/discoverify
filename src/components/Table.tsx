@@ -1,5 +1,8 @@
 import { SxProps, Theme } from '@mui/material';
-import { DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
+import {
+  DataGridPremium,
+  DataGridPremiumProps,
+} from '@mui/x-data-grid-premium';
 
 const styles: SxProps<Theme> = {
   background: '#fff',
@@ -15,9 +18,9 @@ const styles: SxProps<Theme> = {
   },
 };
 
-export function Table(props: DataGridProProps) {
+export function Table(props: DataGridPremiumProps) {
   return (
-    <DataGridPro
+    <DataGridPremium
       sx={styles}
       disableSelectionOnClick
       disableColumnResize

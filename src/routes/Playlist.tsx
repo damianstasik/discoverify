@@ -9,7 +9,7 @@ import {
   GridColumns,
   GridRowId,
   useGridApiContext,
-} from '@mui/x-data-grid-pro';
+} from '@mui/x-data-grid-premium';
 import { formatRelative } from 'date-fns';
 import Icon from '@mdi/react';
 import { mdiCardsHeartOutline, mdiSpotify } from '@mdi/js';

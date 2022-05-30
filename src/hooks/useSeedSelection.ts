@@ -1,4 +1,4 @@
-import { type GridRowParams, type GridRowId } from '@mui/x-data-grid-pro';
+import { type GridRowParams, type GridRowId } from '@mui/x-data-grid-premium';
 import { useCallback, useState } from 'react';
 
 export function useSeedSelection() {
