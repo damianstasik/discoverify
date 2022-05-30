@@ -1,6 +1,6 @@
 import { StrictMode, Suspense } from 'react';
-import * as ReactDOM from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { createRoot } from 'react-dom/client';
 import { Provider } from 'jotai';
 import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -51,7 +51,9 @@ function SuspensedApp() {
   );
 }
 
-ReactDOM.render(
+const root = createRoot(document.getElementById('root')!);
+
+root.render(
   <StrictMode>
     <CssBaseline />
     <ThemeProvider theme={theme}>
@@ -66,5 +68,4 @@ ReactDOM.render(
       </SnackbarProvider>
     </ThemeProvider>
   </StrictMode>,
-  document.getElementById('root'),
 );
