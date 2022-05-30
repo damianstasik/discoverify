@@ -13,7 +13,7 @@ import { IconButton } from '@mui/material';
 import { useInfiniteQuery, useMutation, useQueryClient } from 'react-query';
 import { mdiCardsHeartOutline, mdiSpotify } from '@mdi/js';
 import Icon from '@mdi/react';
-import { tokenIdState } from '../store';
+import { tokenState } from '../store';
 import { Layout } from '../components/Layout';
 import * as trackApi from '../api/track';
 import * as artistApi from '../api/artist';
@@ -87,7 +87,7 @@ const columns: GridColumns = [
 ];
 
 export function RelatedArtistsTopTracks() {
-  const tokenId = useAtomValue(tokenIdState);
+  const token = useAtomValue(tokenState);
   const apiRef = useGridApiRef();
   const { id } = useParams<{ id: string }>();
 
@@ -96,7 +96,7 @@ export function RelatedArtistsTopTracks() {
   const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery(
     ['related-artists-top-tracks', id],
     async ({ pageParam = 0 }) =>
-      artistApi.getRelatedArtistsTopTracks(tokenId, id, pageParam),
+      artistApi.getRelatedArtistsTopTracks(token, id, pageParam),
     {
       getNextPageParam: (lastPage, pages) =>
         lastPage.hasNextPage ? pages.length : false,
@@ -104,7 +104,7 @@ export function RelatedArtistsTopTracks() {
   );
 
   const { mutateAsync: saveTrack } = useMutation<void, Error, string>(
-    async (trackId) => trackApi.saveTrack(tokenId, trackId),
+    async (trackId) => trackApi.saveTrack(token, trackId),
     {
       onSuccess(trackId) {
         queryClient.setQueryData(['related-artists-top-tracks', id], (old) => {

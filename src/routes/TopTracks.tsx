@@ -19,7 +19,7 @@ import {
 import { useInfiniteQuery, useMutation } from 'react-query';
 import { mdiCardsHeartOutline, mdiSpotify } from '@mdi/js';
 import Icon from '@mdi/react';
-import { tokenIdState } from '../store';
+import { tokenState } from '../store';
 import { Layout } from '../components/Layout';
 import * as trackApi from '../api/track';
 import { TrackSelectionToolbar } from '../components/TrackSelectionToolbar';
@@ -92,18 +92,18 @@ const columns: GridColumns = [
 ];
 
 export function TopTracks() {
-  const tokenId = useAtomValue(tokenIdState);
+  const token = useAtomValue(tokenState);
   const apiRef = useGridApiRef();
   const [timeRange, setTimeRange] = useState('short_term');
 
   const { mutateAsync: saveTrack } = useMutation<void, Error, string>(
-    async (id) => trackApi.saveTrack(tokenId, id),
+    async (id) => trackApi.saveTrack(token, id),
   );
 
   const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery(
     ['top-tracks', timeRange],
     async ({ pageParam = 0 }) =>
-      trackApi.getTopTracks(tokenId, timeRange, pageParam),
+      trackApi.getTopTracks(token, timeRange, pageParam),
     {
       getNextPageParam: (lastPage) => lastPage.nextPage,
     },

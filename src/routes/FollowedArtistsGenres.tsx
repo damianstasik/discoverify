@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import { type GridColumns } from '@mui/x-data-grid-premium';
 import { useAtomValue } from 'jotai';
 import { useQuery } from 'react-query';
-import { tokenIdState } from '../store';
+import { tokenState } from '../store';
 import { Layout } from '../components/Layout';
 import { Table } from '../components/Table';
 
@@ -39,11 +39,9 @@ const columns: GridColumns = [
   },
 ];
 
-async function fetchFollowedArtistsGenres(tokenId) {
+async function fetchFollowedArtistsGenres(token) {
   const res = await fetch(
-    `${
-      import.meta.env.VITE_API_URL
-    }/followed-artists/genres?tokenId=${tokenId}`,
+    `${import.meta.env.VITE_API_URL}/followed-artists/genres?tokenId=${token}`,
   );
 
   const body = await res.json();
@@ -52,11 +50,10 @@ async function fetchFollowedArtistsGenres(tokenId) {
 }
 
 export function FollowedArtistsGenres() {
-  const tokenId = useAtomValue(tokenIdState);
+  const token = useAtomValue(tokenState);
 
-  const { isLoading, data } = useQuery(
-    ['followed-artists-genres', tokenId],
-    () => fetchFollowedArtistsGenres(tokenId),
+  const { isLoading, data } = useQuery(['followed-artists-genres', token], () =>
+    fetchFollowedArtistsGenres(token),
   );
 
   return (

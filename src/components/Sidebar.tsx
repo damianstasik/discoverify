@@ -28,7 +28,7 @@ import Avatar from '@mui/material/Avatar';
 import Collapse from '@mui/material/Collapse';
 import { useQuery } from 'react-query';
 import { createTheme, ThemeProvider } from '@mui/material';
-import { tokenIdState, userAtom } from '../store';
+import { tokenState, userAtom } from '../store';
 import { Navbar } from './Navbar';
 
 function RouterListItem({ to, label, icon }: any) {
@@ -67,7 +67,7 @@ const darkTheme = createTheme({
 
 export const Sidebar = memo(() => {
   const user = useAtomValue(userAtom)!;
-  const tokenId = useAtomValue(tokenIdState);
+  const token = useAtomValue(tokenState);
 
   const { data } = useQuery<
     void,
@@ -75,7 +75,7 @@ export const Sidebar = memo(() => {
     { playlists: any[]; hasNextPage: boolean }
   >(['playlists'], async () => {
     const res = await fetch(
-      `${import.meta.env.VITE_API_URL}/playlists?tokenId=${tokenId}&limit=5`,
+      `${import.meta.env.VITE_API_URL}/playlists?tokenId=${token}&limit=5`,
     );
     const body = await res.json();
 

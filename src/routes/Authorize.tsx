@@ -1,11 +1,11 @@
 import { Navigate, useSearchParams } from 'react-router-dom';
-import { useUpdateAtom } from 'jotai/utils';
+import { useSetAtom } from 'jotai';
 import { useQuery } from 'react-query';
-import { tokenIdState } from '../store';
+import { tokenState } from '../store';
 
 export function Authorize() {
   const [searchParams] = useSearchParams();
-  const setTokenId = useUpdateAtom(tokenIdState);
+  const setToken = useSetAtom(tokenState);
 
   const code = searchParams.get('code');
 
@@ -13,13 +13,13 @@ export function Authorize() {
     ['authorize', code],
     async () => {
       const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/authorize?code=${code}`,
+        `${import.meta.env.VITE_API_URL}/auth/authorize?code=${code}`,
       );
 
-      const body = await res.json();
+      const body = await res.text();
 
-      if (body?.tokenId) {
-        return body.tokenId;
+      if (res.ok && body) {
+        return body;
       }
 
       throw new Error();
@@ -27,8 +27,8 @@ export function Authorize() {
     {
       enabled: !!code,
       suspense: true,
-      onSuccess(tokenId) {
-        setTokenId(tokenId);
+      onSuccess(token) {
+        setToken(token);
       },
       onError(e) {
         console.error('Authorize error', e);

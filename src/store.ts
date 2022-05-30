@@ -28,14 +28,16 @@ export const trackPreviewUrlSelector = atom(
   },
 );
 
-export const tokenIdState = atomWithStorage('tid', '');
+export const tokenState = atomWithStorage('token', '');
 
 export const userAtom = atomWithQuery((get) => ({
-  queryKey: ['user', get(tokenIdState)],
-  queryFn: async ({ queryKey: [, tokenId] }) => {
-    const req = await fetch(
-      `${import.meta.env.VITE_API_URL}/me?tokenId=${tokenId}`,
-    );
+  queryKey: ['user', get(tokenState)],
+  queryFn: async ({ queryKey: [, token] }) => {
+    const req = await fetch(`${import.meta.env.VITE_API_URL}/auth/me`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
     if (!req.ok) {
       return null;

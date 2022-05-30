@@ -13,7 +13,7 @@ import { mdiCardsHeartOutline, mdiSpotify } from '@mdi/js';
 import IconButton from '@mui/material/IconButton';
 import { memo, useMemo, useState } from 'react';
 import { Layout } from '../components/Layout';
-import { tokenIdState } from '../store';
+import { tokenState } from '../store';
 import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
 import { ArtistColumn } from '../components/ArtistColumn';
 import { AlbumColumn } from '../components/AlbumColumn';
@@ -120,15 +120,18 @@ const columns: GridColumns = [
 ];
 
 export function Liked() {
-  const tokenId = useAtomValue(tokenIdState);
+  const token = useAtomValue(tokenState);
 
   const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery(
-    ['liked', tokenId],
+    ['liked', token],
     async ({ pageParam = 0 }) => {
       const res = await fetch(
-        `${
-          import.meta.env.VITE_API_URL
-        }/liked?tokenId=${tokenId}&page=${pageParam}`,
+        `${import.meta.env.VITE_API_URL}/user/liked?page=${pageParam}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
       );
 
       const body = await res.json();

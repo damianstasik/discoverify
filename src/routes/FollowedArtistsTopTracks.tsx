@@ -13,7 +13,7 @@ import { IconButton } from '@mui/material';
 import { useInfiniteQuery, useMutation } from 'react-query';
 import { mdiCardsHeartOutline, mdiSpotify } from '@mdi/js';
 import Icon from '@mdi/react';
-import { tokenIdState } from '../store';
+import { tokenState } from '../store';
 import { Layout } from '../components/Layout';
 import * as trackApi from '../api/track';
 import * as artistApi from '../api/artist';
@@ -87,20 +87,20 @@ const columns: GridColumns = [
 ];
 
 export function FollowedArtistsTopTracks() {
-  const tokenId = useAtomValue(tokenIdState);
+  const token = useAtomValue(tokenState);
   const [searchParams] = useSearchParams();
   const apiRef = useGridApiRef();
   const genre = searchParams.get('genre');
 
   const { mutateAsync: saveTrack } = useMutation<void, Error, string>(
-    async (id) => trackApi.saveTrack(tokenId, id),
+    async (id) => trackApi.saveTrack(token, id),
   );
 
   const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery(
     ['top-tracks', genre],
     async ({ pageParam = 0 }) =>
       artistApi.getFollowedArtistsTopTracks(
-        tokenId,
+        token,
         searchParams.get('genre'),
         pageParam,
       ),

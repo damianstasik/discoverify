@@ -15,7 +15,7 @@ import { mdiCardsHeartOutline, mdiSpotify } from '@mdi/js';
 import { useDebounce } from 'use-debounce';
 import IconButton from '@mui/material/IconButton';
 import produce from 'immer';
-import { tokenIdState } from '../store';
+import { tokenState } from '../store';
 import { Layout } from '../components/Layout';
 import { TrackAutocomplete } from '../components/TrackAutocomplete';
 import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
@@ -458,7 +458,7 @@ export function Recommendations() {
 
   const { attributes, values } = useAttributes(conf);
 
-  const tokenId = useAtomValue(tokenIdState);
+  const token = useAtomValue(tokenState);
   const queryClient = useQueryClient();
 
   const trackIds = searchParams.getAll('trackId');
@@ -468,12 +468,16 @@ export function Recommendations() {
     async () => {
       const q = new URLSearchParams({
         trackId: trackIds.join(),
-        tokenId,
         ...values,
       });
 
       const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/recommended?${q}`,
+        `${import.meta.env.VITE_API_URL}/track/recommended?${q}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
       );
       const body = await res.json();
 
@@ -486,7 +490,7 @@ export function Recommendations() {
   >(['songs', trackIds], async () => {
     const q = new URLSearchParams({
       trackId: trackIds.join(),
-      tokenId,
+      token,
     });
 
     const req = await fetch(`${import.meta.env.VITE_API_URL}/get-tracks?${q}`);
@@ -502,7 +506,7 @@ export function Recommendations() {
     async () => {
       const q = new URLSearchParams({
         q: debouncedQuery,
-        tokenId,
+        token,
       });
 
       const req = await fetch(`${import.meta.env.VITE_API_URL}/search?${q}`);

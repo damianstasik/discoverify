@@ -15,7 +15,7 @@ import { IconButton, Link } from '@mui/material';
 import { useInfiniteQuery, useMutation, useQueryClient } from 'react-query';
 import { mdiSpotify } from '@mdi/js';
 import Icon from '@mdi/react';
-import { tokenIdState } from '../store';
+import { tokenState } from '../store';
 import { Layout } from '../components/Layout';
 import * as trackApi from '../api/track';
 import * as playlistApi from '../api/playlist';
@@ -58,7 +58,7 @@ const columns: GridColumns = [
 ];
 
 export function Playlists() {
-  const tokenId = useAtomValue(tokenIdState);
+  const token = useAtomValue(tokenState);
   const apiRef = useGridApiRef();
   const { id } = useParams<{ id: string }>();
 
@@ -66,7 +66,7 @@ export function Playlists() {
 
   const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery(
     ['playlists', id],
-    async ({ pageParam = 0 }) => playlistApi.getPlaylists(tokenId, pageParam),
+    async ({ pageParam = 0 }) => playlistApi.getPlaylists(token, pageParam),
     {
       getNextPageParam: (lastPage, pages) =>
         lastPage.hasNextPage ? pages.length : false,
@@ -74,7 +74,7 @@ export function Playlists() {
   );
 
   const { mutateAsync: saveTrack } = useMutation<void, Error, string>(
-    async (trackId) => trackApi.saveTrack(tokenId, trackId),
+    async (trackId) => trackApi.saveTrack(token, trackId),
     {
       onSuccess(trackId) {
         queryClient.setQueryData(['related-artists-top-tracks', id], (old) => {

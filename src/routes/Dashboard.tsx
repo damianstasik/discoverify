@@ -11,15 +11,17 @@ import { Link as RouterLink } from 'react-router-dom';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Link from '@mui/material/Link';
 import { Layout } from '../components/Layout';
-import { tokenIdState } from '../store';
+import { tokenState } from '../store';
 
 export default function Dashboard() {
-  const tokenId = useAtomValue(tokenIdState);
+  const token = useAtomValue(tokenState);
 
   const { data, isLoading } = useQuery(['stats'], async () => {
-    const res = await fetch(
-      `${import.meta.env.VITE_API_URL}/user/stats?tokenId=${tokenId}`,
-    );
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/user/stats`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
     const body = await res.json();
 

@@ -13,7 +13,7 @@ import {
 import { formatRelative } from 'date-fns';
 import Icon from '@mdi/react';
 import { mdiCardsHeartOutline, mdiSpotify } from '@mdi/js';
-import { tokenIdState } from '../store';
+import { tokenState } from '../store';
 import { Layout } from '../components/Layout';
 import { TrackSelectionToolbar } from '../components/TrackSelectionToolbar';
 import { AlbumColumn } from '../components/AlbumColumn';
@@ -127,7 +127,7 @@ const columns: GridColumns = [
 ];
 
 export function Playlist() {
-  const tokenId = useAtomValue(tokenIdState);
+  const token = useAtomValue(tokenState);
   const params = useParams<{ id: string }>();
 
   const { data, isFetching } = useQuery(
@@ -136,7 +136,7 @@ export function Playlist() {
       const res = await fetch(
         `${import.meta.env.VITE_API_URL}/playlist/${
           params.id
-        }?tokenId=${tokenId}`,
+        }?tokenId=${token}`,
       );
       const body = await res.json();
 
