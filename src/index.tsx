@@ -1,5 +1,5 @@
 import { StrictMode, Suspense } from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'jotai';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -8,7 +8,8 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { SnackbarProvider } from 'notistack';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
-import { App } from './App';
+import { LicenseInfo } from '@mui/x-data-grid-pro';
+import { Router } from './Router';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -19,6 +20,12 @@ const queryClient = new QueryClient({
     },
   },
 });
+
+const muiLicenseKey = import.meta.env.VITE_MUI_LICENSE_KEY;
+
+if (muiLicenseKey) {
+  LicenseInfo.setLicenseKey(muiLicenseKey);
+}
 
 const theme = createTheme({
   palette: {
@@ -46,7 +53,7 @@ function SuspensedApp() {
         </Box>
       }
     >
-      <App />
+      <Router />
     </Suspense>
   );
 }
@@ -60,9 +67,9 @@ root.render(
       <SnackbarProvider maxSnack={3}>
         <QueryClientProvider client={queryClient}>
           <Provider>
-            <Router>
+            <BrowserRouter>
               <SuspensedApp />
-            </Router>
+            </BrowserRouter>
           </Provider>
         </QueryClientProvider>
       </SnackbarProvider>
