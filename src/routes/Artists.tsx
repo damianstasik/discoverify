@@ -17,9 +17,8 @@ import PlayCircleFilledTwoToneIcon from '@mui/icons-material/PlayCircleFilledTwo
 import StopCircleTwoToneIcon from '@mui/icons-material/StopCircleTwoTone';
 import Skeleton from '@mui/material/Skeleton';
 import CardActionArea from '@mui/material/CardActionArea';
-import { useAtomValue } from 'jotai/utils';
-import { useAtom } from 'jotai';
 import { tokenIdState, trackPreviewState } from '../store';
+import { useAtomValue, useAtom } from 'jotai';
 import { Layout } from '../components/Layout';
 
 function ArtistCardSkeleton() {

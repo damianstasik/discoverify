@@ -1,6 +1,6 @@
 import { Navigate, RouteObject, useRoutes } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
-import { useAtomValue } from 'jotai/utils';
+import { useAtomValue } from 'jotai';
 import CircularProgress from '@mui/material/CircularProgress';
 import { Login } from './routes/Login';
 import { Authorize } from './routes/Authorize';

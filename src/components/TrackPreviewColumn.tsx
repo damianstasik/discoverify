@@ -1,8 +1,7 @@
 import { mdiPauseCircleOutline, mdiPlayCircleOutline } from '@mdi/js';
 import Icon from '@mdi/react';
 import IconButton from '@mui/material/IconButton';
-import { useAtom } from 'jotai';
-import { useAtomValue } from 'jotai/utils';
+import { useAtom, useAtomValue } from 'jotai';
 import { memo } from 'react';
 import { loadingTrackPreview, trackPreviewState } from '../store';
 

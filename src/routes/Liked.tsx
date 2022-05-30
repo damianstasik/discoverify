@@ -7,7 +7,7 @@ import {
   type GridRowId,
 } from '@mui/x-data-grid-premium';
 import { useInfiniteQuery } from 'react-query';
-import { useAtomValue } from 'jotai/utils';
+import { useAtomValue } from 'jotai';
 import Icon from '@mdi/react';
 import { mdiCardsHeartOutline, mdiSpotify } from '@mdi/js';
 import IconButton from '@mui/material/IconButton';

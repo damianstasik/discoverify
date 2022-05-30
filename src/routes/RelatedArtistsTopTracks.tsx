@@ -7,8 +7,8 @@ import {
   useGridApiContext,
   useGridApiRef,
   type GridRowId,
-import { useAtomValue } from 'jotai/utils';
 } from '@mui/x-data-grid-premium';
+import { useAtomValue } from 'jotai';
 import { IconButton } from '@mui/material';
 import { useInfiniteQuery, useMutation, useQueryClient } from 'react-query';
 import { mdiCardsHeartOutline, mdiSpotify } from '@mdi/js';

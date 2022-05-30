@@ -9,7 +9,7 @@ import {
 import { useQuery, useQueryClient } from 'react-query';
 import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
-import { useAtomValue } from 'jotai/utils';
+import { useAtomValue } from 'jotai';
 import Icon from '@mdi/react';
 import { mdiCardsHeartOutline, mdiSpotify } from '@mdi/js';
 import { useDebounce } from 'use-debounce';

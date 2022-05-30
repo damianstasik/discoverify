@@ -1,6 +1,6 @@
 import Button from '@mui/material/Button';
 import { Link as RouterLink, useParams } from 'react-router-dom';
-import { useAtomValue } from 'jotai/utils';
+import { useAtomValue } from 'jotai';
 import { useQuery } from 'react-query';
 import { IconButton, Typography } from '@mui/material';
 import { memo, useState } from 'react';

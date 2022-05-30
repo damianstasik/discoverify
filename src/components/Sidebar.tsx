@@ -22,7 +22,7 @@ import {
   mdiHistory,
 } from '@mdi/js';
 import Icon from '@mdi/react';
-import { useAtomValue } from 'jotai/utils';
+import { useAtomValue } from 'jotai';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import Collapse from '@mui/material/Collapse';

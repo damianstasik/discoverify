@@ -9,8 +9,8 @@ import {
   DataGridPremium,
   type GridColumns,
   useGridApiRef,
-import { useAtomValue } from 'jotai/utils';
 } from '@mui/x-data-grid-premium';
+import { useAtomValue } from 'jotai';
 import { IconButton, Link } from '@mui/material';
 import { useInfiniteQuery, useMutation, useQueryClient } from 'react-query';
 import { mdiSpotify } from '@mdi/js';
