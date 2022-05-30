@@ -107,7 +107,7 @@ export const Sidebar = memo(() => {
         <List dense>
           <RouterListItem
             label="Dashboard"
-            to="/"
+            to="/dashboard"
             icon={<DashboardTwoTone />}
           />
 

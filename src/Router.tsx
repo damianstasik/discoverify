@@ -28,6 +28,10 @@ export function Router() {
     routes = [
       {
         path: '/',
+        element: <Navigate to="/dashboard" replace />,
+      },
+      {
+        path: '/dashboard',
         element: <Dashboard />,
       },
       {
