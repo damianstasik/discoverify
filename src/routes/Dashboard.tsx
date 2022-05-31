@@ -56,7 +56,12 @@ export default function Dashboard() {
               </Typography>
             </CardContent>
             <CardActions>
-              <Button size="small" component={RouterLink} to="/liked">
+              <Button
+                size="small"
+                component={RouterLink}
+                to="/liked"
+                disabled={isLoading}
+              >
                 All liked tracks
               </Button>
             </CardActions>
@@ -76,7 +81,12 @@ export default function Dashboard() {
               </Typography>
             </CardContent>
             <CardActions>
-              <Button size="small" component={RouterLink} to="/artists">
+              <Button
+                size="small"
+                component={RouterLink}
+                to="/artists"
+                disabled={isLoading}
+              >
                 All followed artists
               </Button>
             </CardActions>
@@ -120,7 +130,12 @@ export default function Dashboard() {
               </Typography>
             </CardContent>
             <CardActions>
-              <Button size="small" component={RouterLink} to="/recently-played">
+              <Button
+                size="small"
+                component={RouterLink}
+                to="/recently-played"
+                disabled={isLoading}
+              >
                 More recently played tracks
               </Button>
             </CardActions>
@@ -163,7 +178,12 @@ export default function Dashboard() {
               </List>
             </CardContent>
             <CardActions>
-              <Button size="small" component={RouterLink} to="/top-artists">
+              <Button
+                size="small"
+                component={RouterLink}
+                to="/top-artists"
+                disabled={isLoading}
+              >
                 All top artists
               </Button>
             </CardActions>
@@ -228,7 +248,12 @@ export default function Dashboard() {
               </List>
             </CardContent>
             <CardActions>
-              <Button size="small" component={RouterLink} to="/top-tracks">
+              <Button
+                size="small"
+                component={RouterLink}
+                to="/top-tracks"
+                disabled={isLoading}
+              >
                 All top tracks
               </Button>
             </CardActions>
