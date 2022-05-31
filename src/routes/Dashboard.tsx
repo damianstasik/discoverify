@@ -5,11 +5,22 @@ import CardContent from '@mui/material/CardContent';
 import Grid from '@mui/material/Grid';
 import Skeleton from '@mui/material/Skeleton';
 import Typography from '@mui/material/Typography';
-import { useAtomValue } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { useQuery } from 'react-query';
 import { Link as RouterLink } from 'react-router-dom';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Link from '@mui/material/Link';
+import { mdiPlayCircleOutline } from '@mdi/js';
+import {
+  Avatar,
+  IconButton,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemButton,
+  ListItemText,
+} from '@mui/material';
+import Icon from '@mdi/react';
 import { Layout } from '../components/Layout';
 import { tokenState } from '../store';
 
@@ -111,6 +122,114 @@ export default function Dashboard() {
             <CardActions>
               <Button size="small" component={RouterLink} to="/recently-played">
                 More recently played tracks
+              </Button>
+            </CardActions>
+          </Card>
+        </Grid>
+        <Grid item xs={4}>
+          <Card>
+            <CardContent>
+              <Typography variant="h5" component="div">
+                Top 5 artists
+              </Typography>
+              <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                based on listening history
+              </Typography>
+              <List dense disablePadding>
+                {isLoading && (
+                  <ListItem disableGutters>
+                    <ListItemButton disableGutters>
+                      <ListItemAvatar>
+                        <Skeleton width={40} height={40} variant="circular" />
+                      </ListItemAvatar>
+                      <ListItemText primary={<Skeleton variant="text" />} />
+                    </ListItemButton>
+                  </ListItem>
+                )}
+                {data?.topArtists.map((artist) => (
+                  <ListItem disableGutters key={artist.id}>
+                    <ListItemButton
+                      disableGutters
+                      component={RouterLink}
+                      to={`/artist/${artist.id}`}
+                    >
+                      <ListItemAvatar>
+                        <Avatar alt={artist.name} src={artist.images[0].url} />
+                      </ListItemAvatar>
+                      <ListItemText primary={artist.name} />
+                    </ListItemButton>
+                  </ListItem>
+                ))}
+              </List>
+            </CardContent>
+            <CardActions>
+              <Button size="small" component={RouterLink} to="/top-artists">
+                All top artists
+              </Button>
+            </CardActions>
+          </Card>
+        </Grid>
+        <Grid item xs={4}>
+          <Card>
+            <CardContent>
+              <Typography variant="h5" component="div">
+                Top 5 tracks
+              </Typography>
+              <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                based on listening history
+              </Typography>
+              <List dense disablePadding>
+                {isLoading && (
+                  <ListItem disableGutters>
+                    <ListItemAvatar sx={{ alignItems: 'center' }}>
+                      <IconButton disabled aria-label="Play">
+                        <Skeleton width={24} height={24} variant="circular" />
+                      </IconButton>
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary={<Skeleton variant="text" />}
+                      secondary={<Skeleton variant="text" width="70%" />}
+                    />
+                  </ListItem>
+                )}
+                {data?.topTracks.map((track) => (
+                  <ListItem disableGutters key={track.id}>
+                    <ListItemAvatar>
+                      <IconButton aria-label="Play">
+                        <Icon path={mdiPlayCircleOutline} size={1} />
+                      </IconButton>
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary={
+                        <Link
+                          component={RouterLink}
+                          to={`/track/${track.id}`}
+                          sx={{ fontSize: '1rem' }}
+                        >
+                          {track.name}
+                        </Link>
+                      }
+                      secondary={
+                        <Breadcrumbs sx={{ fontSize: 'inherit' }}>
+                          {track.artists.map((artist) => (
+                            <Link
+                              component={RouterLink}
+                              to={`/artist/${artist.id}`}
+                              key={artist.id}
+                            >
+                              {artist.name}
+                            </Link>
+                          ))}
+                        </Breadcrumbs>
+                      }
+                    />
+                  </ListItem>
+                ))}
+              </List>
+            </CardContent>
+            <CardActions>
+              <Button size="small" component={RouterLink} to="/top-tracks">
+                All top tracks
               </Button>
             </CardActions>
           </Card>
