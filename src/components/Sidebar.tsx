@@ -75,7 +75,12 @@ export const Sidebar = memo(() => {
     { playlists: any[]; hasNextPage: boolean }
   >(['playlists'], async () => {
     const res = await fetch(
-      `${import.meta.env.VITE_API_URL}/playlists?tokenId=${token}&limit=5`,
+      `${import.meta.env.VITE_API_URL}/user/playlists?limit=5`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
     );
     const body = await res.json();
 
