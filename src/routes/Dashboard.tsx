@@ -254,6 +254,7 @@ export default function Dashboard() {
                       aria-label="Play"
                       disabled={isLoadingTrackPreview}
                       onClick={() => playPreview(track)}
+                      color={isCurrentlyPlaying(track) ? 'primary' : 'default'}
                     >
                       <Icon
                         path={
