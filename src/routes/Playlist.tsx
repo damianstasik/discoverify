@@ -14,7 +14,6 @@ import { formatRelative } from 'date-fns';
 import Icon from '@mdi/react';
 import { mdiCardsHeartOutline, mdiSpotify } from '@mdi/js';
 import { tokenState } from '../store';
-import { Layout } from '../components/Layout';
 import { TrackSelectionToolbar } from '../components/TrackSelectionToolbar';
 import { AlbumColumn } from '../components/AlbumColumn';
 import { ArtistColumn } from '../components/ArtistColumn';
@@ -148,7 +147,7 @@ export function Playlist() {
   const [selectedTracks, setSelectedTracks] = useState<Array<GridRowId>>([]);
 
   return (
-    <Layout>
+    <>
       <Typography variant="h5" gutterBottom sx={{ mb: 2 }}>
         Playlist: {data.name}
       </Typography>
@@ -168,6 +167,6 @@ export function Playlist() {
           getRowId={(row) => row.track.id + row.added_at}
         />
       </div>
-    </Layout>
+    </>
   );
 }

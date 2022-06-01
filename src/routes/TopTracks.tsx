@@ -20,7 +20,6 @@ import { useInfiniteQuery, useMutation } from 'react-query';
 import { mdiCardsHeartOutline, mdiSpotify } from '@mdi/js';
 import Icon from '@mdi/react';
 import { tokenState } from '../store';
-import { Layout } from '../components/Layout';
 import * as trackApi from '../api/track';
 import { TrackSelectionToolbar } from '../components/TrackSelectionToolbar';
 import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
@@ -125,7 +124,7 @@ export function TopTracks() {
   const [selectedTracks, setSelectedTracks] = useState<Array<GridRowId>>([]);
 
   return (
-    <Layout>
+    <>
       <Typography variant="h5" sx={{ mb: 1 }}>
         Top tracks
       </Typography>
@@ -177,6 +176,6 @@ export function TopTracks() {
           }}
         />
       </div>
-    </Layout>
+    </>
   );
 }

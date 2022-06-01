@@ -3,7 +3,6 @@ import { Link as RouterLink, useParams } from 'react-router-dom';
 import { useAtomValue } from 'jotai';
 import { useQuery } from 'react-query';
 import { tokenState } from '../store';
-import { Layout } from '../components/Layout';
 
 export function Artist() {
   const token = useAtomValue(tokenState);
@@ -23,7 +22,7 @@ export function Artist() {
   );
 
   return (
-    <Layout>
+    <>
       <h3>{data.name}</h3>
 
       <Button
@@ -32,6 +31,6 @@ export function Artist() {
       >
         Related artists' top tracks
       </Button>
-    </Layout>
+    </>
   );
 }

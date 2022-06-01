@@ -14,7 +14,6 @@ import { useInfiniteQuery, useMutation } from 'react-query';
 import { mdiCardsHeartOutline, mdiSpotify } from '@mdi/js';
 import Icon from '@mdi/react';
 import { tokenState } from '../store';
-import { Layout } from '../components/Layout';
 import * as trackApi from '../api/track';
 import * as artistApi from '../api/artist';
 import { TrackSelectionToolbar } from '../components/TrackSelectionToolbar';
@@ -125,7 +124,7 @@ export function FollowedArtistsTopTracks() {
   const [selectedTracks, setSelectedTracks] = useState<Array<GridRowId>>([]);
 
   return (
-    <Layout>
+    <>
       <Typography variant="h5" sx={{ mb: 1 }}>
         Top tracks from followed artists
       </Typography>
@@ -153,6 +152,6 @@ export function FollowedArtistsTopTracks() {
           }}
         />
       </div>
-    </Layout>
+    </>
   );
 }

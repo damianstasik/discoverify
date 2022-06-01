@@ -16,7 +16,6 @@ import { useInfiniteQuery, useMutation, useQueryClient } from 'react-query';
 import { mdiSpotify } from '@mdi/js';
 import Icon from '@mdi/react';
 import { tokenState } from '../store';
-import { Layout } from '../components/Layout';
 import * as trackApi from '../api/track';
 import * as playlistApi from '../api/playlist';
 import { useSeedSelection } from '../hooks/useSeedSelection';
@@ -102,7 +101,7 @@ export function Playlists() {
   );
 
   return (
-    <Layout>
+    <>
       <Typography variant="h5" sx={{ mb: 2 }}>
         Playlists
       </Typography>
@@ -118,6 +117,6 @@ export function Playlists() {
           loading={isFetching}
         />
       </div>
-    </Layout>
+    </>
   );
 }

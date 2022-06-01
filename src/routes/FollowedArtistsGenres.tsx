@@ -5,7 +5,6 @@ import { type GridColumns } from '@mui/x-data-grid-premium';
 import { useAtomValue } from 'jotai';
 import { useQuery } from 'react-query';
 import { tokenState } from '../store';
-import { Layout } from '../components/Layout';
 import { Table } from '../components/Table';
 
 const columns: GridColumns = [
@@ -57,7 +56,7 @@ export function FollowedArtistsGenres() {
   );
 
   return (
-    <Layout>
+    <>
       <Typography variant="h5" sx={{ mb: 1 }}>
         Genres from followed artists
       </Typography>
@@ -74,6 +73,6 @@ export function FollowedArtistsGenres() {
           getRowId={(row) => row.name}
         />
       </div>
-    </Layout>
+    </>
   );
 }

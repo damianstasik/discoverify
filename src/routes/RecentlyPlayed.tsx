@@ -15,7 +15,6 @@ import { mdiCardsHeartOutline, mdiSpotify } from '@mdi/js';
 import Icon from '@mdi/react';
 import { formatRelative } from 'date-fns';
 import { tokenState } from '../store';
-import { Layout } from '../components/Layout';
 import * as trackApi from '../api/track';
 import { TrackSelectionToolbar } from '../components/TrackSelectionToolbar';
 import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
@@ -142,7 +141,7 @@ export function RecentlyPlayed() {
   const [selectedTracks, setSelectedTracks] = useState<Array<GridRowId>>([]);
 
   return (
-    <Layout>
+    <>
       <Typography variant="h5" sx={{ mb: 1 }}>
         Recently played tracks
       </Typography>
@@ -169,6 +168,6 @@ export function RecentlyPlayed() {
           getRowId={(row) => row.track.id + row.played_at}
         />
       </div>
-    </Layout>
+    </>
   );
 }

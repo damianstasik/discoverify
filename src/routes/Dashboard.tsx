@@ -21,7 +21,6 @@ import {
   ListItemText,
 } from '@mui/material';
 import Icon from '@mdi/react';
-import { Layout } from '../components/Layout';
 import { tokenState } from '../store';
 
 export default function Dashboard() {
@@ -40,7 +39,6 @@ export default function Dashboard() {
   });
 
   return (
-    <Layout>
       <Grid container spacing={2}>
         <Grid item xs={4}>
           <Card>
@@ -286,6 +284,5 @@ export default function Dashboard() {
           </Card>
         </Grid>
       </Grid>
-    </Layout>
   );
 }

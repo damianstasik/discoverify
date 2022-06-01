@@ -19,7 +19,6 @@ import Skeleton from '@mui/material/Skeleton';
 import CardActionArea from '@mui/material/CardActionArea';
 import { useAtomValue, useAtom } from 'jotai';
 import { tokenState, trackPreviewState } from '../store';
-import { Layout } from '../components/Layout';
 
 function ArtistCardSkeleton() {
   return (
@@ -144,7 +143,7 @@ export function Artists() {
   }, []);
 
   return (
-    <Layout>
+    <>
       <Typography variant="h5" gutterBottom>
         Artists from liked tracks
       </Typography>
@@ -191,6 +190,6 @@ export function Artists() {
           ))
         )}
       </Grid>
-    </Layout>
+    </>
   );
 }

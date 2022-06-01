@@ -12,7 +12,6 @@ import Icon from '@mdi/react';
 import { mdiCardsHeartOutline, mdiSpotify } from '@mdi/js';
 import IconButton from '@mui/material/IconButton';
 import { memo, useMemo, useState } from 'react';
-import { Layout } from '../components/Layout';
 import { tokenState } from '../store';
 import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
 import { ArtistColumn } from '../components/ArtistColumn';
@@ -151,7 +150,7 @@ export function Liked() {
   const [selectedTracks, setSelectedTracks] = useState<Array<GridRowId>>([]);
 
   return (
-    <Layout>
+    <>
       <Typography variant="h5" sx={{ mb: 2 }}>
         Liked tracks
       </Typography>
@@ -170,6 +169,6 @@ export function Liked() {
           }}
         />
       </div>
-    </Layout>
+    </>
   );
 }

@@ -16,7 +16,6 @@ import { useDebounce } from 'use-debounce';
 import IconButton from '@mui/material/IconButton';
 import produce from 'immer';
 import { tokenState } from '../store';
-import { Layout } from '../components/Layout';
 import { TrackAutocomplete } from '../components/TrackAutocomplete';
 import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
 import { ArtistColumn } from '../components/ArtistColumn';
@@ -520,7 +519,7 @@ export function Recommendations() {
   );
 
   return (
-    <Layout>
+    <>
       <Typography variant="h5" gutterBottom sx={{ mb: 2 }}>
         Recommendations
       </Typography>
@@ -576,6 +575,6 @@ export function Recommendations() {
           loading={isFetching}
         />
       </div>
-    </Layout>
+    </>
   );
 }

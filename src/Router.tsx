@@ -16,6 +16,7 @@ import { TopTracks } from './routes/TopTracks';
 import { Playlists } from './routes/Playlists';
 import { RecentlyPlayed } from './routes/RecentlyPlayed';
 import { Playlist } from './routes/Playlist';
+import { Layout } from './components/Layout';
 
 const Dashboard = lazy(() => import('./routes/Dashboard'));
 
@@ -28,71 +29,73 @@ export function Router() {
     routes = [
       {
         path: '/',
-        element: <Navigate to="/dashboard" replace />,
-      },
-      {
-        path: '/dashboard',
-        element: <Dashboard />,
-      },
-      {
-        path: '/liked',
-        element: <Liked />,
-      },
-      {
-        path: '/recommendations',
-        element: <Recommendations />,
-      },
-      {
-        path: '/playlists',
-        element: <Playlists />,
-      },
-      {
-        path: '/playlist/:id',
-        element: (
-          <Suspense fallback={<CircularProgress />}>
-            <Playlist />
-          </Suspense>
-        ),
-      },
-      {
-        path: '/artists',
-        element: <Artists />,
-      },
-      {
-        path: '/top-tracks',
-        element: <TopTracks />,
-      },
-      {
-        path: '/recently-played',
-        element: <RecentlyPlayed />,
-      },
-      {
-        path: '/followed-artists/top-tracks',
-        element: <FollowedArtistsTopTracks />,
-      },
-      {
-        path: '/related-artists/top-tracks/:id',
-        element: <RelatedArtistsTopTracks />,
-      },
-      {
-        path: '/related-artists/top-tracks',
-        element: <RelatedArtistsTopTracks />,
-      },
-      {
-        path: '/followed-artists/genres',
-        element: <FollowedArtistsGenres />,
-      },
-      {
-        path: '/artist/:id',
-        element: (
-          <Suspense fallback={<CircularProgress />}>
-            <Artist />
-          </Suspense>
-        ),
-      },
-      {
-        path: '/login',
-        element: <Navigate to="/" replace />,
+        element: <Layout />,
+        children: [
+          {
+            index: true,
+            element: <Navigate to="/dashboard" replace />,
+          },
+          {
+            path: 'dashboard',
+            element: <Dashboard />,
+          },
+          {
+            path: 'liked',
+            element: <Liked />,
+          },
+          {
+            path: 'recommendations',
+            element: <Recommendations />,
+          },
+          {
+            path: 'playlists',
+            element: <Playlists />,
+          },
+          {
+            path: 'playlist/:id',
+            element: (
+              <Suspense fallback={<CircularProgress />}>
+                <Playlist />
+              </Suspense>
+            ),
+          },
+          {
+            path: 'artists',
+            element: <Artists />,
+          },
+          {
+            path: 'top-tracks',
+            element: <TopTracks />,
+          },
+          {
+            path: 'recently-played',
+            element: <RecentlyPlayed />,
+          },
+          {
+            path: 'followed-artists/top-tracks',
+            element: <FollowedArtistsTopTracks />,
+          },
+          {
+            path: 'related-artists/top-tracks/:id',
+            element: <RelatedArtistsTopTracks />,
+          },
+          {
+            path: 'related-artists/top-tracks',
+            element: <RelatedArtistsTopTracks />,
+          },
+          {
+            path: 'followed-artists/genres',
+            element: <FollowedArtistsGenres />,
+          },
+          {
+            path: 'artist/:id',
+            element: (
+              <Suspense fallback={<CircularProgress />}>
+                <Artist />
+              </Suspense>
+            ),
+          },
+        ],
       },
       {
         path: '/login',
@@ -101,10 +104,6 @@ export function Router() {
     ];
   } else {
     routes = [
-      {
-        path: '/',
-        element: <Navigate to="/login" replace />,
-      },
       {
         path: '/login',
         element: <Login />,
@@ -116,6 +115,10 @@ export function Router() {
             <Authorize />
           </Suspense>
         ),
+      },
+      {
+        path: '*',
+        element: <Navigate to="/login" replace />,
       },
     ];
   }
