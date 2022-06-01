@@ -10,7 +10,7 @@ import { useQuery } from 'react-query';
 import { Link as RouterLink } from 'react-router-dom';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Link from '@mui/material/Link';
-import { mdiPlayCircleOutline } from '@mdi/js';
+import { mdiPauseCircleOutline, mdiPlayCircleOutline } from '@mdi/js';
 import {
   Avatar,
   IconButton,
@@ -21,7 +21,7 @@ import {
   ListItemText,
 } from '@mui/material';
 import Icon from '@mdi/react';
-import { tokenState } from '../store';
+import { loadingTrackPreview, tokenState, trackPreviewState } from '../store';
 
 export default function Dashboard() {
   const token = useAtomValue(tokenState);
@@ -38,7 +38,21 @@ export default function Dashboard() {
     return body;
   });
 
+  const [trackPreview, setTrackPreview] = useAtom(trackPreviewState);
+  const isLoadingTrackPreview = useAtomValue(loadingTrackPreview);
+
+  const isCurrentlyPlaying = (track) =>
+    trackPreview?.url === track.preview_url && trackPreview?.context === track;
+
+  const playPreview = (track) =>
+    setTrackPreview({
+      url: track.preview_url,
+      context: track,
+      state: 'playing',
+    });
+
   return (
+    <>
       <Grid container spacing={2}>
         <Grid item xs={4}>
           <Card>
@@ -63,9 +77,7 @@ export default function Dashboard() {
                   data?.likedTracks ?? 'N/A'
                 )}
               </Typography>
-              <Typography color="text.secondary">
-                through Discoverify
-              </Typography>
+              <Typography color="text.secondary">through Discoverify</Typography>
             </CardContent>
             <CardActions>
               <Button
@@ -89,20 +101,20 @@ export default function Dashboard() {
                 {isLoading ? (
                   <Skeleton width="15%" />
                 ) : (
-                  data?.followedArtists ?? 'N/A'
+                  data?.followedArtistsSpotify ?? 'N/A'
                 )}
               </Typography>
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                through Discoverify
+                on Spotify
               </Typography>
               <Typography variant="h6">
                 {isLoading ? (
                   <Skeleton width="15%" />
                 ) : (
-                  data?.followedArtistsSpotify ?? 'N/A'
+                  data?.followedArtists ?? 'N/A'
                 )}
               </Typography>
-              <Typography color="text.secondary">on Spotify</Typography>
+              <Typography color="text.secondary">through Discoverify</Typography>
             </CardContent>
             <CardActions>
               <Button
@@ -239,8 +251,19 @@ export default function Dashboard() {
                 {data?.topTracks.map((track) => (
                   <ListItem disableGutters key={track.id}>
                     <ListItemAvatar>
-                      <IconButton aria-label="Play">
-                        <Icon path={mdiPlayCircleOutline} size={1} />
+                      <IconButton
+                        aria-label="Play"
+                        disabled={isLoadingTrackPreview}
+                        onClick={() => playPreview(track)}
+                      >
+                        <Icon
+                          path={
+                            isCurrentlyPlaying(track)
+                              ? mdiPauseCircleOutline
+                              : mdiPlayCircleOutline
+                          }
+                          size={1}
+                        />
                       </IconButton>
                     </ListItemAvatar>
                     <ListItemText
@@ -284,5 +307,6 @@ export default function Dashboard() {
           </Card>
         </Grid>
       </Grid>
+    </>
   );
 }
