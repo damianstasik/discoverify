@@ -45,14 +45,28 @@ export default function Dashboard() {
         <Grid item xs={4}>
           <Card>
             <CardContent>
-              <Typography variant="h5" component="div">
+              <Typography variant="h5" sx={{ mb: 1.5 }}>
                 Liked tracks
               </Typography>
+              <Typography variant="h6">
+                {isLoading ? (
+                  <Skeleton width="15%" />
+                ) : (
+                  data?.likedTracksSpotify ?? 'N/A'
+                )}
+              </Typography>
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                through Discoverify
+                on Spotify
               </Typography>
               <Typography variant="h6">
-                {isLoading ? <Skeleton /> : data?.likedTracks ?? 'N/A'}
+                {isLoading ? (
+                  <Skeleton width="15%" />
+                ) : (
+                  data?.likedTracks ?? 'N/A'
+                )}
+              </Typography>
+              <Typography color="text.secondary">
+                through Discoverify
               </Typography>
             </CardContent>
             <CardActions>
@@ -70,15 +84,27 @@ export default function Dashboard() {
         <Grid item xs={4}>
           <Card>
             <CardContent>
-              <Typography variant="h5" component="div">
+              <Typography variant="h5" sx={{ mb: 1.5 }}>
                 Followed artists
+              </Typography>
+              <Typography variant="h6">
+                {isLoading ? (
+                  <Skeleton width="15%" />
+                ) : (
+                  data?.followedArtists ?? 'N/A'
+                )}
               </Typography>
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
                 through Discoverify
               </Typography>
               <Typography variant="h6">
-                {isLoading ? <Skeleton /> : data?.followedArtists ?? 'N/A'}
+                {isLoading ? (
+                  <Skeleton width="15%" />
+                ) : (
+                  data?.followedArtistsSpotify ?? 'N/A'
+                )}
               </Typography>
+              <Typography color="text.secondary">on Spotify</Typography>
             </CardContent>
             <CardActions>
               <Button
