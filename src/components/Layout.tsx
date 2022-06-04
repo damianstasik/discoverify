@@ -12,7 +12,7 @@ const drawerWidth = 300;
 export function Layout() {
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: '#f3f4f6' }}>
+    <div style={{ display: 'flex', minHeight: '100vh', background: '#121212' }}>
       <Sidebar />
 
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>

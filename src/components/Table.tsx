@@ -5,9 +5,7 @@ import {
 } from '@mui/x-data-grid-premium';
 
 const styles: SxProps<Theme> = {
-  background: '#fff',
   border: 0,
-  boxShadow: 2,
 
   '.MuiDataGrid-columnSeparator': {
     display: 'none',

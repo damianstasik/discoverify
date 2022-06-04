@@ -27,7 +27,6 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import Collapse from '@mui/material/Collapse';
 import { useQuery } from 'react-query';
-import { createTheme, ThemeProvider } from '@mui/material';
 import { tokenState, userAtom } from '../store';
 import { Navbar } from './Navbar';
 
@@ -40,30 +39,26 @@ function RouterListItem({ to, label, icon }: any) {
       component={RouterLink}
       to={to}
       selected={!!match}
+      disableGutters
       sx={{
-        margin: 1,
         width: 'auto',
         borderRadius: 1,
-        ':hover': {},
 
-        '&.Mui-selected': {
-          background: '#111827',
+        '&.Mui-selected, &:hover, &.Mui-selected:hover': {
+          background: 'none',
+          color: '#fff',
         },
       }}
     >
-      {icon && <ListItemIcon sx={{ color: '#6B7280' }}>{icon}</ListItemIcon>}
+      {icon && (
+        <ListItemIcon sx={{ color: 'currentColor' }}>{icon}</ListItemIcon>
+      )}
       <ListItemText primary={label} />
     </ListItem>
   );
 }
 
 const drawerWidth = 300;
-
-const darkTheme = createTheme({
-  palette: {
-    mode: 'dark',
-  },
-});
 
 export const Sidebar = memo(() => {
   const user = useAtomValue(userAtom)!;
@@ -88,169 +83,212 @@ export const Sidebar = memo(() => {
   });
 
   return (
-    <ThemeProvider theme={darkTheme}>
-      <Drawer
-        sx={{
+    <Drawer
+      sx={{
+        width: drawerWidth,
+        scrollbarColor: 'rgba(255,255,255,.3) transparent',
+        flexShrink: 0,
+        '& .MuiDrawer-paper': {
           width: drawerWidth,
-          flexShrink: 0,
-          '& .MuiDrawer-paper': {
-            width: drawerWidth,
-          },
-        }}
-        PaperProps={{
-          sx: {
-            backgroundColor: '#1f2937',
-          },
-        }}
-        variant="permanent"
-        anchor="left"
+        },
+      }}
+      PaperProps={{
+        sx: {
+          background: '#000',
+          border: 0,
+          padding: '24px',
+        },
+      }}
+      variant="permanent"
+      anchor="left"
+    >
+      <Navbar />
+
+      <List dense disablePadding>
+        <RouterListItem
+          label="Dashboard"
+          to="/dashboard"
+          icon={<DashboardTwoTone />}
+        />
+
+        <RouterListItem
+          label="Recommendations"
+          to="/recommendations"
+          icon={<RecommendIcon />}
+        />
+      </List>
+
+      <Divider sx={{ mt: 3 }} />
+
+      <List
+        dense
+        disablePadding
+        subheader={
+          <ListSubheader
+            sx={{
+              background: 'none',
+              px: 0,
+              pt: 3,
+              pb: 2,
+              fontWeight: 'bold',
+              lineHeight: 1,
+            }}
+            component="div"
+          >
+            Artists
+          </ListSubheader>
+        }
       >
-        <Navbar />
+        <RouterListItem
+          label="My top artists"
+          to="/top-artists"
+          icon={<Icon path={mdiAccountStar} size={1} />}
+        />
 
-        <Divider />
+        <RouterListItem
+          label="From liked tracks"
+          to="/artists"
+          icon={<Icon path={mdiAccountHeart} size={1} />}
+        />
 
-        <List dense>
-          <RouterListItem
-            label="Dashboard"
-            to="/dashboard"
-            icon={<DashboardTwoTone />}
-          />
+        <RouterListItem
+          label="Related to followed"
+          to="/similar"
+          icon={<Icon path={mdiAccountMultipleOutline} size={1} />}
+        />
+      </List>
 
-          <RouterListItem
-            label="Recommendations"
-            to="/recommendations"
-            icon={<RecommendIcon />}
-          />
-        </List>
+      <Divider sx={{ mt: 3 }} />
 
-        <Divider />
+      <List
+        dense
+        disablePadding
+        subheader={
+          <ListSubheader
+            sx={{
+              background: 'none',
+              px: 0,
+              pt: 3,
+              pb: 2,
+              fontWeight: 'bold',
+              lineHeight: 1,
+            }}
+            component="div"
+          >
+            Tracks
+          </ListSubheader>
+        }
+      >
+        <RouterListItem
+          label="Liked tracks"
+          to="/liked"
+          icon={<FavoriteIcon />}
+        />
 
-        <List
-          dense
-          subheader={
-            <ListSubheader sx={{ background: 'none' }} component="div">
-              Artists
-            </ListSubheader>
-          }
-        >
-          <RouterListItem
-            label="My top artists"
-            to="/top-artists"
-            icon={<Icon path={mdiAccountStar} size={1} />}
-          />
+        <RouterListItem
+          label="My top tracks"
+          to="/top-tracks"
+          icon={<Icon path={mdiMusicNotePlus} size={1} />}
+        />
 
-          <RouterListItem
-            label="From liked tracks"
-            to="/artists"
-            icon={<Icon path={mdiAccountHeart} size={1} />}
-          />
+        <RouterListItem
+          label="Top from followed artists"
+          to="/followed-artists/top-tracks"
+          icon={<Icon path={mdiAccountMusic} size={1} />}
+        />
 
-          <RouterListItem
-            label="Related to followed"
-            to="/similar"
-            icon={<Icon path={mdiAccountMultipleOutline} size={1} />}
-          />
-        </List>
+        <RouterListItem
+          label="Top from related artists"
+          to="/related-artists/top-tracks"
+          icon={<Icon path={mdiAccountMusicOutline} size={1} />}
+        />
 
-        <Divider />
+        <RouterListItem
+          label="Recently played"
+          to="/recently-played"
+          icon={<Icon path={mdiHistory} size={1} />}
+        />
+      </List>
 
-        <List
-          dense
-          subheader={
-            <ListSubheader sx={{ background: 'none' }} component="div">
-              Tracks
-            </ListSubheader>
-          }
-        >
-          <RouterListItem
-            label="Liked tracks"
-            to="/liked"
-            icon={<FavoriteIcon />}
-          />
+      <Divider sx={{ mt: 3 }} />
 
-          <RouterListItem
-            label="My top tracks"
-            to="/top-tracks"
-            icon={<Icon path={mdiMusicNotePlus} size={1} />}
-          />
+      <List
+        dense
+        disablePadding
+        subheader={
+          <ListSubheader
+            sx={{
+              background: 'none',
+              px: 0,
+              pt: 3,
+              pb: 2,
+              fontWeight: 'bold',
+              lineHeight: 1,
+            }}
+            component="div"
+          >
+            Genres
+          </ListSubheader>
+        }
+      >
+        <RouterListItem
+          label="From followed artists"
+          to="/followed-artists/genres"
+          icon={<Icon path={mdiTagText} size={1} />}
+        />
+      </List>
 
-          <RouterListItem
-            label="Top from followed artists"
-            to="/followed-artists/top-tracks"
-            icon={<Icon path={mdiAccountMusic} size={1} />}
-          />
+      <Divider sx={{ mt: 3 }} />
 
-          <RouterListItem
-            label="Top from related artists"
-            to="/related-artists/top-tracks"
-            icon={<Icon path={mdiAccountMusicOutline} size={1} />}
-          />
-
-          <RouterListItem
-            label="Recently played"
-            to="/recently-played"
-            icon={<Icon path={mdiHistory} size={1} />}
-          />
-        </List>
-
-        <Divider />
-
-        <List
-          dense
-          subheader={
-            <ListSubheader sx={{ background: 'none' }} component="div">
-              Genres
-            </ListSubheader>
-          }
-        >
-          <RouterListItem
-            label="From followed artists"
-            to="/followed-artists/genres"
-            icon={<Icon path={mdiTagText} size={1} />}
-          />
-        </List>
-
-        <Divider />
-
-        <List
-          dense
-          subheader={
-            <ListSubheader sx={{ background: 'none' }} component="div">
-              Playlists
-            </ListSubheader>
-          }
-        >
-          <Collapse in timeout="auto" unmountOnExit>
-            <List component="div" disablePadding dense>
-              {(data?.playlists || []).map((playlist) => (
-                <RouterListItem
-                  key={playlist.id}
-                  label={playlist.name}
-                  to={`/playlist/${playlist.id}`}
-                />
-              ))}
-
+      <List
+        dense
+        disablePadding
+        subheader={
+          <ListSubheader
+            sx={{
+              background: 'none',
+              px: 0,
+              pt: 3,
+              pb: 2,
+              fontWeight: 'bold',
+              lineHeight: 1,
+            }}
+            component="div"
+          >
+            Playlists
+          </ListSubheader>
+        }
+      >
+        <Collapse in timeout="auto" unmountOnExit>
+          <List component="div" disablePadding dense>
+            {(data?.playlists || []).map((playlist) => (
               <RouterListItem
-                label="All playlists"
-                to="/playlists"
-                icon={<Icon path={mdiPlaylistMusic} size={1} />}
+                key={playlist.id}
+                label={playlist.name}
+                to={`/playlist/${playlist.id}`}
               />
-            </List>
-          </Collapse>
-        </List>
+            ))}
 
-        <Divider />
+            <RouterListItem
+              label="All playlists"
+              to="/playlists"
+              icon={<Icon path={mdiPlaylistMusic} size={1} />}
+            />
+          </List>
+        </Collapse>
+      </List>
 
-        <List dense sx={{ mt: 'auto' }}>
-          <ListItem button>
-            <ListItemAvatar>
-              <Avatar src={user.photoUrl!} style={{ marginRight: '8px' }} />
-            </ListItemAvatar>
+      <Divider sx={{ my: 3 }} />
 
-            <ListItemText primary={user.displayName} secondary="My account" />
-          </ListItem>
-        </List>
-      </Drawer>
-    </ThemeProvider>
+      <List dense disablePadding sx={{ mt: 'auto' }}>
+        <ListItem button>
+          <ListItemAvatar>
+            <Avatar src={user.photoUrl!} style={{ marginRight: '8px' }} />
+          </ListItemAvatar>
+
+          <ListItemText primary={user.displayName} secondary="My account" />
+        </ListItem>
+      </List>
+    </Drawer>
   );
 });

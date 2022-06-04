@@ -1,24 +1,19 @@
-import Toolbar from '@mui/material/Toolbar';
+import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { memo } from 'react';
 
-export const Navbar = memo(() => {
+export function Navbar() {
   return (
-    <Toolbar
+    <Box
       sx={{
         flexDirection: 'column',
         alignItems: 'flex-start',
         justifyContent: 'center',
-        py: 1,
-        '&': {
-          px: 2,
-        },
+        pb: 3,
       }}
     >
-      <Typography variant="h6" display="block">
-        Discoverify.app
+      <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#fff' }}>
+        Discoverify
       </Typography>
-      <Typography variant="caption">Made with ❤️ by @ds</Typography>
-    </Toolbar>
+    </Box>
   );
-});
+}

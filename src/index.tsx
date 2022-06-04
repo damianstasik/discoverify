@@ -10,6 +10,7 @@ import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import { LicenseInfo } from '@mui/x-data-grid-premium';
 import { Router } from './Router';
+import './dark.css';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -30,11 +31,36 @@ if (muiLicenseKey) {
 
 const theme = createTheme({
   palette: {
-    // mode: 'dark',
+    mode: 'dark',
     neutral: {
-      main: '#64748B',
+      main: '#d7ba1e',
       contrastText: '#fff',
     },
+    background: {
+      default: '#000000',
+      paper: '#181818',
+    },
+    text: {
+      primary: '#b3b3b3',
+    },
+    divider: 'rgba(255, 255, 255, 0.25)',
+  },
+  typography: {
+    fontFamily: [
+      '-apple-system',
+      'BlinkMacSystemFont',
+      '"Segoe UI"',
+      'Roboto',
+      '"Helvetica Neue"',
+      'Arial',
+      'sans-serif',
+      '"Apple Color Emoji"',
+      '"Segoe UI Emoji"',
+      '"Segoe UI Symbol"',
+    ].join(','),
+  },
+  shape: {
+    borderRadius: 6,
   },
 });
 
@@ -63,8 +89,8 @@ const root = createRoot(document.getElementById('root')!);
 
 root.render(
   <StrictMode>
-    <CssBaseline />
     <ThemeProvider theme={theme}>
+      <CssBaseline />
       <SnackbarProvider maxSnack={3}>
         <QueryClientProvider client={queryClient}>
           <Provider>
