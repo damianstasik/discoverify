@@ -27,8 +27,23 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import Collapse from '@mui/material/Collapse';
 import { useQuery } from 'react-query';
+import styled from '@emotion/styled';
 import { tokenState, userAtom } from '../store';
 import { Navbar } from './Navbar';
+
+const Heading = styled(Divider)`
+  &::before {
+    display: none;
+  }
+  &::after {
+    top: 0;
+  }
+  .MuiDivider-wrapper {
+    padding-left: 0;
+    font-weight: 600;
+    color: #fff;
+  }
+`;
 
 function RouterListItem({ to, label, icon }: any) {
   const match = useMatch(to);
@@ -118,27 +133,9 @@ export const Sidebar = memo(() => {
         />
       </List>
 
-      <Divider sx={{ mt: 3 }} />
+      <Heading sx={{ mt: 3, mb: 2 }}>Artists</Heading>
 
-      <List
-        dense
-        disablePadding
-        subheader={
-          <ListSubheader
-            sx={{
-              background: 'none',
-              px: 0,
-              pt: 3,
-              pb: 2,
-              fontWeight: 'bold',
-              lineHeight: 1,
-            }}
-            component="div"
-          >
-            Artists
-          </ListSubheader>
-        }
-      >
+      <List dense disablePadding>
         <RouterListItem
           label="My top artists"
           to="/top-artists"
@@ -158,27 +155,9 @@ export const Sidebar = memo(() => {
         />
       </List>
 
-      <Divider sx={{ mt: 3 }} />
+      <Heading sx={{ mt: 3, mb: 2 }}>Tracks</Heading>
 
-      <List
-        dense
-        disablePadding
-        subheader={
-          <ListSubheader
-            sx={{
-              background: 'none',
-              px: 0,
-              pt: 3,
-              pb: 2,
-              fontWeight: 'bold',
-              lineHeight: 1,
-            }}
-            component="div"
-          >
-            Tracks
-          </ListSubheader>
-        }
-      >
+      <List dense disablePadding>
         <RouterListItem
           label="Liked tracks"
           to="/liked"
@@ -210,27 +189,9 @@ export const Sidebar = memo(() => {
         />
       </List>
 
-      <Divider sx={{ mt: 3 }} />
+      <Heading sx={{ mt: 3, mb: 2 }}>Genres</Heading>
 
-      <List
-        dense
-        disablePadding
-        subheader={
-          <ListSubheader
-            sx={{
-              background: 'none',
-              px: 0,
-              pt: 3,
-              pb: 2,
-              fontWeight: 'bold',
-              lineHeight: 1,
-            }}
-            component="div"
-          >
-            Genres
-          </ListSubheader>
-        }
-      >
+      <List dense disablePadding>
         <RouterListItem
           label="From followed artists"
           to="/followed-artists/genres"
@@ -238,27 +199,9 @@ export const Sidebar = memo(() => {
         />
       </List>
 
-      <Divider sx={{ mt: 3 }} />
+      <Heading sx={{ mt: 3, mb: 2 }}>Playlists</Heading>
 
-      <List
-        dense
-        disablePadding
-        subheader={
-          <ListSubheader
-            sx={{
-              background: 'none',
-              px: 0,
-              pt: 3,
-              pb: 2,
-              fontWeight: 'bold',
-              lineHeight: 1,
-            }}
-            component="div"
-          >
-            Playlists
-          </ListSubheader>
-        }
-      >
+      <List dense disablePadding>
         <Collapse in timeout="auto" unmountOnExit>
           <List component="div" disablePadding dense>
             {(data?.playlists || []).map((playlist) => (
