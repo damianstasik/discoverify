@@ -19,6 +19,7 @@ import { AlbumColumn } from '../components/AlbumColumn';
 import { TrackSelectionToolbar } from '../components/TrackSelectionToolbar';
 import { TrackNameColumn } from '../components/TrackNameColumn';
 import { Table } from '../components/Table';
+import { PageTitle } from '../components/PageTitle';
 
 function msToTime(duration: number) {
   const seconds = Math.floor((duration / 1000) % 60);
@@ -151,9 +152,7 @@ export function Liked() {
 
   return (
     <>
-      <Typography variant="h5" sx={{ mb: 2 }}>
-        Liked tracks
-      </Typography>
+      <PageTitle>Liked tracks</PageTitle>
 
       <div style={{ height: 800 }}>
         <Table

@@ -11,7 +11,7 @@ export function Navbar() {
         pb: 3,
       }}
     >
-      <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#fff' }}>
+      <Typography variant="h5" sx={{ fontWeight: '900', color: '#fff' }}>
         Discoverify
       </Typography>
     </Box>

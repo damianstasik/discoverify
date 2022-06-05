@@ -6,6 +6,7 @@ import {
 
 const styles: SxProps<Theme> = {
   border: 0,
+  background: 'none',
 
   '.MuiDataGrid-columnSeparator': {
     display: 'none',
@@ -13,6 +14,23 @@ const styles: SxProps<Theme> = {
 
   '.MuiDataGrid-columnHeaderTitleContainer': {
     padding: 0,
+  },
+
+  '.MuiDataGrid-columnHeaderTitle': {
+    color: '#fff',
+    fontWeight: 600,
+  },
+
+  '.MuiDataGrid-cell': {
+    border: 0,
+  },
+
+  '.MuiDataGrid-columnHeaders': {
+    mb: 2,
+  },
+
+  '.MuiDataGrid-row:hover': {
+    borderRadius: '6px',
   },
 };
 

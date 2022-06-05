@@ -56,7 +56,7 @@ export default function Dashboard() {
       <Grid item xs={4}>
         <Card>
           <CardContent>
-            <Typography variant="h5" sx={{ mb: 1.5 }}>
+            <Typography variant="h5" sx={{ mb: 1.5, color: '#fff' }}>
               Liked tracks
             </Typography>
             <Typography variant="h6">
@@ -93,7 +93,7 @@ export default function Dashboard() {
       <Grid item xs={4}>
         <Card>
           <CardContent>
-            <Typography variant="h5" sx={{ mb: 1.5 }}>
+            <Typography variant="h5" sx={{ mb: 1.5, color: '#fff' }}>
               Followed artists
             </Typography>
             <Typography variant="h6">
@@ -130,7 +130,7 @@ export default function Dashboard() {
       <Grid item xs={4}>
         <Card>
           <CardContent>
-            <Typography variant="h5" component="div">
+            <Typography variant="h5" component="div" sx={{ color: '#fff' }}>
               Recently played track
             </Typography>
             <Typography sx={{ mt: 1.5 }} variant="h6">
@@ -179,7 +179,7 @@ export default function Dashboard() {
       <Grid item xs={4}>
         <Card>
           <CardContent>
-            <Typography variant="h5" component="div">
+            <Typography variant="h5" component="div" sx={{ color: '#fff' }}>
               Top 5 artists
             </Typography>
             <Typography sx={{ mb: 1.5 }} color="text.secondary">
@@ -227,7 +227,7 @@ export default function Dashboard() {
       <Grid item xs={4}>
         <Card>
           <CardContent>
-            <Typography variant="h5" component="div">
+            <Typography variant="h5" component="div" sx={{ color: '#fff' }}>
               Top 5 tracks
             </Typography>
             <Typography sx={{ mb: 1.5 }} color="text.secondary">
