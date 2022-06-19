@@ -7,7 +7,7 @@ import {
   type GridRowId,
 } from '@mui/x-data-grid-premium';
 import { useInfiniteQuery } from 'react-query';
-import { useAtomValue } from 'jotai';
+import { useRecoilValue } from 'recoil';
 import Icon from '@mdi/react';
 import { mdiCardsHeartOutline, mdiSpotify } from '@mdi/js';
 import IconButton from '@mui/material/IconButton';
@@ -120,7 +120,7 @@ const columns: GridColumns = [
 ];
 
 export function Liked() {
-  const token = useAtomValue(tokenState);
+  const token = useRecoilValue(tokenState);
 
   const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery(
     ['liked', token],

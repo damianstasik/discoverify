@@ -1,7 +1,7 @@
 import { StrictMode, Suspense } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { createRoot } from 'react-dom/client';
-import { Provider } from 'jotai';
+import { RecoilRoot } from 'recoil';
 import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { QueryClient, QueryClientProvider } from 'react-query';
@@ -93,11 +93,11 @@ root.render(
       <CssBaseline />
       <SnackbarProvider maxSnack={3}>
         <QueryClientProvider client={queryClient}>
-          <Provider>
+          <RecoilRoot>
             <BrowserRouter>
               <SuspensedApp />
             </BrowserRouter>
-          </Provider>
+          </RecoilRoot>
         </QueryClientProvider>
       </SnackbarProvider>
     </ThemeProvider>

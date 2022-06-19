@@ -8,7 +8,7 @@ import {
   useGridApiRef,
   type GridRowId,
 } from '@mui/x-data-grid-premium';
-import { useAtomValue } from 'jotai';
+import { useRecoilValue } from 'recoil';
 import { IconButton } from '@mui/material';
 import { useInfiniteQuery, useMutation } from 'react-query';
 import { mdiCardsHeartOutline, mdiSpotify } from '@mdi/js';
@@ -98,7 +98,7 @@ const columns: GridColumns = [
 ];
 
 export function RecentlyPlayed() {
-  const token = useAtomValue(tokenState);
+  const token = useRecoilValue(tokenState);
   const [searchParams] = useSearchParams();
   const apiRef = useGridApiRef();
 

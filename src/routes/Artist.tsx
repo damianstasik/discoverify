@@ -1,11 +1,11 @@
 import Button from '@mui/material/Button';
 import { Link as RouterLink, useParams } from 'react-router-dom';
-import { useAtomValue } from 'jotai';
+import { useRecoilValue } from 'recoil';
 import { useQuery } from 'react-query';
 import { tokenState } from '../store';
 
 export function Artist() {
-  const token = useAtomValue(tokenState);
+  const token = useRecoilValue(tokenState);
   const params = useParams();
 
   const { data } = useQuery(

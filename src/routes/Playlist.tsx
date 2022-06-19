@@ -1,6 +1,6 @@
 import Button from '@mui/material/Button';
 import { Link as RouterLink, useParams } from 'react-router-dom';
-import { useAtomValue } from 'jotai';
+import { useRecoilValue } from 'recoil';
 import { useQuery } from 'react-query';
 import { IconButton, Typography } from '@mui/material';
 import { memo, useState } from 'react';
@@ -126,7 +126,7 @@ const columns: GridColumns = [
 ];
 
 export function Playlist() {
-  const token = useAtomValue(tokenState);
+  const token = useRecoilValue(tokenState);
   const params = useParams<{ id: string }>();
 
   const { data, isFetching } = useQuery(

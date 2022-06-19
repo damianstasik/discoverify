@@ -1,6 +1,6 @@
 import { Navigate, RouteObject, useRoutes } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
-import { useAtomValue } from 'jotai';
+import { useRecoilValue } from 'recoil';
 import CircularProgress from '@mui/material/CircularProgress';
 import { Login } from './routes/Login';
 import { Authorize } from './routes/Authorize';
@@ -8,7 +8,7 @@ import { Artists } from './routes/Artists';
 import { Artist } from './routes/Artist';
 import { FollowedArtistsTopTracks } from './routes/FollowedArtistsTopTracks';
 import { FollowedArtistsGenres } from './routes/FollowedArtistsGenres';
-import { userAtom } from './store';
+import { userState } from './store';
 import { Liked } from './routes/Liked';
 import { Recommendations } from './routes/Recommendations';
 import { RelatedArtistsTopTracks } from './routes/RelatedArtistsTopTracks';
@@ -21,7 +21,7 @@ import { Layout } from './components/Layout';
 const Dashboard = lazy(() => import('./routes/Dashboard'));
 
 export function Router() {
-  const user = useAtomValue(userAtom);
+  const user = useRecoilValue(userState);
 
   let routes: RouteObject[] = [];
 

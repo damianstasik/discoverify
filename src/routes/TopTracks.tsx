@@ -7,7 +7,7 @@ import {
   useGridApiRef,
   type GridRowId,
 } from '@mui/x-data-grid-premium';
-import { useAtomValue } from 'jotai';
+import { useRecoilValue } from 'recoil';
 import {
   FormControl,
   FormControlLabel,
@@ -91,7 +91,7 @@ const columns: GridColumns = [
 ];
 
 export function TopTracks() {
-  const token = useAtomValue(tokenState);
+  const token = useRecoilValue(tokenState);
   const apiRef = useGridApiRef();
   const [timeRange, setTimeRange] = useState('short_term');
 

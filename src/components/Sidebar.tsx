@@ -22,13 +22,13 @@ import {
   mdiHistory,
 } from '@mdi/js';
 import Icon from '@mdi/react';
-import { useAtomValue } from 'jotai';
+import { useRecoilValue } from 'recoil';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import Collapse from '@mui/material/Collapse';
 import { useQuery } from 'react-query';
 import styled from '@emotion/styled';
-import { tokenState, userAtom } from '../store';
+import { tokenState, userState } from '../store';
 import { Navbar } from './Navbar';
 
 const Heading = styled(Divider)`
@@ -76,8 +76,8 @@ function RouterListItem({ to, label, icon }: any) {
 const drawerWidth = 300;
 
 export const Sidebar = memo(() => {
-  const user = useAtomValue(userAtom)!;
-  const token = useAtomValue(tokenState);
+  const user = useRecoilValue(userState)!;
+  const token = useRecoilValue(tokenState);
 
   const { data } = useQuery<
     void,

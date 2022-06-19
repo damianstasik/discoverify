@@ -2,7 +2,7 @@ import Button from '@mui/material/Button';
 import { Link as RouterLink } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import { type GridColumns } from '@mui/x-data-grid-premium';
-import { useAtomValue } from 'jotai';
+import { useRecoilValue } from 'recoil';
 import { useQuery } from 'react-query';
 import { tokenState } from '../store';
 import { Table } from '../components/Table';
@@ -49,7 +49,7 @@ async function fetchFollowedArtistsGenres(token) {
 }
 
 export function FollowedArtistsGenres() {
-  const token = useAtomValue(tokenState);
+  const token = useRecoilValue(tokenState);
 
   const { isLoading, data } = useQuery(['followed-artists-genres', token], () =>
     fetchFollowedArtistsGenres(token),

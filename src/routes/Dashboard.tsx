@@ -5,7 +5,7 @@ import CardContent from '@mui/material/CardContent';
 import Grid from '@mui/material/Grid';
 import Skeleton from '@mui/material/Skeleton';
 import Typography from '@mui/material/Typography';
-import { useAtom, useAtomValue } from 'jotai';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { useQuery } from 'react-query';
 import { Link as RouterLink } from 'react-router-dom';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
@@ -24,7 +24,7 @@ import Icon from '@mdi/react';
 import { loadingTrackPreview, tokenState, trackPreviewState } from '../store';
 
 export default function Dashboard() {
-  const token = useAtomValue(tokenState);
+  const token = useRecoilValue(tokenState);
 
   const { data, isLoading } = useQuery(['stats'], async () => {
     const res = await fetch(`${import.meta.env.VITE_API_URL}/user/stats`, {
@@ -38,8 +38,8 @@ export default function Dashboard() {
     return body;
   });
 
-  const [trackPreview, setTrackPreview] = useAtom(trackPreviewState);
-  const isLoadingTrackPreview = useAtomValue(loadingTrackPreview);
+  const [trackPreview, setTrackPreview] = useRecoilState(trackPreviewState);
+  const isLoadingTrackPreview = useRecoilValue(loadingTrackPreview);
 
   const isCurrentlyPlaying = (track) =>
     trackPreview?.url === track.preview_url && trackPreview?.context === track;

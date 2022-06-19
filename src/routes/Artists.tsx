@@ -17,7 +17,7 @@ import PlayCircleFilledTwoToneIcon from '@mui/icons-material/PlayCircleFilledTwo
 import StopCircleTwoToneIcon from '@mui/icons-material/StopCircleTwoTone';
 import Skeleton from '@mui/material/Skeleton';
 import CardActionArea from '@mui/material/CardActionArea';
-import { useAtomValue, useAtom } from 'jotai';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { tokenState, trackPreviewState } from '../store';
 
 function ArtistCardSkeleton() {
@@ -43,8 +43,8 @@ function ArtistCardSkeleton() {
 function ArtistCard({ artist }: { artist: any }) {
   const [isLoading, setLoading] = useState(false);
   const [isFollowing, setFollowingState] = useState(false);
-  const token = useAtomValue(tokenState);
-  const [trackPreview, setTrackPreview] = useAtom(trackPreviewState);
+  const token = useRecoilValue(tokenState);
+  const [trackPreview, setTrackPreview] = useRecoilState(trackPreviewState);
   const handleFollow = () => {
     setLoading(true);
 
@@ -131,7 +131,7 @@ function ArtistCard({ artist }: { artist: any }) {
 export function Artists() {
   const [isLoading, setLoading] = useState(true);
   const [artists, setArtists] = useState([]);
-  const token = useAtomValue(tokenState);
+  const token = useRecoilValue(tokenState);
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_URL}/artists?tokenId=${token}`)

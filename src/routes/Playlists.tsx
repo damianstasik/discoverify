@@ -10,7 +10,7 @@ import {
   type GridColumns,
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
-import { useAtomValue } from 'jotai';
+import { useRecoilValue } from 'recoil';
 import { IconButton, Link } from '@mui/material';
 import { useInfiniteQuery, useMutation, useQueryClient } from 'react-query';
 import { mdiSpotify } from '@mdi/js';
@@ -57,7 +57,7 @@ const columns: GridColumns = [
 ];
 
 export function Playlists() {
-  const token = useAtomValue(tokenState);
+  const token = useRecoilValue(tokenState);
   const apiRef = useGridApiRef();
   const { id } = useParams<{ id: string }>();
 

@@ -1,19 +1,19 @@
 import { memo } from 'react';
 import AudioPlayer from 'react-h5-audio-player';
-import { useAtom } from 'jotai';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { trackPreviewState, loadingTrackPreview } from '../store';
 
 export const Player = memo(() => {
-  const [trackPreview, setTrackPreview] = useAtom(trackPreviewState);
+  const [trackPreview, setTrackPreview] = useRecoilState(trackPreviewState);
 
   const [isLoadingTrackPreview, setLoadingTrackPreview] =
-    useAtom(loadingTrackPreview);
+    useRecoilState(loadingTrackPreview);
 
-  // const [playTrackPreviews, setPlayTrackPreviews] = useAtom(
+  // const [playTrackPreviews, setPlayTrackPreviews] = useRecoilState(
   //   playTrackPreviewsState,
   // );
-  // const [deviceId, setDeviceId] = useAtom(deviceIdState);
-  // const tokenId = useAtomValue(tokenIdState);
+  // const [deviceId, setDeviceId] = useRecoilState(deviceIdState);
+  // const tokenId = useRecoilValue(tokenIdState);
 
   // const { data: player } = useQuery(
   //   ['player', tokenId],

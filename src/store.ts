@@ -1,50 +1,98 @@
-import { atom } from 'jotai';
-import { atomWithStorage } from 'jotai/utils';
-import { atomWithQuery } from 'jotai/query';
+import { atom, type AtomEffect, selector } from 'recoil';
 
-export const loadingState = atom(false);
+export const likedIdsState = atom({
+  key: 'likedIds',
+  default: new Set(),
+});
 
-export const loadingTrackPreview = atom(false);
+export const albumState = atom<string | null>({
+  key: 'album',
+  default: null,
+});
+
+export const loadingState = atom<boolean>({
+  key: 'loading',
+  default: false,
+});
+
+export const loadingTrackPreview = atom<boolean>({
+  key: 'loadingTrackPreview',
+  default: false,
+});
 
 export const trackPreviewState = atom<{
   url: string;
   context: any;
   state: 'playing' | 'pause';
-} | null>(null);
+} | null>({
+  key: 'trackPreview',
+  default: null,
+});
 
-export const deviceIdState = atom('');
+export const deviceIdState = atom<string>({
+  key: 'deviceId',
+  default: '',
+});
 
-export const playTrackPreviewsState = atom(true);
+export const playTrackPreviewsState = atom<boolean>({
+  key: 'playTrackPreviews',
+  default: true,
+});
 
-export const trackPreviewUrlSelector = atom(
-  (get) => get(trackPreviewState),
-
-  (get, set, newValue) => {
+export const trackPreviewUrlSelector = selector({
+  key: 'trackPreviewUrl',
+  get: ({ get }) => get(trackPreviewState),
+  set: ({ get, set }, newValue) => {
     if (newValue === get(trackPreviewState)) {
-      set(trackPreviewState, '');
+      set(trackPreviewState, null);
     } else {
       set(trackPreviewState, newValue);
     }
   },
-);
+});
 
-export const tokenState = atomWithStorage('token', '');
-
-export const userAtom = atomWithQuery((get) => ({
-  queryKey: ['user', get(tokenState)],
-  queryFn: async ({ queryKey: [, token] }) => {
-    const req = await fetch(`${import.meta.env.VITE_API_URL}/auth/me`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    if (!req.ok) {
-      return null;
+const localStorageEffect =
+  <T>(key: string): AtomEffect<T> =>
+  ({ setSelf, onSet }) => {
+    const savedValue = localStorage.getItem(key);
+    if (savedValue !== null) {
+      setSelf(JSON.parse(savedValue));
     }
 
-    const res = req.json();
+    onSet((newValue, _, isReset) => {
+      isReset
+        ? localStorage.removeItem(key)
+        : localStorage.setItem(key, JSON.stringify(newValue));
+    });
+  };
 
-    return res;
+export const tokenState = atom({
+  key: 'token',
+  default: '',
+  effects: [localStorageEffect<string>('token')],
+});
+
+export const userState = selector<{
+  email: string;
+  photoUrl: string;
+  displayName: string;
+} | null>({
+  key: 'user',
+  get: async ({ get }) => {
+    try {
+      const req = await fetch(`${import.meta.env.VITE_API_URL}/auth/me`, {
+        headers: {
+          Authorization: `Bearer ${get(tokenState)}`,
+        },
+      });
+
+      if (!req.ok) {
+        return null;
+      }
+
+      return await req.json();
+    } catch {
+      return null;
+    }
   },
-}));
+});

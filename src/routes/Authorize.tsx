@@ -1,11 +1,11 @@
 import { Navigate, useSearchParams } from 'react-router-dom';
-import { useSetAtom } from 'jotai';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { useQuery } from 'react-query';
 import { tokenState } from '../store';
 
 export function Authorize() {
   const [searchParams] = useSearchParams();
-  const setToken = useSetAtom(tokenState);
+  const [token, setToken] = useRecoilState(tokenState);
 
   const code = searchParams.get('code');
 

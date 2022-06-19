@@ -1,7 +1,7 @@
 import { mdiPauseCircleOutline, mdiPlayCircleOutline } from '@mdi/js';
 import Icon from '@mdi/react';
 import IconButton from '@mui/material/IconButton';
-import { useAtom, useAtomValue } from 'jotai';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { memo } from 'react';
 import { loadingTrackPreview, trackPreviewState } from '../store';
 
@@ -11,8 +11,8 @@ interface Props {
 }
 
 export const TrackPreviewColumn = memo(({ url, context }: Props) => {
-  const [trackPreview, setTrackPreview] = useAtom(trackPreviewState);
-  const isLoadingTrackPreview = useAtomValue(loadingTrackPreview);
+  const [trackPreview, setTrackPreview] = useRecoilState(trackPreviewState);
+  const isLoadingTrackPreview = useRecoilValue(loadingTrackPreview);
 
   const isCurrentlyPlaying =
     trackPreview?.url === url && trackPreview?.context === context;
