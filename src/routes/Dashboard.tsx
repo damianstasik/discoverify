@@ -8,7 +8,7 @@ import { useQuery } from 'react-query';
 import { Link as RouterLink } from 'react-router-dom';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Link from '@mui/material/Link';
-import { mdiPauseCircleOutline, mdiPlayCircleOutline } from '@mdi/js';
+import { mdiPauseCircle, mdiPlayCircle } from '@mdi/js';
 import {
   Avatar,
   IconButton,
@@ -112,7 +112,7 @@ export default function Dashboard() {
           <Typography variant="h5" sx={{ mb: 1.5, color: '#fff' }}>
             Liked tracks
           </Typography>
-          <Typography variant="h6">
+          <Typography variant="h6" color="#fff">
             {isLoading ? (
               <Skeleton animation="wave" width="15%" />
             ) : (
@@ -122,7 +122,7 @@ export default function Dashboard() {
           <Typography sx={{ mb: 1.5 }} color="text.secondary">
             on Spotify
           </Typography>
-          <Typography variant="h6">
+          <Typography variant="h6" color="#fff">
             {isLoading ? (
               <Skeleton animation="wave" width="15%" />
             ) : (
@@ -136,7 +136,7 @@ export default function Dashboard() {
             component={RouterLink}
             to="/liked"
             disabled={isLoading}
-            sx={{ mt: 2 }}
+            sx={{ mt: 2, px: 1, ml: -1 }}
           >
             All liked tracks
           </Button>
@@ -147,7 +147,7 @@ export default function Dashboard() {
           <Typography variant="h5" sx={{ mb: 1.5, color: '#fff' }}>
             Followed artists
           </Typography>
-          <Typography variant="h6">
+          <Typography variant="h6" color="#fff">
             {isLoading ? (
               <Skeleton animation="wave" width="15%" />
             ) : (
@@ -157,7 +157,7 @@ export default function Dashboard() {
           <Typography sx={{ mb: 1.5 }} color="text.secondary">
             on Spotify
           </Typography>
-          <Typography variant="h6">
+          <Typography variant="h6" color="#fff">
             {isLoading ? (
               <Skeleton animation="wave" width="15%" />
             ) : (
@@ -171,7 +171,7 @@ export default function Dashboard() {
             component={RouterLink}
             to="/artists"
             disabled={isLoading}
-            sx={{ mt: 2 }}
+            sx={{ mt: 2, px: 1, ml: -1 }}
           >
             All followed artists
           </Button>
@@ -182,7 +182,7 @@ export default function Dashboard() {
           <Typography variant="h5" component="div" sx={{ color: '#fff' }}>
             Recently played track
           </Typography>
-          <Typography sx={{ mt: 1.5 }} variant="h6">
+          <Typography sx={{ mt: 1.5 }} variant="subtitle1">
             {isLoading ? (
               <Skeleton animation="wave" />
             ) : (
@@ -192,6 +192,8 @@ export default function Dashboard() {
                     component={RouterLink}
                     to={`/artist/${artist.id}`}
                     key={artist.id}
+                    color="#fff"
+                    underline="hover"
                   >
                     {artist.name}
                   </Link>
@@ -199,7 +201,7 @@ export default function Dashboard() {
               </Breadcrumbs>
             )}
           </Typography>
-          <Typography variant="subtitle1">
+          <Typography variant="subtitle2">
             {isLoading ? (
               <Skeleton animation="wave" />
             ) : (
@@ -207,6 +209,8 @@ export default function Dashboard() {
                 component={RouterLink}
                 to={`/track/${data?.recentlyPlayedTrack?.track.id}`}
                 key={data?.recentlyPlayedTrack?.track.id}
+                color="rgba(255, 255, 255, 0.7)"
+                underline="hover"
               >
                 {data?.recentlyPlayedTrack?.track.name}
               </Link>
@@ -218,7 +222,7 @@ export default function Dashboard() {
             component={RouterLink}
             to="/recently-played"
             disabled={isLoading}
-            sx={{ mt: 2 }}
+            sx={{ mt: 2, px: 1, ml: -1 }}
           >
             More recently played tracks
           </Button>
@@ -248,11 +252,12 @@ export default function Dashboard() {
                   disableGutters
                   component={RouterLink}
                   to={`/artist/${artist.id}`}
+                  sx={{ px: 1, borderRadius: 1, mx: -1 }}
                 >
                   <ListItemAvatar>
                     <Avatar alt={artist.name} src={artist.images[0].url} />
                   </ListItemAvatar>
-                  <ListItemText primary={artist.name} />
+                  <ListItemText primary={artist.name} sx={{ color: '#fff' }} />
                 </ListItemButton>
               </ListItem>
             ))}
@@ -263,7 +268,7 @@ export default function Dashboard() {
             component={RouterLink}
             to="/top-artists"
             disabled={isLoading}
-            sx={{ mt: 2 }}
+            sx={{ mt: 2, px: 1, ml: -1 }}
           >
             All top artists
           </Button>
@@ -299,8 +304,8 @@ export default function Dashboard() {
                     <Icon
                       path={
                         isCurrentlyPlaying(track)
-                          ? mdiPauseCircleOutline
-                          : mdiPlayCircleOutline
+                          ? mdiPauseCircle
+                          : mdiPlayCircle
                       }
                       size={1}
                     />
@@ -312,6 +317,8 @@ export default function Dashboard() {
                       component={RouterLink}
                       to={`/track/${track.id}`}
                       sx={{ fontSize: '1rem' }}
+                      color="#fff"
+                      underline="hover"
                     >
                       {track.name}
                     </Link>
@@ -326,6 +333,8 @@ export default function Dashboard() {
                           component={RouterLink}
                           to={`/artist/${artist.id}`}
                           key={artist.id}
+                          color="rgba(255, 255, 255, 0.7)"
+                          underline="hover"
                         >
                           {artist.name}
                         </Link>
@@ -342,7 +351,7 @@ export default function Dashboard() {
             component={RouterLink}
             to="/top-tracks"
             disabled={isLoading}
-            sx={{ mt: 2 }}
+            sx={{ mt: 2, px: 1, ml: -1 }}
           >
             All top tracks
           </Button>
