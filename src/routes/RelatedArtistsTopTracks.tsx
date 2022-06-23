@@ -94,8 +94,9 @@ export function RelatedArtistsTopTracks() {
 
   const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery(
     ['related-artists-top-tracks', id],
-    async ({ pageParam = 0 }) =>
-      artistApi.getRelatedArtistsTopTracks(token, id, pageParam),
+    async function relatedArtistsTopTracksQuery({ pageParam = 0 }) {
+      return artistApi.getRelatedArtistsTopTracks(token, id, pageParam);
+    },
     {
       getNextPageParam: (lastPage, pages) =>
         lastPage.hasNextPage ? pages.length : false,

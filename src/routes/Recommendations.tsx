@@ -464,7 +464,7 @@ export function Recommendations() {
 
   const { data, isFetching } = useQuery(
     ['recommended', trackIds, values],
-    async () => {
+    async function recommendedQuery() {
       const q = new URLSearchParams({
         trackId: trackIds.join(),
         ...values,
@@ -486,7 +486,7 @@ export function Recommendations() {
 
   const { data: songs, isLoading: isLoadingSongs } = useQuery<
     Array<{ id: string; title: string }>
-  >(['songs', trackIds], async () => {
+  >(['songs', trackIds], async function getTracksQuery() {
     const q = new URLSearchParams({
       trackId: trackIds.join(),
       token,
@@ -502,7 +502,7 @@ export function Recommendations() {
     Array<{ id: string; title: string }>
   >(
     ['search', debouncedQuery],
-    async () => {
+    async function autocompleteQuery() {
       const q = new URLSearchParams({
         q: debouncedQuery,
         token,

@@ -131,7 +131,7 @@ export function Playlist() {
 
   const { data, isFetching } = useQuery(
     ['playlist', params.id],
-    async () => {
+    async function playlistQuery() {
       const res = await fetch(
         `${import.meta.env.VITE_API_URL}/playlist/${
           params.id

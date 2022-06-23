@@ -80,7 +80,7 @@ function TrackSkeleton() {
 export default function Dashboard() {
   const token = useRecoilValue(tokenState);
 
-  const { data, isLoading } = useQuery(['stats'], async () => {
+  const { data, isLoading } = useQuery(['stats'], async function statsQuery() {
     const res = await fetch(`${import.meta.env.VITE_API_URL}/user/stats`, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -157,7 +157,7 @@ export default function Dashboard() {
           <Typography sx={{ mb: 1.5 }} color="text.secondary">
             on Spotify
           </Typography>
-          <Typography variant="h6" color="#fff">
+          <Typography variant="h6">
             {isLoading ? (
               <Skeleton animation="wave" width="15%" />
             ) : (

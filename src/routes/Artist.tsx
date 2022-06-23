@@ -10,7 +10,7 @@ export function Artist() {
 
   const { data } = useQuery(
     ['artist', params.id],
-    async () => {
+    async function artistQuery() {
       const res = await fetch(
         `${import.meta.env.VITE_API_URL}/artist/${params.id}?tokenId=${token}`,
       );

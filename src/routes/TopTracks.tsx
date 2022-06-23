@@ -101,8 +101,9 @@ export function TopTracks() {
 
   const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery(
     ['top-tracks', timeRange],
-    async ({ pageParam = 0 }) =>
-      trackApi.getTopTracks(token, timeRange, pageParam),
+    async function topTracksQuery({ pageParam = 0 }) {
+      return trackApi.getTopTracks(token, timeRange, pageParam);
+    },
     {
       getNextPageParam: (lastPage) => lastPage.nextPage,
     },

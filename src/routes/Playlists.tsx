@@ -65,7 +65,9 @@ export function Playlists() {
 
   const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery(
     ['playlists', id],
-    async ({ pageParam = 0 }) => playlistApi.getPlaylists(token, pageParam),
+    async function playlistsQuery({ pageParam = 0 }) {
+      return playlistApi.getPlaylists(token, pageParam);
+    },
     {
       getNextPageParam: (lastPage, pages) =>
         lastPage.hasNextPage ? pages.length : false,

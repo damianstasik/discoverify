@@ -51,8 +51,11 @@ async function fetchFollowedArtistsGenres(token) {
 export function FollowedArtistsGenres() {
   const token = useRecoilValue(tokenState);
 
-  const { isLoading, data } = useQuery(['followed-artists-genres', token], () =>
-    fetchFollowedArtistsGenres(token),
+  const { isLoading, data } = useQuery(
+    ['followed-artists-genres', token],
+    async function followedArtistsGenres() {
+      return fetchFollowedArtistsGenres(token);
+    },
   );
 
   return (

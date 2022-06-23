@@ -97,12 +97,13 @@ export function FollowedArtistsTopTracks() {
 
   const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery(
     ['top-tracks', genre],
-    async ({ pageParam = 0 }) =>
-      artistApi.getFollowedArtistsTopTracks(
+    async function followedArtistsTopTracksQuery({ pageParam = 0 }) {
+      return artistApi.getFollowedArtistsTopTracks(
         token,
         searchParams.get('genre'),
         pageParam,
-      ),
+      );
+    },
     {
       getNextPageParam: (lastPage) => lastPage.nextPage,
     },

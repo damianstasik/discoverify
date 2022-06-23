@@ -108,7 +108,7 @@ export function RecentlyPlayed() {
 
   const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery(
     ['recently-played'],
-    async ({ pageParam }) => {
+    async function recentlyPlayedQuery({ pageParam }) {
       const res = await fetch(
         `${import.meta.env.VITE_API_URL}/recentlyPlayed?tokenId=${token}${
           pageParam ? `&after=${pageParam}` : ''

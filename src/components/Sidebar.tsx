@@ -83,7 +83,7 @@ export const Sidebar = memo(() => {
     void,
     Error,
     { playlists: any[]; hasNextPage: boolean }
-  >(['playlists'], async () => {
+  >(['playlists'], async function playlistsQuery() {
     const res = await fetch(
       `${import.meta.env.VITE_API_URL}/user/playlists?limit=5`,
       {

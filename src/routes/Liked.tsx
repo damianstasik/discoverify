@@ -124,7 +124,7 @@ export function Liked() {
 
   const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery(
     ['liked', token],
-    async ({ pageParam = 0 }) => {
+    async function likedQuery({ pageParam = 0 }) {
       const res = await fetch(
         `${import.meta.env.VITE_API_URL}/user/liked?page=${pageParam}`,
         {

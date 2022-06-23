@@ -13,7 +13,7 @@ export function Authorize() {
 
   const { isSuccess } = useQuery<void, Error, string>(
     ['authorize', code],
-    async () => {
+    async function authorizeQuery() {
       const res = await fetch(
         `${import.meta.env.VITE_API_URL}/auth/authorize?code=${code}`,
       );
