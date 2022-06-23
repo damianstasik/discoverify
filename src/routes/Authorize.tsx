@@ -1,11 +1,11 @@
 import { Navigate, useSearchParams } from 'react-router-dom';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import { useQuery } from 'react-query';
 import { tokenState } from '../store';
 
 export function Authorize() {
   const [searchParams] = useSearchParams();
-  const [token, setToken] = useRecoilState(tokenState);
+  const setToken = useSetRecoilState(tokenState);
 
   const code = searchParams.get('code');
 
@@ -16,10 +16,10 @@ export function Authorize() {
         `${import.meta.env.VITE_API_URL}/auth/authorize?code=${code}`,
       );
 
-      const body = await res.text();
+      const body = await res.json();
 
-      if (res.ok && body) {
-        return body;
+      if (res.ok && body?.token) {
+        return body.token;
       }
 
       throw new Error();
