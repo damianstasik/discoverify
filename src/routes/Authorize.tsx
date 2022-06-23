@@ -1,11 +1,13 @@
 import { Navigate, useSearchParams } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import { useQuery } from 'react-query';
+import { useSnackbar } from 'notistack';
 import { tokenState } from '../store';
 
 export function Authorize() {
   const [searchParams] = useSearchParams();
   const setToken = useSetRecoilState(tokenState);
+  const { enqueueSnackbar } = useSnackbar();
 
   const code = searchParams.get('code');
 
@@ -27,11 +29,16 @@ export function Authorize() {
     {
       enabled: !!code,
       suspense: true,
+      useErrorBoundary: false,
       onSuccess(token) {
         setToken(token);
       },
       onError(e) {
-        console.error('Authorize error', e);
+        enqueueSnackbar('Authorization error', {
+          variant: 'error',
+        });
+
+        console.log('Authorize error', e);
       },
     },
   );
