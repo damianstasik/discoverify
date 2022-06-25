@@ -9,7 +9,7 @@ interface Props {
 
 export const TrackNameColumn = memo(({ id, name }: Props) => {
   return (
-    <Link component={RouterLink} to={`/track/${id}`}>
+    <Link component={RouterLink} to={`/track/${id}`} color="#fff" py={1}>
       {name}
     </Link>
   );

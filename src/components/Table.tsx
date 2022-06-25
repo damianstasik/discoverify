@@ -29,7 +29,7 @@ const styles: SxProps<Theme> = {
     mb: 2,
   },
 
-  '.MuiDataGrid-row:hover': {
+  '.MuiDataGrid-row': {
     borderRadius: '6px',
   },
 };
@@ -48,6 +48,7 @@ export function Table(props: DataGridPremiumProps) {
       disableColumnFilter
       disableMultipleColumnsFiltering
       hideFooter
+      getRowHeight={() => 'auto'}
       {...props}
     />
   );
