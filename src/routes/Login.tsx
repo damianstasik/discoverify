@@ -3,21 +3,23 @@ import { useMutation } from 'react-query';
 import { useSnackbar } from 'notistack';
 import { Card, Box, Typography } from '@mui/material';
 
+async function authUrlMutation() {
+  const req = await fetch(`${import.meta.env.VITE_API_URL}/auth/url`);
+
+  if (!req.ok) {
+    throw new Error();
+  }
+
+  const res = await req.json();
+
+  return res;
+}
+
 export function Login() {
   const { enqueueSnackbar } = useSnackbar();
 
   const { mutate, isLoading } = useMutation<{ url: string }, Error>(
-    async function authUrlMutation() {
-      const req = await fetch(`${import.meta.env.VITE_API_URL}/auth/url`);
-
-      if (!req.ok) {
-        throw new Error();
-      }
-
-      const res = await req.json();
-
-      return res;
-    },
+    authUrlMutation,
     {
       onSuccess(res) {
         window.location.href = res.url;
@@ -31,6 +33,8 @@ export function Login() {
       },
     },
   );
+
+  const handleClick = () => mutate();
 
   return (
     <Box
@@ -47,11 +51,11 @@ export function Login() {
           Login
         </Typography>
         <Typography variant="body2" color="text.secondary" mb={3}>
-          You can login with Spotify by clicking on the button below.
+          You can login with Spotify by clicking the button below.
         </Typography>
         <LoadingButton
           variant="contained"
-          onClick={() => mutate()}
+          onClick={handleClick}
           loading={isLoading}
         >
           Login with Spotify
