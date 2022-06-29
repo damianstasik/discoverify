@@ -152,10 +152,10 @@ interface StatsResponse {
   topArtists: any[];
 }
 
-const statsQuery: QueryFunction<StatsResponse, string[]> = async ({
-  queryKey,
-  signal,
-}) => {
+const statsQuery: QueryFunction<
+  StatsResponse,
+  [key: string, token: string]
+> = async ({ queryKey, signal }) => {
   const res = await fetch(`${import.meta.env.VITE_API_URL}/user/stats`, {
     signal,
     headers: {
