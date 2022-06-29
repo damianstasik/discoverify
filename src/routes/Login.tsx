@@ -1,9 +1,9 @@
 import { LoadingButton } from '@mui/lab';
-import { useMutation } from 'react-query';
+import { type MutationFunction, useMutation } from 'react-query';
 import { useSnackbar } from 'notistack';
 import { Card, Box, Typography } from '@mui/material';
 
-async function authUrlMutation() {
+const authUrlMutation: MutationFunction<string, void> = async () => {
   const req = await fetch(`${import.meta.env.VITE_API_URL}/auth/url`);
 
   if (!req.ok) {
@@ -12,27 +12,24 @@ async function authUrlMutation() {
 
   const res = await req.json();
 
-  return res;
-}
+  return res?.url;
+};
 
 export function Login() {
   const { enqueueSnackbar } = useSnackbar();
 
-  const { mutate, isLoading } = useMutation<{ url: string }, Error>(
-    authUrlMutation,
-    {
-      onSuccess(res) {
-        window.location.href = res.url;
-      },
-      onError(error) {
-        console.log('Login error', error);
-
-        enqueueSnackbar('Login error', {
-          variant: 'error',
-        });
-      },
+  const { mutate, isLoading } = useMutation(authUrlMutation, {
+    onSuccess(url) {
+      window.location.href = url;
     },
-  );
+    onError(error) {
+      console.log('Login error', error);
+
+      enqueueSnackbar('Login error', {
+        variant: 'error',
+      });
+    },
+  });
 
   const handleClick = () => mutate();
 
