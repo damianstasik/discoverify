@@ -1,4 +1,3 @@
-import Typography from '@mui/material/Typography';
 import { formatRelative } from 'date-fns';
 import {
   type GridColumns,
@@ -6,12 +5,12 @@ import {
   useGridApiContext,
   type GridRowId,
 } from '@mui/x-data-grid-premium';
-import { useInfiniteQuery } from 'react-query';
+import { type QueryFunction, useInfiniteQuery } from 'react-query';
 import { useRecoilValue } from 'recoil';
 import Icon from '@mdi/react';
 import { mdiCardsHeartOutline, mdiSpotify } from '@mdi/js';
 import IconButton from '@mui/material/IconButton';
-import { memo, useMemo, useState } from 'react';
+import { memo, useState } from 'react';
 import { tokenState } from '../store';
 import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
 import { ArtistColumn } from '../components/ArtistColumn';
@@ -75,7 +74,7 @@ const columns: GridColumns = [
     ),
   },
   {
-    field: 'artist',
+    field: 'artists',
     headerName: 'Artist(s)',
     flex: 0.2,
     renderCell: (params) => <ArtistColumn artists={params.value} />,
@@ -119,36 +118,51 @@ const columns: GridColumns = [
   },
 ];
 
+type LikedRes = { tracks: Track[]; nextPage: number | null };
+type LikedQueryKey = [key: string, token: string];
+
+const likedQuery: QueryFunction<LikedRes, LikedQueryKey> = async ({
+  queryKey,
+  pageParam = 0,
+  signal,
+}) => {
+  const res = await fetch(
+    `${import.meta.env.VITE_API_URL}/user/liked?page=${pageParam}`,
+    {
+      signal,
+      headers: {
+        Authorization: `Bearer ${queryKey[1]}`,
+      },
+    },
+  );
+
+  const body = await res.json();
+
+  return body;
+};
+
+interface Track {
+  id: string;
+}
+
 export function Liked() {
   const token = useRecoilValue(tokenState);
-
-  const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery(
-    ['liked', token],
-    async function likedQuery({ pageParam = 0 }) {
-      const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/user/liked?page=${pageParam}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
-
-      const body = await res.json();
-
-      return body;
-    },
-    {
-      getNextPageParam: (lastPage) => lastPage.nextPage,
-    },
-  );
-
-  const rows = useMemo(
-    () => (data?.pages || []).map((page) => page.tracks).flat(),
-    [data],
-  );
-
   const [selectedTracks, setSelectedTracks] = useState<Array<GridRowId>>([]);
+
+  const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery<
+    LikedRes,
+    Error,
+    Track,
+    LikedQueryKey
+  >(['liked', token], likedQuery, {
+    getNextPageParam: (lastPage) => lastPage.nextPage,
+    select: (d) => ({
+      pages: d.pages.map((page) => page.tracks).flat(),
+      pageParams: d.pageParams,
+    }),
+  });
+
+  const rows = data?.pages || [];
 
   return (
     <>
