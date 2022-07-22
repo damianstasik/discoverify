@@ -5,7 +5,7 @@ import {
   useGridApiContext,
   type GridRowId,
 } from '@mui/x-data-grid-premium';
-import { type QueryFunction, useInfiniteQuery } from 'react-query';
+import { type QueryFunction, useInfiniteQuery } from '@tanstack/react-query';
 import { useRecoilValue } from 'recoil';
 import Icon from '@mdi/react';
 import { mdiCardsHeartOutline, mdiSpotify } from '@mdi/js';

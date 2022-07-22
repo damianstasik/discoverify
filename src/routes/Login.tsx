@@ -1,5 +1,5 @@
 import { LoadingButton } from '@mui/lab';
-import { type MutationFunction, useMutation } from 'react-query';
+import { type MutationFunction, useMutation } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import { Card, Box, Typography } from '@mui/material';
 

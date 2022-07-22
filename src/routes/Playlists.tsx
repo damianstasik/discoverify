@@ -12,7 +12,11 @@ import {
 } from '@mui/x-data-grid-premium';
 import { useRecoilValue } from 'recoil';
 import { IconButton, Link } from '@mui/material';
-import { useInfiniteQuery, useMutation, useQueryClient } from 'react-query';
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { mdiSpotify } from '@mdi/js';
 import Icon from '@mdi/react';
 import { tokenState } from '../store';

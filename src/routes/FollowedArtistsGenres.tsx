@@ -3,7 +3,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import { type GridColumns } from '@mui/x-data-grid-premium';
 import { useRecoilValue } from 'recoil';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { tokenState } from '../store';
 import { Table } from '../components/Table';
 

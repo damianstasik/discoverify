@@ -16,7 +16,7 @@ import {
   Radio,
   RadioGroup,
 } from '@mui/material';
-import { useInfiniteQuery, useMutation } from 'react-query';
+import { useInfiniteQuery, useMutation } from '@tanstack/react-query';
 import { mdiCardsHeartOutline, mdiSpotify } from '@mdi/js';
 import Icon from '@mdi/react';
 import { tokenState } from '../store';

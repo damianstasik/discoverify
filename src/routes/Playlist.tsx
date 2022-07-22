@@ -1,7 +1,7 @@
 import Button from '@mui/material/Button';
 import { Link as RouterLink, useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { IconButton, Typography } from '@mui/material';
 import { memo, useState } from 'react';
 import {

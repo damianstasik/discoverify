@@ -6,7 +6,7 @@ import {
   GridActionsCellItem,
   useGridApiContext,
 } from '@mui/x-data-grid-premium';
-import { useQuery, useQueryClient } from 'react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
 import { useRecoilValue } from 'recoil';

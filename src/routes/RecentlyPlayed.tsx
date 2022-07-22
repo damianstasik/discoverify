@@ -10,7 +10,7 @@ import {
 } from '@mui/x-data-grid-premium';
 import { useRecoilValue } from 'recoil';
 import { IconButton } from '@mui/material';
-import { useInfiniteQuery, useMutation } from 'react-query';
+import { useInfiniteQuery, useMutation } from '@tanstack/react-query';
 import { mdiCardsHeartOutline, mdiSpotify } from '@mdi/js';
 import Icon from '@mdi/react';
 import { formatRelative } from 'date-fns';

@@ -4,7 +4,7 @@ import Grid from '@mui/material/Grid';
 import Skeleton from '@mui/material/Skeleton';
 import Typography from '@mui/material/Typography';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { QueryFunction, useQuery } from 'react-query';
+import { QueryFunction, useQuery } from '@tanstack/react-query';
 import { Link as RouterLink } from 'react-router-dom';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Link from '@mui/material/Link';

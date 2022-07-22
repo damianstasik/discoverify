@@ -1,6 +1,6 @@
 import { Navigate, useSearchParams } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
-import { type QueryFunction, useQuery } from 'react-query';
+import { type QueryFunction, useQuery } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import { tokenState } from '../store';
 
