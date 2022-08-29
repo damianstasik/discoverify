@@ -44,5 +44,5 @@ export function Authorize() {
     },
   });
 
-  return <Navigate to={isSuccess ? '/dashboard' : '/login'} />;
+  return <Navigate to={isSuccess ? '/recommendations' : '/login'} />;
 }

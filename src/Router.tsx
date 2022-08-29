@@ -1,128 +1,125 @@
 import { Navigate, RouteObject, useRoutes } from 'react-router-dom';
-import { lazy, Suspense } from 'react';
-import { useRecoilValue } from 'recoil';
-import CircularProgress from '@mui/material/CircularProgress';
+// import { lazy, Suspense } from 'react';
+// import { useRecoilValue } from 'recoil';
+// import CircularProgress from '@mui/material/CircularProgress';
 import { Login } from './routes/Login';
 import { Authorize } from './routes/Authorize';
-import { Artists } from './routes/Artists';
-import { Artist } from './routes/Artist';
-import { FollowedArtistsTopTracks } from './routes/FollowedArtistsTopTracks';
-import { FollowedArtistsGenres } from './routes/FollowedArtistsGenres';
-import { userState } from './store';
+// import { Artists } from './routes/Artists';
+// import { Artist } from './routes/Artist';
+// import { FollowedArtistsTopTracks } from './routes/FollowedArtistsTopTracks';
+// import { FollowedArtistsGenres } from './routes/FollowedArtistsGenres';
+// import { userState } from './store';
 import { Liked } from './routes/Liked';
 import { Recommendations } from './routes/Recommendations';
-import { RelatedArtistsTopTracks } from './routes/RelatedArtistsTopTracks';
-import { TopTracks } from './routes/TopTracks';
-import { Playlists } from './routes/Playlists';
-import { RecentlyPlayed } from './routes/RecentlyPlayed';
-import { Playlist } from './routes/Playlist';
+// import { RelatedArtistsTopTracks } from './routes/RelatedArtistsTopTracks';
+// import { TopTracks } from './routes/TopTracks';
+// import { Playlists } from './routes/Playlists';
+// import { RecentlyPlayed } from './routes/RecentlyPlayed';
+// import { Playlist } from './routes/Playlist';
 import { Layout } from './components/Layout';
+// import { ArtistTopTracks } from './routes/ArtistTopTracks';
+// import { ArtistAlbums } from './routes/ArtistAlbums';
 
-const Dashboard = lazy(() => import('./routes/Dashboard'));
+// import Dashboard from './routes/Dashboard';
+// import { Test } from './routes/Test';
+// import { Track } from './routes/Track';
+
+const routes: RouteObject[] = [
+  {
+    path: '/',
+    element: <Layout />,
+    children: [
+      {
+        index: true,
+        element: <Navigate to="/recommendations" replace />,
+      },
+      // {
+      //   path: 'dashboard',
+      //   element: <Dashboard />,
+      // },
+      {
+        path: 'liked',
+        element: <Liked />,
+      },
+      {
+        path: 'recommendations',
+        element: <Recommendations />,
+      },
+      // {
+      //   path: 'playlists',
+      //   element: <Playlists />,
+      // },
+      // {
+      //   path: 'playlist/:id',
+      //   element: (
+      //     <Suspense fallback={<CircularProgress />}>
+      //       <Playlist />
+      //     </Suspense>
+      //   ),
+      // },
+      // {
+      //   path: 'artists',
+      //   element: <Artists />,
+      // },
+      // {
+      //   path: 'top-tracks',
+      //   element: <TopTracks />,
+      // },
+      // {
+      //   path: 'recently-played',
+      //   element: <RecentlyPlayed />,
+      // },
+      // {
+      //   path: 'followed-artists/top-tracks',
+      //   element: <FollowedArtistsTopTracks />,
+      // },
+      // {
+      //   path: 'related-artists/top-tracks/:id',
+      //   element: <RelatedArtistsTopTracks />,
+      // },
+      // {
+      //   path: 'related-artists/top-tracks',
+      //   element: <RelatedArtistsTopTracks />,
+      // },
+      // {
+      //   path: 'followed-artists/genres',
+      //   element: <FollowedArtistsGenres />,
+      // },
+      // {
+      //   path: 'track/:id',
+      //   element: <Track />,
+      // },
+      // {
+      //   path: 'artist/:id',
+      //   element: (
+      //     <Suspense fallback={<CircularProgress />}>
+      //       <Artist />
+      //     </Suspense>
+      //   ),
+      //   children: [
+      //     {
+      //       index: true,
+      //       element: <ArtistTopTracks />,
+      //     },
+      //     {
+      //       path: 'albums',
+      //       element: <ArtistAlbums />,
+      //     },
+      //   ],
+      // },
+    ],
+  },
+  {
+    path: '/login',
+    element: <Login />,
+  },
+  {
+    path: '/authorize',
+    element: <Authorize />,
+  },
+];
 
 export function Router() {
-  const user = useRecoilValue(userState);
-
-  let routes: RouteObject[] = [];
-
-  if (user) {
-    routes = [
-      {
-        path: '/',
-        element: <Layout />,
-        children: [
-          {
-            index: true,
-            element: <Navigate to="/dashboard" replace />,
-          },
-          {
-            path: 'dashboard',
-            element: <Dashboard />,
-          },
-          {
-            path: 'liked',
-            element: <Liked />,
-          },
-          {
-            path: 'recommendations',
-            element: <Recommendations />,
-          },
-          {
-            path: 'playlists',
-            element: <Playlists />,
-          },
-          {
-            path: 'playlist/:id',
-            element: (
-              <Suspense fallback={<CircularProgress />}>
-                <Playlist />
-              </Suspense>
-            ),
-          },
-          {
-            path: 'artists',
-            element: <Artists />,
-          },
-          {
-            path: 'top-tracks',
-            element: <TopTracks />,
-          },
-          {
-            path: 'recently-played',
-            element: <RecentlyPlayed />,
-          },
-          {
-            path: 'followed-artists/top-tracks',
-            element: <FollowedArtistsTopTracks />,
-          },
-          {
-            path: 'related-artists/top-tracks/:id',
-            element: <RelatedArtistsTopTracks />,
-          },
-          {
-            path: 'related-artists/top-tracks',
-            element: <RelatedArtistsTopTracks />,
-          },
-          {
-            path: 'followed-artists/genres',
-            element: <FollowedArtistsGenres />,
-          },
-          {
-            path: 'artist/:id',
-            element: (
-              <Suspense fallback={<CircularProgress />}>
-                <Artist />
-              </Suspense>
-            ),
-          },
-        ],
-      },
-      {
-        path: '/login',
-        element: <Navigate to="/" replace />,
-      },
-    ];
-  } else {
-    routes = [
-      {
-        path: '/login',
-        element: <Login />,
-      },
-      {
-        path: '/authorize',
-        element: (
-          <Suspense fallback={<CircularProgress />}>
-            <Authorize />
-          </Suspense>
-        ),
-      },
-      {
-        path: '*',
-        element: <Navigate to="/login" replace />,
-      },
-    ];
-  }
-
   const element = useRoutes(routes);
 
   return element;

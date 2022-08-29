@@ -28,6 +28,7 @@ import Avatar from '@mui/material/Avatar';
 import Collapse from '@mui/material/Collapse';
 import { useQuery } from '@tanstack/react-query';
 import styled from '@emotion/styled';
+import { Skeleton } from '@mui/material';
 import { tokenState, userState } from '../store';
 import { Navbar } from './Navbar';
 
@@ -45,6 +46,26 @@ const Heading = styled(Divider)`
   }
 `;
 
+function getRandomArbitrary(min: number, max: number) {
+  return Math.random() * (max - min) + min;
+}
+
+function ListItemSkeleton() {
+  const width = getRandomArbitrary(20, 90);
+
+  return (
+    <ListItem
+      sx={{
+        width: 'auto',
+        borderRadius: 1,
+        margin: '0 -16px',
+      }}
+    >
+      <ListItemText primary={<Skeleton width={`${width}%`} />} />
+    </ListItem>
+  );
+}
+
 function RouterListItem({ to, label, icon }: any) {
   const match = useMatch(to);
 
@@ -54,10 +75,10 @@ function RouterListItem({ to, label, icon }: any) {
       component={RouterLink}
       to={to}
       selected={!!match}
-      disableGutters
       sx={{
         width: 'auto',
         borderRadius: 1,
+        margin: '0 -16px',
 
         '&.Mui-selected, &:hover, &.Mui-selected:hover': {
           background: 'none',
@@ -66,7 +87,9 @@ function RouterListItem({ to, label, icon }: any) {
       }}
     >
       {icon && (
-        <ListItemIcon sx={{ color: 'currentColor' }}>{icon}</ListItemIcon>
+        <ListItemIcon sx={{ color: 'currentColor', minWidth: '42px' }}>
+          {icon}
+        </ListItemIcon>
       )}
       <ListItemText primary={label} />
     </ListItem>
@@ -77,25 +100,24 @@ const drawerWidth = 300;
 
 export const Sidebar = memo(() => {
   const user = useRecoilValue(userState)!;
-  const token = useRecoilValue(tokenState);
+  // const token = useRecoilValue(tokenState);
 
-  const { data } = useQuery<
-    void,
-    Error,
-    { playlists: any[]; hasNextPage: boolean }
-  >(['playlists'], async function playlistsQuery() {
-    const res = await fetch(
-      `${import.meta.env.VITE_API_URL}/user/playlists?limit=5`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
-    const body = await res.json();
+  // const { data, isLoading } = useQuery<{
+  //   playlists: any[];
+  //   hasNextPage: boolean;
+  // }>(['playlists'], async function playlistsQuery() {
+  //   const res = await fetch(
+  //     `${import.meta.env.VITE_API_URL}/user/playlists?limit=5`,
+  //     {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     },
+  //   );
+  //   const body = await res.json();
 
-    return body;
-  });
+  //   return body;
+  // });
 
   return (
     <Drawer
@@ -109,7 +131,7 @@ export const Sidebar = memo(() => {
       }}
       PaperProps={{
         sx: {
-          background: '#000',
+          background: 'rgba(0, 0, 0, .9)',
           border: 0,
           padding: '24px',
         },
@@ -120,11 +142,11 @@ export const Sidebar = memo(() => {
       <Navbar />
 
       <List dense disablePadding>
-        <RouterListItem
+        {/* <RouterListItem
           label="Dashboard"
           to="/dashboard"
           icon={<DashboardTwoTone />}
-        />
+        /> */}
 
         <RouterListItem
           label="Recommendations"
@@ -133,7 +155,7 @@ export const Sidebar = memo(() => {
         />
       </List>
 
-      <Heading sx={{ mt: 3, mb: 2 }}>Artists</Heading>
+      {/* <Heading sx={{ mt: 3, mb: 2 }}>Artists</Heading>
 
       <List dense disablePadding>
         <RouterListItem
@@ -149,11 +171,11 @@ export const Sidebar = memo(() => {
         />
 
         <RouterListItem
-          label="Related to followed"
+          label="Similar artists"
           to="/similar"
           icon={<Icon path={mdiAccountMultipleOutline} size={1} />}
         />
-      </List>
+      </List> */}
 
       <Heading sx={{ mt: 3, mb: 2 }}>Tracks</Heading>
 
@@ -163,7 +185,7 @@ export const Sidebar = memo(() => {
           to="/liked"
           icon={<FavoriteIcon />}
         />
-
+        {/* 
         <RouterListItem
           label="My top tracks"
           to="/top-tracks"
@@ -186,9 +208,9 @@ export const Sidebar = memo(() => {
           label="Recently played"
           to="/recently-played"
           icon={<Icon path={mdiHistory} size={1} />}
-        />
+        /> */}
       </List>
-
+      {/* 
       <Heading sx={{ mt: 3, mb: 2 }}>Genres</Heading>
 
       <List dense disablePadding>
@@ -204,6 +226,15 @@ export const Sidebar = memo(() => {
       <List dense disablePadding>
         <Collapse in timeout="auto" unmountOnExit>
           <List component="div" disablePadding dense>
+            {isLoading && (
+              <>
+                <ListItemSkeleton />
+                <ListItemSkeleton />
+                <ListItemSkeleton />
+                <ListItemSkeleton />
+                <ListItemSkeleton />
+              </>
+            )}
             {(data?.playlists || []).map((playlist) => (
               <RouterListItem
                 key={playlist.id}
@@ -219,9 +250,9 @@ export const Sidebar = memo(() => {
             />
           </List>
         </Collapse>
-      </List>
+      </List> */}
 
-      <Divider sx={{ my: 3 }} />
+      {/* <Divider sx={{ my: 3 }} />
 
       <List dense disablePadding sx={{ mt: 'auto' }}>
         <ListItem button>
@@ -231,7 +262,7 @@ export const Sidebar = memo(() => {
 
           <ListItemText primary={user.displayName} secondary="My account" />
         </ListItem>
-      </List>
+      </List> */}
     </Drawer>
   );
 });
