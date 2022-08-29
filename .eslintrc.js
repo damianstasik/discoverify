@@ -4,6 +4,7 @@ const sharedRules = {
   'no-bitwise': 'off',
   'no-param-reassign': 'off',
   'consistent-return': ['error', { treatUndefinedAsUnspecified: false }],
+  'no-restricted-syntax': 'off',
 };
 
 const sharedReactRules = {
