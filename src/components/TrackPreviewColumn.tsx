@@ -1,45 +1,67 @@
-import { mdiPauseCircleOutline, mdiPlayCircleOutline } from '@mdi/js';
+import { mdiPauseCircle, mdiPlayCircle } from '@mdi/js';
 import Icon from '@mdi/react';
 import IconButton from '@mui/material/IconButton';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { memo } from 'react';
-import { loadingTrackPreview, trackPreviewState } from '../store';
+import { useMutation } from '@tanstack/react-query';
+import {
+  deviceIdAtom,
+  loadingTrackPreview,
+  playerStateAtom,
+  playerTrackAtom,
+  tokenState,
+  trackPreviewState,
+} from '../store';
 
 interface Props {
-  url: string | null;
-  context: any;
+  track: any | null;
 }
 
-export const TrackPreviewColumn = memo(({ url, context }: Props) => {
+export const TrackPreviewColumn = memo(({ track }: Props) => {
+  const [playerTrack, setPlayerTrack] = useRecoilState(playerTrackAtom);
   const [trackPreview, setTrackPreview] = useRecoilState(trackPreviewState);
   const isLoadingTrackPreview = useRecoilValue(loadingTrackPreview);
+  const token = useRecoilValue(tokenState);
+  const isPlayerTrack = playerTrack?.uri === track?.uri; // && trackPreview?.context === context
+  const [playerState, setPlayerState] = useRecoilState(playerStateAtom);
+  const deviceId = useRecoilValue(deviceIdAtom);
 
-  const isCurrentlyPlaying =
-    trackPreview?.url === url && trackPreview?.context === context;
+  const { mutate } = useMutation(async (track) => {
+    await fetch(
+      `${import.meta.env.VITE_API_URL}/track/${
+        track.uri
+      }/play?deviceId=${deviceId}`,
+      {
+        method: 'post',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+  });
 
-  if (!url) {
+  if (!track) {
     return null;
   }
 
-  const handleClick = () =>
-    setTrackPreview({
-      url,
-      context,
-      state: 'playing',
-    });
+  const handleClick = () => {
+    setPlayerState('loading');
+    setPlayerTrack(track);
+    mutate(track);
+  };
 
   return (
     <IconButton
-      color={isCurrentlyPlaying ? 'primary' : 'default'}
+      color={isPlayerTrack ? 'primary' : 'default'}
       onClick={handleClick}
-      disabled={isLoadingTrackPreview}
-      aria-label={isCurrentlyPlaying ? 'Pause' : 'Play'}
+      disabled={isPlayerTrack && playerState === 'loading'}
+      aria-label={isPlayerTrack ? 'Pause' : 'Play'}
     >
       <Icon
         path={
-          isCurrentlyPlaying && trackPreview?.state === 'playing'
-            ? mdiPauseCircleOutline
-            : mdiPlayCircleOutline
+          isPlayerTrack && playerState === 'playing'
+            ? mdiPauseCircle
+            : mdiPlayCircle
         }
         size={1}
       />

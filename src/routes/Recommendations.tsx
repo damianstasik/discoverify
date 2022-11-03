@@ -64,9 +64,7 @@ const columns: GridColumns = [
     headerName: '',
     width: 60,
     sortable: false,
-    renderCell: (params) => (
-      <TrackPreviewColumn url={params.value} context={params.row} />
-    ),
+    renderCell: (params) => <TrackPreviewColumn track={params.row} />,
   },
   {
     field: 'name',

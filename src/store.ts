@@ -1,5 +1,19 @@
 import { atom, type AtomEffect, selector } from 'recoil';
 
+// player
+
+export const playerStateAtom = atom<'playing' | 'paused' | 'loading' | null>({
+  key: 'playerState',
+  default: null,
+});
+
+export const playerTrackAtom = atom<any | null>({
+  key: 'playerTrack',
+  default: null,
+});
+
+// non-player
+
 export const likedIdsState = atom({
   key: 'likedIds',
   default: new Set(),
@@ -29,9 +43,9 @@ export const trackPreviewState = atom<{
   default: null,
 });
 
-export const deviceIdState = atom<string>({
+export const deviceIdAtom = atom<string | null>({
   key: 'deviceId',
-  default: '',
+  default: null,
 });
 
 export const playTrackPreviewsState = atom<boolean>({
