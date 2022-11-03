@@ -7,6 +7,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { Sidebar } from './Sidebar';
 import { Player } from './Player';
 import { tokenState, userAtom } from '../store';
+import { refreshAccessToken } from '../api';
 
 const drawerWidth = 300;
 
@@ -14,9 +15,12 @@ export function Layout() {
   const location = useLocation();
   const token = useRecoilValue(tokenState);
   const setUser = useSetRecoilState(userAtom);
+  const setToken = useSetRecoilState(tokenState);
 
-  const { mutate } = useMutation(async () => {
-    console.log('token refresh logic');
+  const { mutate } = useMutation(refreshAccessToken, {
+    onSuccess(freshToken) {
+      setToken(freshToken);
+    },
   });
 
   const { data: user } = useQuery(
