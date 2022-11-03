@@ -7,7 +7,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { Sidebar } from './Sidebar';
 import { Player } from './Player';
 import { tokenState, userAtom } from '../store';
-import { refreshAccessToken } from '../api';
+import { getCurrentUser, refreshAccessToken } from '../api';
 
 const drawerWidth = 300;
 
@@ -23,39 +23,23 @@ export function Layout() {
     },
   });
 
-  const { data: user } = useQuery(
-    ['user', token],
-    async () => {
-      const req = await fetch(`${import.meta.env.VITE_API_URL}/auth/me`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!req.ok) {
-        throw new Error();
-      }
-
-      return req.json();
+  const { data: user } = useQuery(['user', token], getCurrentUser, {
+    suspense: true,
+    enabled: !!token,
+    refetchOnMount: true,
+    refetchOnReconnect: true,
+    refetchOnWindowFocus: true,
+    refetchIntervalInBackground: true,
+    refetchInterval: 60 * 60 * 1000,
+    onSuccess(data) {
+      setUser(data);
     },
-    {
-      suspense: true,
-      enabled: !!token,
-      refetchOnMount: true,
-      refetchOnReconnect: true,
-      refetchOnWindowFocus: true,
-      refetchIntervalInBackground: true,
-      refetchInterval: 60 * 60 * 1000,
-      onSuccess(data) {
-        setUser(data);
-      },
-      onError() {
-        // check error type, if token is expired run the mutation and update token that will rerun this query
-        // need to do this with keepExistingData to avoid triggering suspense
-        mutate();
-      },
+    onError() {
+      // check error type, if token is expired run the mutation and update token that will rerun this query
+      // need to do this with keepExistingData to avoid triggering suspense
+      mutate(token);
     },
-  );
+  });
 
   if (!user) {
     return <Navigate to="/login" state={location} replace />;

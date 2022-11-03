@@ -1,4 +1,5 @@
-import { MutationFunction } from '@tanstack/react-query';
+import { MutationFunction, QueryFunction } from '@tanstack/react-query';
+import { User } from '../types.d';
 
 export function createUrl(
   path: string,
@@ -25,4 +26,22 @@ export const refreshAccessToken: MutationFunction<string, string> = async (
   }
 
   throw new Error();
+};
+
+export const getCurrentUser: QueryFunction<
+  User,
+  [key: string, token: string]
+> = async ({ queryKey, signal }) => {
+  const req = await fetch(`${import.meta.env.VITE_API_URL}/auth/me`, {
+    signal,
+    headers: {
+      Authorization: `Bearer ${queryKey[1]}`,
+    },
+  });
+
+  if (!req.ok) {
+    throw new Error();
+  }
+
+  return req.json();
 };

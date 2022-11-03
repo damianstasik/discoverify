@@ -8,3 +8,9 @@ export enum PlaybackState {
   PLAYING,
   PAUSED,
 }
+
+export interface User {
+  email: string;
+  photoUrl: string;
+  displayName: string;
+}
