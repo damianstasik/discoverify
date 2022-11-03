@@ -87,27 +87,11 @@ export const tokenState = atom({
   effects: [localStorageEffect<string>('token')],
 });
 
-export const userState = selector<{
+export const userAtom = atom<{
   email: string;
   photoUrl: string;
   displayName: string;
 } | null>({
   key: 'user',
-  get: async ({ get }) => {
-    try {
-      const req = await fetch(`${import.meta.env.VITE_API_URL}/auth/me`, {
-        headers: {
-          Authorization: `Bearer ${get(tokenState)}`,
-        },
-      });
-
-      if (!req.ok) {
-        return null;
-      }
-
-      return await req.json();
-    } catch {
-      return null;
-    }
-  },
+  default: null,
 });
