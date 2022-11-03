@@ -1,8 +1,9 @@
 import { atom, type AtomEffect, selector } from 'recoil';
+import { PlaybackState } from './types.d';
 
 // player
 
-export const playerStateAtom = atom<'playing' | 'paused' | 'loading' | null>({
+export const playerStateAtom = atom<PlaybackState | null>({
   key: 'playerState',
   default: null,
 });

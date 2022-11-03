@@ -12,6 +12,7 @@ import {
   tokenState,
   trackPreviewState,
 } from '../store';
+import { PlaybackState } from '../types.d';
 
 interface Props {
   track: any | null;
@@ -59,7 +60,7 @@ export const TrackPreviewColumn = memo(({ track }: Props) => {
     >
       <Icon
         path={
-          isPlayerTrack && playerState === 'playing'
+          isPlayerTrack && playerState === PlaybackState.PLAYING
             ? mdiPauseCircle
             : mdiPlayCircle
         }

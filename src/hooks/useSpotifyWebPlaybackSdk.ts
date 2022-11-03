@@ -20,7 +20,6 @@ export function useSpotifyWebPlaybackSdk({
 
   useEffect(() => {
     if (window.Spotify) {
-      console.log('spot');
       playerRef.current = new Spotify.Player({
         name,
         getOAuthToken: async (cb) => {

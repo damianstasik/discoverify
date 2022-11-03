@@ -3,3 +3,8 @@ export interface Attribute<Value> {
   target: Value | null;
   max: Value | null;
 }
+
+export enum PlaybackState {
+  PLAYING,
+  PAUSED,
+}
