@@ -1,7 +1,7 @@
 import { Navigate, RouteObject, useRoutes } from 'react-router-dom';
-// import { lazy, Suspense } from 'react';
+import { lazy, Suspense } from 'react';
 // import { useRecoilValue } from 'recoil';
-// import CircularProgress from '@mui/material/CircularProgress';
+import CircularProgress from '@mui/material/CircularProgress';
 import { Login } from './routes/Login';
 import { Authorize } from './routes/Authorize';
 // import { Artists } from './routes/Artists';
@@ -15,7 +15,7 @@ import { Recommendations } from './routes/Recommendations';
 // import { TopTracks } from './routes/TopTracks';
 // import { Playlists } from './routes/Playlists';
 // import { RecentlyPlayed } from './routes/RecentlyPlayed';
-// import { Playlist } from './routes/Playlist';
+import { Playlist } from './routes/Playlist';
 import { Layout } from './components/Layout';
 // import { ArtistTopTracks } from './routes/ArtistTopTracks';
 // import { ArtistAlbums } from './routes/ArtistAlbums';
@@ -49,14 +49,14 @@ const routes: RouteObject[] = [
       //   path: 'playlists',
       //   element: <Playlists />,
       // },
-      // {
-      //   path: 'playlist/:id',
-      //   element: (
-      //     <Suspense fallback={<CircularProgress />}>
-      //       <Playlist />
-      //     </Suspense>
-      //   ),
-      // },
+      {
+        path: 'playlist/:id',
+        element: (
+          <Suspense fallback={<CircularProgress />}>
+            <Playlist />
+          </Suspense>
+        ),
+      },
       // {
       //   path: 'artists',
       //   element: <Artists />,
