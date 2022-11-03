@@ -61,12 +61,7 @@ const columns: GridColumns = [
     headerName: '',
     width: 60,
     sortable: false,
-    renderCell: (params) => (
-      <TrackPreviewColumn
-        url={params.row.track.preview_url}
-        context={params.row.track}
-      />
-    ),
+    renderCell: (params) => <TrackPreviewColumn track={params.row.track} />,
   },
   {
     field: 'name',
@@ -130,18 +125,21 @@ export function Playlist() {
   const params = useParams<{ id: string }>();
 
   const { data, isFetching } = useQuery(
-    ['playlist', params.id],
+    ['playlist', params.id, token],
     async function playlistQuery() {
       const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/playlist/${
-          params.id
-        }?tokenId=${token}`,
+        `${import.meta.env.VITE_API_URL}/playlist/${params.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
       );
       const body = await res.json();
 
-      return body.playlist;
+      return body;
     },
-    { suspense: true, keepPreviousData: true },
+    { suspense: true },
   );
 
   const [selectedTracks, setSelectedTracks] = useState<Array<GridRowId>>([]);
