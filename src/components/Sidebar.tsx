@@ -99,25 +99,24 @@ function RouterListItem({ to, label, icon }: any) {
 const drawerWidth = 300;
 
 export const Sidebar = memo(() => {
-  const user = useRecoilValue(userState)!;
-  // const token = useRecoilValue(tokenState);
+  const token = useRecoilValue(tokenState);
 
-  // const { data, isLoading } = useQuery<{
-  //   playlists: any[];
-  //   hasNextPage: boolean;
-  // }>(['playlists'], async function playlistsQuery() {
-  //   const res = await fetch(
-  //     `${import.meta.env.VITE_API_URL}/user/playlists?limit=5`,
-  //     {
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //     },
-  //   );
-  //   const body = await res.json();
+  const { data, isLoading } = useQuery<{
+    playlists: any[];
+    hasNextPage: boolean;
+  }>(['playlists'], async function playlistsQuery() {
+    const res = await fetch(
+      `${import.meta.env.VITE_API_URL}/user/playlists?limit=10`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    const body = await res.json();
 
-  //   return body;
-  // });
+    return body;
+  });
 
   return (
     <Drawer
@@ -220,7 +219,7 @@ export const Sidebar = memo(() => {
           icon={<Icon path={mdiTagText} size={1} />}
         />
       </List>
-
+*/}
       <Heading sx={{ mt: 3, mb: 2 }}>Playlists</Heading>
 
       <List dense disablePadding>
@@ -250,7 +249,7 @@ export const Sidebar = memo(() => {
             />
           </List>
         </Collapse>
-      </List> */}
+      </List>
 
       {/* <Divider sx={{ my: 3 }} />
 
