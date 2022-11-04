@@ -11,7 +11,7 @@ import { memo } from 'react';
 import { PlaybackState } from '../../types.d';
 
 interface Props {
-  state: PlaybackState;
+  state: PlaybackState | null;
   onPlayPauseClick: () => void;
 }
 
