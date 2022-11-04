@@ -121,7 +121,7 @@ type LikedQueryKey = [key: string, token: string];
 
 const likedQuery: QueryFunction<LikedRes, LikedQueryKey> = async ({
   queryKey,
-  pageParam = 0,
+  pageParam = 1,
   signal,
 }) => {
   const res = await fetch(
@@ -146,6 +146,7 @@ interface Track {
 export function Liked() {
   const token = useRecoilValue(tokenState);
   const [selectedTracks, setSelectedTracks] = useState<Array<GridRowId>>([]);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery<
     LikedRes,
@@ -158,6 +159,16 @@ export function Liked() {
       pages: d.pages.map((page) => page.tracks).flat(),
       pageParams: d.pageParams,
     }),
+    onSuccess(data) {
+      const page = data.pageParams[data.pageParams.length - 1];
+
+      if (page) {
+        setSearchParams((prev) => {
+          prev.set('page', page);
+          return prev;
+        });
+      }
+    },
   });
 
   const rows = data?.pages || [];
