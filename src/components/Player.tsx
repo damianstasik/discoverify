@@ -88,6 +88,14 @@ export function Player() {
     volume,
   });
 
+  useQuery<number>(['volume', deviceId], async () => player!.getVolume(), {
+    enabled: player !== null && playerState === PlaybackState.PLAYING,
+    refetchInterval: 2500,
+    onSuccess(data) {
+      setVolume(data);
+    },
+  });
+
   const handlePlayPause = useCallback(() => {
     player?.togglePlay();
   }, [player]);
