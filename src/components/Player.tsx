@@ -52,36 +52,29 @@ export function Player() {
     null,
   );
 
-  const h = useCallback(
-    (playerState) => {
-      console.log('player state changed:', playerState);
-      setDuration(playerState.duration / 1000);
-
-      setMeta(playerState.context.metadata);
+  const h = useCallback<Spotify.PlaybackStateListener>(
+    (state) => {
+      setDuration(state.duration / 1000);
+      setMeta(state.context.metadata);
 
       setPlayerState(
-        playerState.paused ? PlaybackState.PAUSED : PlaybackState.PLAYING,
+        state.paused ? PlaybackState.PAUSED : PlaybackState.PLAYING,
       );
-      console.log('time', time, playerState.position / 1000);
-      advanceTime(playerState.position / 1000 - time);
 
-      if (playerState.paused && status === 'RUNNING') {
+      advanceTime(state.position / 1000 - time);
+
+      if (state.paused && status === 'RUNNING') {
         pause();
       }
 
-      if (!playerState.paused && status !== 'RUNNING') {
+      if (!state.paused && status !== 'RUNNING') {
         start();
       }
     },
     [time, status],
   );
 
-  const {
-    deviceId,
-
-    player,
-    isReady,
-  } = useSpotifyWebPlaybackSdk({
+  const { deviceId, player } = useSpotifyWebPlaybackSdk({
     name: 'Discoverify',
     getOAuthToken: () => decoded?.accessToken,
     onPlayerStateChanged: h,
