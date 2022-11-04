@@ -27,6 +27,7 @@ export const VolumeControl = memo(({ volume, onCommit, onChange }: Props) => {
       </IconButton>
 
       <Slider
+        size="small"
         aria-label="Volume"
         onChangeCommitted={handleChangeComitted}
         onChange={handleChange}
