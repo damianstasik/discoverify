@@ -95,3 +95,9 @@ export const userAtom = atom<{
   key: 'user',
   default: null,
 });
+
+export const playerVolumeAtom = atom<number>({
+  key: 'playerVolume',
+  default: 0.8,
+  effects: [localStorageEffect<number>('playerVolume')],
+});

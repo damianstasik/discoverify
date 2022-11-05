@@ -14,6 +14,7 @@ import {
   tokenState,
   playerStateAtom,
   playerTrackAtom,
+  playerVolumeAtom,
 } from '../store';
 import { useSpotifyWebPlaybackSdk } from '../hooks/useSpotifyWebPlaybackSdk';
 import { VolumeControl } from './Player/VolumeControl';
@@ -45,7 +46,7 @@ export function Player() {
 
   const { time, start, pause, set, status } = useTimer('player');
   const [duration, setDuration] = useState(0);
-  const [volume, setVolume] = useState(0.8);
+  const [volume, setVolume] = useRecoilState(playerVolumeAtom);
   const [isChangingVolume, setIsChangingVolume] = useState(false);
   const [isSeeking, setIsSeeking] = useState(false);
   const [playerState, setPlayerState] = useRecoilState(playerStateAtom);
