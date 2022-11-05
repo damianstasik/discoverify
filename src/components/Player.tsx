@@ -47,6 +47,7 @@ export function Player() {
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(0.8);
   const [isChangingVolume, setIsChangingVolume] = useState(false);
+  const [isSeeking, setIsSeeking] = useState(false);
   const [playerState, setPlayerState] = useRecoilState(playerStateAtom);
 
   const [meta, setMeta] = useState<Spotify.PlaybackContextMetadata | null>(
@@ -75,6 +76,12 @@ export function Player() {
     [status],
   );
 
+  useEffect(() => {
+    if (isSeeking && status === 'RUNNING') {
+      pause();
+    }
+  }, [isSeeking, status]);
+
   const { deviceId, player } = useSpotifyWebPlaybackSdk({
     name: 'Discoverify',
     getOAuthToken: () => decoded?.accessToken,
@@ -97,10 +104,16 @@ export function Player() {
     player?.togglePlay();
   }, [player]);
 
-  const handlePositionChange = useCallback((v) => set(v), []);
+  const handlePositionChange = useCallback((v) => {
+    set(v);
+    setIsSeeking(true);
+  }, []);
 
   const handlePositionCommit = useCallback(
-    (v) => player?.seek(v * 1000),
+    (v) => {
+      player?.seek(v * 1000);
+      setIsSeeking(false);
+    },
     [player],
   );
 
