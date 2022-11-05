@@ -8,7 +8,6 @@ import DevicesIcon from '@mui/icons-material/Devices';
 import QueueMusicIcon from '@mui/icons-material/QueueMusic';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 
-import { useTimer } from 'use-timer';
 import {
   trackPreviewState,
   loadingTrackPreview,
@@ -22,6 +21,7 @@ import { SeekControl } from './Player/SeekControl';
 import { TrackInfo } from './Player/TrackInfo';
 import { PlaybackControl } from './Player/PlaybackControl';
 import { PlaybackState } from '../types.d';
+import { useTimer } from '../hooks/useTimer';
 
 export function Player() {
   const [trackPreview, setTrackPreview] = useRecoilState(trackPreviewState);
@@ -43,7 +43,7 @@ export function Player() {
   // });
   console.log('trackPreview', trackPreview);
 
-  const { time, start, pause, advanceTime, status } = useTimer();
+  const { time, start, pause, set, status } = useTimer('player');
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(0.8);
   const [isChangingVolume, setIsChangingVolume] = useState(false);
@@ -62,7 +62,7 @@ export function Player() {
         state.paused ? PlaybackState.PAUSED : PlaybackState.PLAYING,
       );
 
-      advanceTime(state.position / 1000 - time);
+      set(state.position / 1000);
 
       if (state.paused && status === 'RUNNING') {
         pause();
@@ -72,7 +72,7 @@ export function Player() {
         start();
       }
     },
-    [time, status],
+    [status],
   );
 
   const { deviceId, player } = useSpotifyWebPlaybackSdk({
@@ -97,10 +97,7 @@ export function Player() {
     player?.togglePlay();
   }, [player]);
 
-  const handlePositionChange = useCallback(
-    (v) => advanceTime(v - time),
-    [time],
-  );
+  const handlePositionChange = useCallback((v) => set(v), []);
 
   const handlePositionCommit = useCallback(
     (v) => player?.seek(v * 1000),
