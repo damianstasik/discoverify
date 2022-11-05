@@ -46,6 +46,7 @@ export function Player() {
   const { time, start, pause, advanceTime, status } = useTimer();
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(0.8);
+  const [isChangingVolume, setIsChangingVolume] = useState(false);
   const [playerState, setPlayerState] = useRecoilState(playerStateAtom);
 
   const [meta, setMeta] = useState<Spotify.PlaybackContextMetadata | null>(
@@ -82,7 +83,10 @@ export function Player() {
   });
 
   useQuery<number>(['volume', deviceId], async () => player!.getVolume(), {
-    enabled: player !== null && playerState === PlaybackState.PLAYING,
+    enabled:
+      player !== null &&
+      playerState === PlaybackState.PLAYING &&
+      !isChangingVolume,
     refetchInterval: 2500,
     onSuccess(data) {
       setVolume(data);
@@ -103,7 +107,20 @@ export function Player() {
     [player],
   );
 
-  const handleVolumeCommit = useCallback((v) => player?.setVolume(v), [player]);
+  const handleVolumeCommit = useCallback(
+    (v) => {
+      player?.setVolume(v);
+      setIsChangingVolume(false);
+    },
+    [player],
+  );
+
+  const handleVolumeChange = useCallback((v) => {
+    setIsChangingVolume(true);
+    setVolume(v);
+  }, []);
+
+  const { mutate: saveTrackMut } = useMutation(saveTrack);
 
   return (
     <Paper elevation={3} sx={{ p: 1 }}>
@@ -144,7 +161,7 @@ export function Player() {
         >
           <VolumeControl
             volume={volume}
-            onChange={setVolume}
+            onChange={handleVolumeChange}
             onCommit={handleVolumeCommit}
           />
         </Grid2>
