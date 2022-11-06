@@ -32,6 +32,14 @@ if (muiLicenseKey) {
 const theme = createTheme({
   palette: {
     mode: 'dark',
+    link: {
+      main: '#fff',
+      dark: '#fff',
+      contrastText: '#fff',
+    },
+    primary: {
+      main: '#2FC931',
+    },
     neutral: {
       main: '#d7ba1e',
       contrastText: '#fff',
@@ -60,7 +68,7 @@ const theme = createTheme({
     ].join(','),
   },
   shape: {
-    borderRadius: 6,
+    borderRadius: 8,
   },
 });
 
