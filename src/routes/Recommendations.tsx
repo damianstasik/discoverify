@@ -538,7 +538,7 @@ export function Recommendations() {
       ))}
 
       <p>Presets: przycisk przycisk</p>
-      <div style={{ height: 650 }}>
+      <div style={{ height: 800 }}>
         <Table
           columns={columns}
           checkboxSelection
