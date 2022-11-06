@@ -20,6 +20,7 @@ import { ArtistColumn } from '../components/ArtistColumn';
 import { TrackNameColumn } from '../components/TrackNameColumn';
 import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
 import { Table } from '../components/Table';
+import { ActionsColumn } from '../components/TrackTable/ActionsColumn';
 
 function msToTime(duration: number) {
   const seconds = Math.floor((duration / 1000) % 60);
@@ -30,30 +31,6 @@ function msToTime(duration: number) {
 
   return `${m}:${s}`;
 }
-
-const OpenInSpotify = memo(({ row }) => {
-  return (
-    <IconButton
-      size="small"
-      aria-label="Open in Spotify"
-      href={row.uri}
-      target="_blank"
-    >
-      <Icon path={mdiSpotify} size={1} />
-    </IconButton>
-  );
-});
-
-const Save = memo(({ row }) => {
-  const apiRef = useGridApiContext();
-  return (
-    <GridActionsCellItem
-      icon={<Icon path={mdiCardsHeartOutline} size={1} />}
-      onClick={() => apiRef.current.publishEvent('saveTrack', row)}
-      label="Save"
-    />
-  );
-});
 
 const columns: GridColumns = [
   {
@@ -111,12 +88,8 @@ const columns: GridColumns = [
     field: 'actions',
     headerName: 'Actions',
     sortable: false,
-    renderCell: (params) => (
-      <>
-        <OpenInSpotify row={params.row.track} />
-        <Save row={params.row.track} />
-      </>
-    ),
+    flex: 0.15,
+    renderCell: (params) => <ActionsColumn track={params.row.track} />,
   },
 ];
 
