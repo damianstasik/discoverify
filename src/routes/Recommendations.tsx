@@ -47,6 +47,7 @@ const columns: GridColumns = [
     field: 'name',
     headerName: 'Name',
     flex: 0.2,
+    sortable: false,
     renderCell: (params) => (
       <TrackNameColumn id={params.row.id} name={params.value} />
     ),
@@ -55,6 +56,7 @@ const columns: GridColumns = [
     field: 'artist',
     headerName: 'Artist(s)',
     flex: 0.2,
+    sortable: false,
     renderCell: (params) => <ArtistColumn artists={params.value} />,
   },
   {
@@ -69,6 +71,7 @@ const columns: GridColumns = [
     field: 'duration',
     headerName: 'Duration',
     flex: 0.1,
+    sortable: false,
     valueFormatter: (params: any) => {
       return msToTime(params.value);
     },

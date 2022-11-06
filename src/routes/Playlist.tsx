@@ -59,6 +59,7 @@ const columns: GridColumns = [
     field: 'album',
     headerName: 'Album',
     flex: 0.2,
+    sortable: false,
     renderCell: (params) => (
       <AlbumColumn
         id={params.row.track.album.id}

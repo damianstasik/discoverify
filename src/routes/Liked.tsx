@@ -52,12 +52,14 @@ const columns: GridColumns = [
     field: 'artists',
     headerName: 'Artist(s)',
     flex: 0.2,
+    sortable: false,
     renderCell: (params) => <ArtistColumn artists={params.value} />,
   },
   {
     field: 'album',
     headerName: 'Album',
     flex: 0.2,
+    sortable: false,
     renderCell: (params) => (
       <AlbumColumn id={params.value.id} name={params.value.name} />
     ),
@@ -72,7 +74,7 @@ const columns: GridColumns = [
     },
   },
   {
-    field: 'duration',
+    field: 'duration_ms',
     headerName: 'Duration',
     flex: 0.1,
     sortable: false,
