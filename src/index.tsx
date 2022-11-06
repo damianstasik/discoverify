@@ -73,22 +73,24 @@ const theme = createTheme({
   },
 });
 
+function Loader() {
+  return (
+    <Box
+      sx={{
+        height: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <CircularProgress />
+    </Box>
+  );
+}
+
 function SuspensedApp() {
   return (
-    <Suspense
-      fallback={
-        <Box
-          sx={{
-            height: '100vh',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <CircularProgress />
-        </Box>
-      }
-    >
+    <Suspense fallback={<Loader />}>
       <Router />
     </Suspense>
   );
