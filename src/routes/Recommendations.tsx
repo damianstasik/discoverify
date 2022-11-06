@@ -23,6 +23,7 @@ import { AlbumColumn } from '../components/AlbumColumn';
 import { TrackNameColumn } from '../components/TrackNameColumn';
 import { RecommendationAttribute } from '../components/RecommendationAttribute';
 import { Table } from '../components/Table';
+import { PageTitle } from '../components/PageTitle';
 import { ActionsColumn } from '../components/TrackTable/ActionsColumn';
 
 function msToTime(duration: number) {
@@ -494,9 +495,7 @@ export function Recommendations() {
 
   return (
     <>
-      <Typography variant="h5" gutterBottom sx={{ mb: 2 }}>
-        Recommendations
-      </Typography>
+      <PageTitle>Recommendations</PageTitle>
 
       <TrackAutocomplete
         isDisabled={(songs || []).length === 5}

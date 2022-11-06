@@ -20,6 +20,7 @@ import { ArtistColumn } from '../components/ArtistColumn';
 import { TrackNameColumn } from '../components/TrackNameColumn';
 import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
 import { Table } from '../components/Table';
+import { PageTitle } from '../components/PageTitle';
 import { ActionsColumn } from '../components/TrackTable/ActionsColumn';
 
 function msToTime(duration: number) {
@@ -120,9 +121,7 @@ export function Playlist() {
 
   return (
     <>
-      <Typography variant="h5" gutterBottom sx={{ mb: 2 }}>
-        Playlist: {data.name}
-      </Typography>
+      <PageTitle>Playlist: {data.name}</PageTitle>
 
       <div style={{ height: 800 }}>
         <Table
