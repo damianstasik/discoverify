@@ -126,7 +126,7 @@ export function Playlist() {
           components={{
             Toolbar: TrackSelectionToolbar,
           }}
-          getRowId={(row) => row.track.id + row.added_at}
+          getRowId={(row) => `${row.track.id}::${row.added_at}`}
         />
       </div>
     </>
