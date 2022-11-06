@@ -65,7 +65,7 @@ const columns: GridColumns = [
     headerName: 'Album',
     flex: 0.2,
     renderCell: (params) => (
-      <AlbumColumn id={params.value.id} name={params.value.name} />
+      <AlbumColumn id={params.row.id} name={params.row.name} />
     ),
   },
   {
