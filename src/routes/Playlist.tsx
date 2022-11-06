@@ -1,18 +1,9 @@
-import Button from '@mui/material/Button';
-import { Link as RouterLink, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { useQuery } from '@tanstack/react-query';
-import { IconButton, Typography } from '@mui/material';
-import { memo, useState } from 'react';
-import {
-  GridActionsCellItem,
-  GridColumns,
-  GridRowId,
-  useGridApiContext,
-} from '@mui/x-data-grid-premium';
+import { useState } from 'react';
+import { GridColumns, GridRowId } from '@mui/x-data-grid-premium';
 import { formatRelative } from 'date-fns';
-import Icon from '@mdi/react';
-import { mdiCardsHeartOutline, mdiSpotify } from '@mdi/js';
 import { tokenState } from '../store';
 import { TrackSelectionToolbar } from '../components/TrackSelectionToolbar';
 import { AlbumColumn } from '../components/AlbumColumn';
