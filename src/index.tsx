@@ -9,6 +9,7 @@ import { SnackbarProvider } from 'notistack';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import { LicenseInfo } from '@mui/x-data-grid-premium';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Router } from './Router';
 import './dark.css';
 
@@ -101,6 +102,7 @@ root.render(
       <CssBaseline />
       <SnackbarProvider maxSnack={3}>
         <QueryClientProvider client={queryClient}>
+          <ReactQueryDevtools initialIsOpen={false} />
           <RecoilRoot>
             <BrowserRouter>
               <SuspensedApp />
