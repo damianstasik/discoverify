@@ -9,8 +9,8 @@ interface Props {
 
 export const AlbumColumn = memo(({ id, name }: Props) => {
   return (
-      {name}
     <Link component={RouterLink} to={`/album/${id}`} color="#fff" py={1}>
+      {name}
     </Link>
   );
 });
