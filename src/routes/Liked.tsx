@@ -11,6 +11,7 @@ import Icon from '@mdi/react';
 import { mdiCardsHeartOutline, mdiSpotify } from '@mdi/js';
 import IconButton from '@mui/material/IconButton';
 import { memo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { tokenState } from '../store';
 import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
 import { ArtistColumn } from '../components/ArtistColumn';
