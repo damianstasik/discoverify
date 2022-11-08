@@ -6,6 +6,8 @@ const styles: SxProps<Theme> = {
   color: '#fff',
   fontWeight: 600,
   position: 'relative',
+  display: 'flex',
+  alignItems: 'center',
 };
 
 interface Props {

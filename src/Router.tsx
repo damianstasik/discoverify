@@ -1,7 +1,7 @@
 import { Navigate, RouteObject, useRoutes } from 'react-router-dom';
-import { lazy, Suspense } from 'react';
+// import { lazy, Suspense } from 'react';
 // import { useRecoilValue } from 'recoil';
-import CircularProgress from '@mui/material/CircularProgress';
+// import CircularProgress from '@mui/material/CircularProgress';
 import { Login } from './routes/Login';
 import { Authorize } from './routes/Authorize';
 // import { Artists } from './routes/Artists';
@@ -51,11 +51,7 @@ const routes: RouteObject[] = [
       // },
       {
         path: 'playlist/:id',
-        element: (
-          <Suspense fallback={<CircularProgress />}>
-            <Playlist />
-          </Suspense>
-        ),
+        element: <Playlist />,
       },
       // {
       //   path: 'artists',

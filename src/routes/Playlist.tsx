@@ -13,6 +13,7 @@ import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
 import { Table } from '../components/Table';
 import { PageTitle } from '../components/PageTitle';
 import { ActionsColumn } from '../components/TrackTable/ActionsColumn';
+import { Skeleton } from '@mui/material';
 
 function msToTime(duration: number) {
   const seconds = Math.floor((duration / 1000) % 60);
@@ -105,14 +106,20 @@ export function Playlist() {
 
       return body;
     },
-    { suspense: true },
   );
 
   const [selectedTracks, setSelectedTracks] = useState<Array<GridRowId>>([]);
 
   return (
     <>
-      <PageTitle>Playlist: {data.name}</PageTitle>
+      <PageTitle>
+        Playlist:{' '}
+        {data ? (
+          data.name
+        ) : (
+          <Skeleton variant="rounded" width={210} sx={{ ml: 1 }} />
+        )}
+      </PageTitle>
 
       <div style={{ height: 800 }}>
         <Table
@@ -120,7 +127,7 @@ export function Playlist() {
           checkboxSelection
           onSelectionModelChange={(value) => setSelectedTracks(value)}
           selectionModel={selectedTracks}
-          rows={data.tracks.items}
+          rows={data?.tracks?.items || []}
           loading={isFetching}
           // onRowsScrollEnd={() => hasNextPage && fetchNextPage()}
           components={{
