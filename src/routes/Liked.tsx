@@ -10,9 +10,9 @@ import { useRecoilValue } from 'recoil';
 import Icon from '@mdi/react';
 import { mdiCardsHeartOutline, mdiSpotify } from '@mdi/js';
 import IconButton from '@mui/material/IconButton';
-import { memo, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { tokenState } from '../store';
+import { dislikedTrackIdsAtom, tokenState } from '../store';
 import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
 import { ArtistColumn } from '../components/ArtistColumn';
 import { AlbumColumn } from '../components/AlbumColumn';
@@ -21,6 +21,7 @@ import { TrackNameColumn } from '../components/TrackNameColumn';
 import { Table } from '../components/Table';
 import { PageTitle } from '../components/PageTitle';
 import { ActionsColumn } from '../components/TrackTable/ActionsColumn';
+import produce from 'immer';
 
 function msToTime(duration: number) {
   const seconds = Math.floor((duration / 1000) % 60);
@@ -117,6 +118,7 @@ const likedQuery: QueryFunction<LikedRes, LikedQueryKey> = async ({
 
 interface Track {
   id: string;
+  isIgnored: boolean;
 }
 
 export function Liked() {
@@ -148,6 +150,54 @@ export function Liked() {
   });
 
   const rows = data?.pages || [];
+  const queryClient = useQueryClient();
+
+  const { mutate } = useMutation<
+    void,
+    Error,
+    { id: string; isIgnored: boolean }
+  >(
+    async ({ id, isIgnored }) => {
+      await fetch(`${import.meta.env.VITE_API_URL}/track/${id}/ignore`, {
+        method: isIgnored ? 'delete' : 'put',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    },
+    {
+      onSuccess(_, { id, isIgnored }) {
+        queryClient.setQueryData<InfiniteData<LikedRes>>(
+          ['liked', token],
+          (test) => {
+            return produce(test!, (draft) => {
+              for (const page of draft.pages) {
+                const item = page.tracks.find((t) => t.id === id);
+
+                if (item) {
+                  item.isIgnored = !isIgnored;
+                  break;
+                }
+              }
+            });
+          },
+        );
+      },
+    },
+  );
+
+  const apiRef = useGridApiRef();
+
+  useEffect(() => {
+    const handleIgnoreTrack = (params) => {
+      mutate({
+        id: params.id,
+        isIgnored: params.isIgnored,
+      });
+    };
+
+    return apiRef.current.subscribeEvent('ignoreTrack', handleIgnoreTrack);
+  }, [apiRef]);
 
   return (
     <>
@@ -165,6 +215,8 @@ export function Liked() {
           components={{
             Toolbar: TrackSelectionToolbar,
           }}
+          apiRef={apiRef}
+          getRowClassName={(row) => (row.row.isIgnored ? 'disabled' : '')}
         />
       </div>
     </>

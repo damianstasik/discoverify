@@ -5,8 +5,9 @@ import {
   type GridColumns,
   GridActionsCellItem,
   useGridApiContext,
+  useGridApiRef,
 } from '@mui/x-data-grid-premium';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
 import { useRecoilValue } from 'recoil';
@@ -493,6 +494,47 @@ export function Recommendations() {
     },
   );
 
+  const { mutate } = useMutation<
+    void,
+    Error,
+    { id: string; isIgnored: boolean }
+  >(
+    async ({ id, isIgnored }) => {
+      await fetch(`${import.meta.env.VITE_API_URL}/track/${id}/ignore`, {
+        method: isIgnored ? 'delete' : 'put',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    },
+    {
+      onSuccess(_, { id, isIgnored }) {
+        queryClient.setQueryData(['recommended', trackIds, values], (test) => {
+          return produce(test!, (draft) => {
+            const item = draft.find((t) => t.id === id);
+
+            if (item) {
+              item.isIgnored = !isIgnored;
+            }
+          });
+        });
+      },
+    },
+  );
+
+  const apiRef = useGridApiRef();
+
+  useEffect(() => {
+    const handleIgnoreTrack = (params) => {
+      mutate({
+        id: params.id,
+        isIgnored: params.isIgnored,
+      });
+    };
+
+    return apiRef.current.subscribeEvent('ignoreTrack', handleIgnoreTrack);
+  }, [apiRef]);
+
   return (
     <>
       <PageTitle>Recommendations</PageTitle>
@@ -546,6 +588,8 @@ export function Recommendations() {
           selectionModel={selectedSongs}
           rows={data || []}
           loading={isFetching}
+          apiRef={apiRef}
+          getRowClassName={(row) => (row.row.isIgnored ? 'disabled' : '')}
         />
       </div>
     </>

@@ -32,6 +32,14 @@ const styles: SxProps<Theme> = {
   '.MuiDataGrid-row': {
     borderRadius: '6px',
   },
+
+  '.MuiDataGrid-overlay': {
+    background: 'none',
+  },
+
+  '.disabled': {
+    opacity: 0.5,
+  },
 };
 
 export function Table(props: DataGridPremiumProps) {
