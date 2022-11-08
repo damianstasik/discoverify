@@ -6,7 +6,12 @@ export async function getFollowedArtistsTopTracks(
   const res = await fetch(
     `${
       import.meta.env.VITE_API_URL
-    }/followed-artists/top-tracks?tokenId=${token}&genre=${genre}&page=${page}`,
+    }/track/top-followed?genre=${genre}&page=${page}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
   );
 
   const body = await res.json();
