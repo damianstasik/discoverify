@@ -69,7 +69,7 @@ export function Layout() {
           p: 3,
           position: 'relative',
           backgroundColor: '#161616',
-          backgroundImage: 'linear-gradient(160deg, #2b2b2b 0%, #161616 30%)',
+          // backgroundImage: 'linear-gradient(160deg, #2b2b2b 0%, #161616 30%)',
         }}
       >
         <Outlet />
