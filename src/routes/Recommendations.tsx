@@ -1,4 +1,4 @@
-import { memo, useState } from 'react';
+import { memo, useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import {
@@ -8,6 +8,7 @@ import {
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
 import { useRecoilValue } from 'recoil';
@@ -535,7 +536,7 @@ export function Recommendations() {
     <>
       <PageTitle>Recommendations</PageTitle>
 
-      <TrackAutocomplete
+      {/* <TrackAutocomplete
         isDisabled={(songs || []).length === 5}
         isLoading={isLoadingAutocomplete}
         query={query}
@@ -549,7 +550,7 @@ export function Recommendations() {
           q.append('trackId', b.id);
           setSearchParams(q);
         }}
-      />
+      /> */}
 
       <Box mt={2}>
         {(songs || []).map((track) => (
