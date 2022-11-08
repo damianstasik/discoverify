@@ -106,7 +106,6 @@ export function RecommendationAttribute({ attr }: Props) {
               aria-labelledby="useMin"
               disabled={!useMin}
               marks={attr.marks}
-              // valueLabelFormat={valueLabelFormat}
             />
           </Grid>
         </Grid>
@@ -135,7 +134,6 @@ export function RecommendationAttribute({ attr }: Props) {
               aria-labelledby="useTarget"
               disabled={!useTarget}
               marks={attr.marks}
-              // valueLabelFormat={valueLabelFormat}
             />
           </Grid>
         </Grid>
@@ -164,7 +162,6 @@ export function RecommendationAttribute({ attr }: Props) {
               aria-labelledby="useMax"
               disabled={!useMax}
               marks={attr.marks}
-              // valueLabelFormat={valueLabelFormat}
             />
           </Grid>
         </Grid>

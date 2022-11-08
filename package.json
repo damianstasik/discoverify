@@ -14,24 +14,12 @@
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.8",
     "@types/spotify-web-playback-sdk": "^0.1.15",
-    "@typescript-eslint/eslint-plugin": "^5.42.1",
-    "@typescript-eslint/parser": "^5.42.1",
     "@vitejs/plugin-react": "^2.2.0",
     "date-fns": "^2.29.3",
     "eslint": "^8.27.0",
-    "eslint-config-airbnb": "^19.0.4",
-    "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-config-airbnb-typescript": "^17.0.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-jsx-a11y": "^6.6.1",
-    "eslint-plugin-prettier": "^4.2.1",
-    "eslint-plugin-react": "^7.31.10",
-    "eslint-plugin-react-hooks": "^4.6.0",
     "immer": "^9.0.16",
     "jwt-decode": "^3.1.2",
     "notistack": "2.0.8",
-    "prettier": "^2.7.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-h5-audio-player": "^3.8.6",
@@ -44,6 +32,10 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build"
+    "build": "vite build",
+    "format": "rome format --write ."
+  },
+  "devDependencies": {
+    "rome": "^10.0.0"
   }
 }

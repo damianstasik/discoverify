@@ -187,21 +187,19 @@ function findImageUrlByMinWidth(images: any[], width: number) {
   return images[0].url;
 }
 
-const statsQuery: QueryFunction<
-  StatsResponse,
-  [key: string, token: string]
-> = async ({ queryKey, signal }) => {
-  const res = await fetch(`${import.meta.env.VITE_API_URL}/user/stats`, {
-    signal,
-    headers: {
-      Authorization: `Bearer ${queryKey[1]}`,
-    },
-  });
+const statsQuery: QueryFunction<StatsResponse, [key: string, token: string]> =
+  async ({ queryKey, signal }) => {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/user/stats`, {
+      signal,
+      headers: {
+        Authorization: `Bearer ${queryKey[1]}`,
+      },
+    });
 
-  const body = await res.json();
+    const body = await res.json();
 
-  return body;
-};
+    return body;
+  };
 
 export default function Dashboard() {
   const token = useRecoilValue(tokenState);

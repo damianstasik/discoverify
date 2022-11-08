@@ -28,23 +28,21 @@ export const refreshAccessToken: MutationFunction<string, string> = async (
   throw new Error();
 };
 
-export const getCurrentUser: QueryFunction<
-  User,
-  [key: string, token: string]
-> = async ({ queryKey, signal }) => {
-  const req = await fetch(`${import.meta.env.VITE_API_URL}/auth/me`, {
-    signal,
-    headers: {
-      Authorization: `Bearer ${queryKey[1]}`,
-    },
-  });
+export const getCurrentUser: QueryFunction<User, [key: string, token: string]> =
+  async ({ queryKey, signal }) => {
+    const req = await fetch(`${import.meta.env.VITE_API_URL}/auth/me`, {
+      signal,
+      headers: {
+        Authorization: `Bearer ${queryKey[1]}`,
+      },
+    });
 
-  if (!req.ok) {
-    throw new Error();
-  }
+    if (!req.ok) {
+      throw new Error();
+    }
 
-  return req.json();
-};
+    return req.json();
+  };
 
 export const ignoreTrack: MutationFunction<
   void,
@@ -58,14 +56,12 @@ export const ignoreTrack: MutationFunction<
   });
 };
 
-export const saveTrack: MutationFunction<
-  void,
-  { token: string; id: string }
-> = async ({ token, id }) => {
-  await fetch(`${import.meta.env.VITE_API_URL}/track/${id}/save`, {
-    method: 'put',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-};
+export const saveTrack: MutationFunction<void, { token: string; id: string }> =
+  async ({ token, id }) => {
+    await fetch(`${import.meta.env.VITE_API_URL}/track/${id}/save`, {
+      method: 'put',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  };
