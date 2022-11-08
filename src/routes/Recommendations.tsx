@@ -27,6 +27,7 @@ import { Table } from '../components/Table';
 import { PageTitle } from '../components/PageTitle';
 import { ActionsColumn } from '../components/TrackTable/ActionsColumn';
 import { ignoreTrack } from '../api';
+import { TrackChip } from '../components/TrackChip';
 
 function msToTime(duration: number) {
   const seconds = Math.floor((duration / 1000) % 60);
@@ -465,14 +466,20 @@ export function Recommendations() {
     Array<{ id: string; title: string }>
   >(['songs', trackIds], async function getTracksQuery() {
     const q = new URLSearchParams({
-      trackId: trackIds.join(),
-      token,
+      id: trackIds.join(),
     });
 
-    const req = await fetch(`${import.meta.env.VITE_API_URL}/get-tracks?${q}`);
+    const req = await fetch(
+      `${import.meta.env.VITE_API_URL}/track/tracks?${q}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
     const body = await req.json();
 
-    return body.songs;
+    return body.tracks;
   });
 
   const { data: autosongs, isLoading: isLoadingAutocomplete } = useQuery<
@@ -545,15 +552,16 @@ export function Recommendations() {
         }}
       />
 
-      <>
-        {(songs || []).map((song) => (
-          <Chip
-            label={`${song.title}`}
-            key={song.id}
-            onDelete={() => {
+      <Box mt={2}>
+        {(songs || []).map((track) => (
+          <TrackChip
+            name={track.name}
+            artists={track.artists}
+            imageUrl={track.album.images[0].url}
+            onRemove={() => {
               const q = new URLSearchParams();
               trackIds.forEach((trackId) => {
-                if (trackId !== song.id) {
+                if (trackId !== track.id) {
                   q.append('trackId', trackId);
                 }
               });
@@ -561,9 +569,7 @@ export function Recommendations() {
             }}
           />
         ))}
-      </>
-
-      <Divider />
+      </Box>
 
       {attributes.map((attr) => (
         <RecommendationAttribute key={attr.name} attr={attr} />
