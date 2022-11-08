@@ -1,9 +1,9 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import jwt_decode from 'jwt-decode';
 import { IconButton, Paper, Stack } from '@mui/material';
 import Grid2 from '@mui/material/Unstable_Grid2';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import DevicesIcon from '@mui/icons-material/Devices';
 import QueueMusicIcon from '@mui/icons-material/QueueMusic';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
@@ -23,6 +23,7 @@ import { TrackInfo } from './Player/TrackInfo';
 import { PlaybackControl } from './Player/PlaybackControl';
 import { PlaybackState } from '../types.d';
 import { useTimer } from '../hooks/useTimer';
+import { saveTrack } from '../api';
 
 export function Player() {
   const [trackPreview, setTrackPreview] = useRecoilState(trackPreviewState);

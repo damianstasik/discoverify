@@ -57,3 +57,15 @@ export const ignoreTrack: MutationFunction<
     },
   });
 };
+
+export const saveTrack: MutationFunction<
+  void,
+  { token: string; id: string }
+> = async ({ token, id }) => {
+  await fetch(`${import.meta.env.VITE_API_URL}/track/${id}/save`, {
+    method: 'put',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
