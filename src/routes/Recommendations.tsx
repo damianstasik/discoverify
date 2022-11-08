@@ -497,15 +497,17 @@ export function Recommendations() {
 
   const { mutate } = useMutation(ignoreTrack, {
     onSuccess(_, { id, isIgnored }) {
-      queryClient.setQueryData(['recommended', trackIds, values], (test) => {
-        return produce(test!, (draft) => {
+      queryClient.setQueryData<{ id: string }[]>(
+        ['recommended', trackIds, values],
+        produce((draft) => {
+          if (!draft) return;
           const item = draft.find((t) => t.id === id);
 
           if (item) {
             item.isIgnored = !isIgnored;
           }
-        });
-      });
+        }),
+      );
     },
   });
 

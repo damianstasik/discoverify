@@ -164,18 +164,18 @@ export function Liked() {
     onSuccess(_, { id, isIgnored }) {
       queryClient.setQueryData<InfiniteData<LikedRes>>(
         ['liked', token],
-        (test) => {
-          return produce(test!, (draft) => {
-            for (const page of draft.pages) {
-              const item = page.tracks.find((t) => t.id === id);
+        produce((draft) => {
+          if (!draft) return;
 
-              if (item) {
-                item.isIgnored = !isIgnored;
-                break;
-              }
+          for (const page of draft.pages) {
+            const item = page.tracks.find((t) => t.id === id);
+
+            if (item) {
+              item.isIgnored = !isIgnored;
+              break;
             }
-          });
-        },
+          }
+        }),
       );
     },
   });
