@@ -22,7 +22,6 @@ import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
 import { ArtistColumn } from '../components/ArtistColumn';
 import { AlbumColumn } from '../components/AlbumColumn';
 import { TrackNameColumn } from '../components/TrackNameColumn';
-import { RecommendationAttribute } from '../components/RecommendationAttribute';
 import { Table } from '../components/Table';
 import { PageTitle } from '../components/PageTitle';
 import { ActionsColumn } from '../components/TrackTable/ActionsColumn';
@@ -571,11 +570,10 @@ export function Recommendations() {
         ))}
       </Box>
 
-      {attributes.map((attr) => (
+      {/* {attributes.map((attr) => (
         <RecommendationAttribute key={attr.name} attr={attr} />
-      ))}
+      ))} */}
 
-      <p>Presets: przycisk przycisk</p>
       <div style={{ height: 800 }}>
         <Table
           columns={columns}
