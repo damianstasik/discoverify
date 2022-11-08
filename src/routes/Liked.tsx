@@ -4,9 +4,16 @@ import {
   GridActionsCellItem,
   useGridApiContext,
   type GridRowId,
+  useGridApiRef,
 } from '@mui/x-data-grid-premium';
-import { type QueryFunction, useInfiniteQuery } from '@tanstack/react-query';
-import { useRecoilValue } from 'recoil';
+import {
+  type QueryFunction,
+  useInfiniteQuery,
+  useMutation,
+  useQueryClient,
+  InfiniteData,
+} from '@tanstack/react-query';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import Icon from '@mdi/react';
 import { mdiCardsHeartOutline, mdiSpotify } from '@mdi/js';
 import IconButton from '@mui/material/IconButton';
@@ -22,6 +29,7 @@ import { Table } from '../components/Table';
 import { PageTitle } from '../components/PageTitle';
 import { ActionsColumn } from '../components/TrackTable/ActionsColumn';
 import produce from 'immer';
+import { ignoreTrack } from '../api';
 
 function msToTime(duration: number) {
   const seconds = Math.floor((duration / 1000) % 60);
@@ -152,39 +160,25 @@ export function Liked() {
   const rows = data?.pages || [];
   const queryClient = useQueryClient();
 
-  const { mutate } = useMutation<
-    void,
-    Error,
-    { id: string; isIgnored: boolean }
-  >(
-    async ({ id, isIgnored }) => {
-      await fetch(`${import.meta.env.VITE_API_URL}/track/${id}/ignore`, {
-        method: isIgnored ? 'delete' : 'put',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-    },
-    {
-      onSuccess(_, { id, isIgnored }) {
-        queryClient.setQueryData<InfiniteData<LikedRes>>(
-          ['liked', token],
-          (test) => {
-            return produce(test!, (draft) => {
-              for (const page of draft.pages) {
-                const item = page.tracks.find((t) => t.id === id);
+  const { mutate } = useMutation(ignoreTrack, {
+    onSuccess(_, { id, isIgnored }) {
+      queryClient.setQueryData<InfiniteData<LikedRes>>(
+        ['liked', token],
+        (test) => {
+          return produce(test!, (draft) => {
+            for (const page of draft.pages) {
+              const item = page.tracks.find((t) => t.id === id);
 
-                if (item) {
-                  item.isIgnored = !isIgnored;
-                  break;
-                }
+              if (item) {
+                item.isIgnored = !isIgnored;
+                break;
               }
-            });
-          },
-        );
-      },
+            }
+          });
+        },
+      );
     },
-  );
+  });
 
   const apiRef = useGridApiRef();
 
@@ -193,6 +187,7 @@ export function Liked() {
       mutate({
         id: params.id,
         isIgnored: params.isIgnored,
+        token,
       });
     };
 

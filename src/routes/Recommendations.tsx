@@ -26,6 +26,7 @@ import { RecommendationAttribute } from '../components/RecommendationAttribute';
 import { Table } from '../components/Table';
 import { PageTitle } from '../components/PageTitle';
 import { ActionsColumn } from '../components/TrackTable/ActionsColumn';
+import { ignoreTrack } from '../api';
 
 function msToTime(duration: number) {
   const seconds = Math.floor((duration / 1000) % 60);
@@ -494,33 +495,19 @@ export function Recommendations() {
     },
   );
 
-  const { mutate } = useMutation<
-    void,
-    Error,
-    { id: string; isIgnored: boolean }
-  >(
-    async ({ id, isIgnored }) => {
-      await fetch(`${import.meta.env.VITE_API_URL}/track/${id}/ignore`, {
-        method: isIgnored ? 'delete' : 'put',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+  const { mutate } = useMutation(ignoreTrack, {
+    onSuccess(_, { id, isIgnored }) {
+      queryClient.setQueryData(['recommended', trackIds, values], (test) => {
+        return produce(test!, (draft) => {
+          const item = draft.find((t) => t.id === id);
+
+          if (item) {
+            item.isIgnored = !isIgnored;
+          }
+        });
       });
     },
-    {
-      onSuccess(_, { id, isIgnored }) {
-        queryClient.setQueryData(['recommended', trackIds, values], (test) => {
-          return produce(test!, (draft) => {
-            const item = draft.find((t) => t.id === id);
-
-            if (item) {
-              item.isIgnored = !isIgnored;
-            }
-          });
-        });
-      },
-    },
-  );
+  });
 
   const apiRef = useGridApiRef();
 
@@ -529,6 +516,7 @@ export function Recommendations() {
       mutate({
         id: params.id,
         isIgnored: params.isIgnored,
+        token,
       });
     };
 

@@ -45,3 +45,15 @@ export const getCurrentUser: QueryFunction<
 
   return req.json();
 };
+
+export const ignoreTrack: MutationFunction<
+  void,
+  { token: string; id: string; isIgnored: boolean }
+> = async ({ token, id, isIgnored }) => {
+  await fetch(`${import.meta.env.VITE_API_URL}/track/${id}/ignore`, {
+    method: isIgnored ? 'delete' : 'put',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
