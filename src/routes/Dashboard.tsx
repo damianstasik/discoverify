@@ -21,6 +21,28 @@ import {
 import Icon from '@mdi/react';
 import { loadingTrackPreview, tokenState, trackPreviewState } from '../store';
 
+function CardWithLink({ title, children, linkTo, isLoading, linkLabel }) {
+  return (
+    <Card sx={{ p: 2, pb: 1.5 }}>
+      <Typography variant="h5" sx={{ mb: 1.5, color: '#fff' }}>
+        {title}
+      </Typography>
+
+      {children}
+
+      <Button
+        size="small"
+        component={RouterLink}
+        to={linkTo}
+        disabled={isLoading}
+        sx={{ mt: 2, px: 1, py: 0.5, ml: -1 }}
+      >
+        {linkLabel}
+      </Button>
+    </Card>
+  );
+}
+
 function getRandomArbitrary(min: number, max: number) {
   return Math.random() * (max - min) + min;
 }
@@ -152,6 +174,19 @@ interface StatsResponse {
   topArtists: any[];
 }
 
+function findImageUrlByMinWidth(images: any[], width: number) {
+  const image = images
+    .slice()
+    .reverse()
+    .find((img) => img.width >= width);
+
+  if (image?.url) {
+    return image.url;
+  }
+
+  return images[0].url;
+}
+
 const statsQuery: QueryFunction<
   StatsResponse,
   [key: string, token: string]
@@ -271,10 +306,12 @@ export default function Dashboard() {
         </Card>
       </Grid>
       <Grid item xs={4}>
-        <Card sx={{ p: 2, pb: 1.5 }}>
-          <Typography variant="h5" component="div" sx={{ color: '#fff' }}>
-            Top 5 artists
-          </Typography>
+        <CardWithLink
+          title="Top 5 artists"
+          linkTo="/top-artists"
+          linkLabel="All top artists"
+          isLoading={isLoading}
+        >
           <Typography sx={{ mb: 1.5 }} color="text.secondary">
             based on listening history
           </Typography>
@@ -297,30 +334,25 @@ export default function Dashboard() {
                   sx={{ px: 1, borderRadius: 1, mx: -1 }}
                 >
                   <ListItemAvatar>
-                    <Avatar alt={artist.name} src={artist.images[0].url} />
+                    <Avatar
+                      alt={artist.name}
+                      src={findImageUrlByMinWidth(artist.images, 40)}
+                    />
                   </ListItemAvatar>
                   <ListItemText primary={artist.name} sx={{ color: '#fff' }} />
                 </ListItemButton>
               </ListItem>
             ))}
           </List>
-
-          <Button
-            size="small"
-            component={RouterLink}
-            to="/top-artists"
-            disabled={isLoading}
-            sx={{ mt: 2, px: 1, py: 0.5, ml: -1 }}
-          >
-            All top artists
-          </Button>
-        </Card>
+        </CardWithLink>
       </Grid>
       <Grid item xs={4}>
-        <Card sx={{ p: 2, pb: 1.5 }}>
-          <Typography variant="h5" component="div" sx={{ color: '#fff' }}>
-            Top 5 tracks
-          </Typography>
+        <CardWithLink
+          title="Top 5 tracks"
+          linkTo="/top-tracks"
+          linkLabel="All top tracks"
+          isLoading={isLoading}
+        >
           <Typography sx={{ mb: 1.5 }} color="text.secondary">
             based on listening history
           </Typography>
@@ -338,17 +370,7 @@ export default function Dashboard() {
               <Track track={track} key={track.id} />
             ))}
           </List>
-
-          <Button
-            size="small"
-            component={RouterLink}
-            to="/top-tracks"
-            disabled={isLoading}
-            sx={{ mt: 2, px: 1, py: 0.5, ml: -1 }}
-          >
-            All top tracks
-          </Button>
-        </Card>
+        </CardWithLink>
       </Grid>
     </Grid>
   );
