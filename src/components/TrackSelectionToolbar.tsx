@@ -5,6 +5,14 @@ import Collapse from '@mui/material/Collapse';
 import { useGridApiContext } from '@mui/x-data-grid-premium';
 import { Link as RouterLink } from 'react-router-dom';
 
+function extractId(value: string) {
+  if (value.includes('::')) {
+    return value.split('::')[0];
+  }
+
+  return value;
+}
+
 export function TrackSelectionToolbar() {
   const apiRef = useGridApiContext();
   const selectedRows = apiRef.current.getSelectedRows();
@@ -18,7 +26,7 @@ export function TrackSelectionToolbar() {
             to={{
               pathname: '/recommendations',
               search: `?${[...selectedRows.keys()]
-                .map((selectedRow) => `trackId=${selectedRow}`)
+                .map((selectedRow) => `trackId=${extractId(selectedRow)}`)
                 .join('&')}`,
             }}
           >
@@ -31,7 +39,7 @@ export function TrackSelectionToolbar() {
           to={{
             pathname: '/playlist/create',
             search: `?${[...selectedRows.keys()]
-              .map((selectedRow) => `trackId=${selectedRow}`)
+              .map((selectedRow) => `trackId=${extractId(selectedRow)}`)
               .join('&')}`,
           }}
         >
