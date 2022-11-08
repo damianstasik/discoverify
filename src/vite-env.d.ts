@@ -15,16 +15,12 @@ interface ImportMeta {
 }
 
 declare module '@mui/material/styles' {
-  interface Theme {
-    status: {
-      danger: React.CSSProperties['color'];
-    };
-  }
-
   interface Palette {
     neutral: OriginalPalette['primary'];
+    link: OriginalPalette['primary'];
   }
   interface PaletteOptions {
     neutral: OriginalPaletteOptions['primary'];
+    link: OriginalPaletteOptions['primary'];
   }
 }
