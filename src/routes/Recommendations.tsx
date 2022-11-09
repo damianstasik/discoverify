@@ -28,6 +28,7 @@ import { PageTitle } from '../components/PageTitle';
 import { ActionsColumn } from '../components/TrackTable/ActionsColumn';
 import { ignoreTrack } from '../api';
 import { TrackChip } from '../components/TrackChip';
+import { Stack } from '@mui/material';
 
 function msToTime(duration: number) {
   const seconds = Math.floor((duration / 1000) % 60);
@@ -552,23 +553,26 @@ export function Recommendations() {
         }}
       /> */}
 
-      <Box mt={2}>
-        {(songs || []).map((track) => (
-          <TrackChip
-            name={track.name}
-            artists={track.artists}
-            imageUrl={track.album.images[0].url}
-            onRemove={() => {
-              const q = new URLSearchParams();
-              trackIds.forEach((trackId) => {
-                if (trackId !== track.id) {
-                  q.append('trackId', trackId);
-                }
-              });
-              setSearchParams(q);
-            }}
-          />
-        ))}
+      <Box sx={{ overflowX: 'auto', my: 2 }}>
+        <Stack direction="row" spacing={2}>
+          {(songs || []).map((track) => (
+            <TrackChip
+              id={track.id}
+              name={track.name}
+              artists={track.artists}
+              imageUrl={track.album.images[0].url}
+              onRemove={() => {
+                const q = new URLSearchParams();
+                trackIds.forEach((trackId) => {
+                  if (trackId !== track.id) {
+                    q.append('trackId', trackId);
+                  }
+                });
+                setSearchParams(q);
+              }}
+            />
+          ))}
+        </Stack>
       </Box>
 
       {/* {attributes.map((attr) => (
