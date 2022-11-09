@@ -26,7 +26,7 @@ import { TrackNameColumn } from '../components/TrackNameColumn';
 import { Table } from '../components/Table';
 import { PageTitle } from '../components/PageTitle';
 import { ActionsColumn } from '../components/TrackTable/ActionsColumn';
-import { ignoreTrack } from '../api';
+import { getRecommendedTracks, getTracks, ignoreTrack, search } from '../api';
 import { TrackChip } from '../components/TrackChip';
 import { Stack } from '@mui/material';
 
@@ -442,62 +442,18 @@ export function Recommendations() {
   const trackIds = searchParams.getAll('trackId');
 
   const { data, isFetching } = useQuery(
-    ['recommended', trackIds, values],
-    async function recommendedQuery() {
-      const q = new URLSearchParams({
-        trackId: trackIds.join(),
-        ...values,
-      });
-
-      const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/track/recommended?${q}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
-      const body = await res.json();
-
-      return body.songs;
-    },
+    ['recommended', token, trackIds, values],
+    getRecommendedTracks,
   );
 
-  const { data: songs, isLoading: isLoadingSongs } = useQuery<
-    Array<{ id: string; title: string }>
-  >(['songs', trackIds], async function getTracksQuery() {
-    const q = new URLSearchParams({
-      id: trackIds.join(),
-    });
+  const { data: songs, isLoading: isLoadingSongs } = useQuery(
+    ['songs', token, trackIds],
+    getTracks,
+  );
 
-    const req = await fetch(
-      `${import.meta.env.VITE_API_URL}/track/tracks?${q}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
-    const body = await req.json();
-
-    return body.tracks;
-  });
-
-  const { data: autosongs, isLoading: isLoadingAutocomplete } = useQuery<
-    Array<{ id: string; title: string }>
-  >(
-    ['search', debouncedQuery],
-    async function autocompleteQuery() {
-      const q = new URLSearchParams({
-        q: debouncedQuery,
-        token,
-      });
-
-      const req = await fetch(`${import.meta.env.VITE_API_URL}/search?${q}`);
-      const body = await req.json();
-
-      return body.songs;
-    },
+  const { data: autosongs, isLoading: isLoadingAutocomplete } = useQuery(
+    ['search', token, debouncedQuery],
+    search,
     {
       enabled: !!debouncedQuery,
     },

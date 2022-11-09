@@ -65,3 +65,67 @@ export const saveTrack: MutationFunction<void, { token: string; id: string }> =
       },
     });
   };
+
+export const getRecommendedTracks: QueryFunction<
+  any,
+  [key: string, token: string, trackIds: string[], values: any]
+> = async ({ queryKey, signal }) => {
+  const q = new URLSearchParams({
+    trackId: queryKey[2].join(),
+    ...queryKey[3],
+  });
+
+  const res = await fetch(
+    `${import.meta.env.VITE_API_URL}/track/recommended?${q}`,
+    {
+      signal,
+      headers: {
+        Authorization: `Bearer ${queryKey[1]}`,
+      },
+    },
+  );
+
+  const body = await res.json();
+
+  return body.songs;
+};
+
+export const getTracks: QueryFunction<
+  Array<{ id: string; title: string }>,
+  [key: string, token: string, trackIds: string[]]
+> = async ({ queryKey, signal }) => {
+  const q = new URLSearchParams({
+    id: queryKey[2].join(),
+  });
+
+  const req = await fetch(`${import.meta.env.VITE_API_URL}/track/tracks?${q}`, {
+    signal,
+    headers: {
+      Authorization: `Bearer ${queryKey[1]}`,
+    },
+  });
+
+  const body = await req.json();
+
+  return body.tracks;
+};
+
+export const search: QueryFunction<
+  Array<{ id: string; title: string }>,
+  [key: string, token: string, query: string]
+> = async ({ queryKey, signal }) => {
+  const q = new URLSearchParams({
+    q: queryKey[2],
+  });
+
+  const req = await fetch(`${import.meta.env.VITE_API_URL}/search?${q}`, {
+    signal,
+    headers: {
+      Authorization: `Bearer ${queryKey[1]}`,
+    },
+  });
+
+  const body = await req.json();
+
+  return body.songs;
+};
