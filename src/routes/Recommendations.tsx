@@ -503,6 +503,7 @@ export function Recommendations() {
             trackIds.map((id) => <TrackChipSkeleton key={id} />)}
           {(songs || []).map((track) => (
             <TrackChip
+              key={track.id}
               id={track.id}
               name={track.name}
               artists={track.artists}
