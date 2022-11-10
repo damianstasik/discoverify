@@ -1,10 +1,15 @@
-import Autocomplete from '@mui/material/Autocomplete';
-import TextField from '@mui/material/TextField';
 import CircularProgress from '@mui/material/CircularProgress';
-import MenuItem from '@mui/material/MenuItem';
-import Typography from '@mui/material/Typography';
 import { type HTMLAttributes } from 'react';
-import { type Theme, type SxProps, ListSubheader, Avatar } from '@mui/material';
+import {
+  Autocomplete,
+  TextField,
+  MenuItem,
+  Typography,
+  type Theme,
+  type SxProps,
+  ListSubheader,
+  Avatar,
+} from '@mui/material';
 import { Box } from '@mui/system';
 
 const menuItemStyle: SxProps<Theme> = {
@@ -20,7 +25,6 @@ const autocompleteStyle: SxProps<Theme> = {
 };
 
 const renderOption = (option: HTMLAttributes<HTMLLIElement>, track: any) => {
-  console.log('t', track);
   switch (track.type) {
     case 'track':
       return (
@@ -66,12 +70,12 @@ export function EntityAutocomplete({
       id="track-autocomplete"
       sx={autocompleteStyle}
       renderOption={renderOption}
-      getOptionLabel={(option) => option.label}
       options={tracks || []}
       disabled={isDisabled}
       groupBy={(item) => item.type}
+      filterOptions={(options) => options}
       renderGroup={(params) => (
-        <li key={params.key}>
+        <li key={params.group}>
           <ListSubheader sx={{ top: -8 }}>{groups[params.group]}</ListSubheader>
           <Box sx={{ padding: 0 }} component="ul">
             {params.children}

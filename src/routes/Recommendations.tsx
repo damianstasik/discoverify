@@ -1,24 +1,12 @@
-import { memo, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import Typography from '@mui/material/Typography';
-import {
-  type GridColumns,
-  GridActionsCellItem,
-  useGridApiContext,
-  useGridApiRef,
-} from '@mui/x-data-grid-premium';
+import { type GridColumns, useGridApiRef } from '@mui/x-data-grid-premium';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Box from '@mui/material/Box';
-import Chip from '@mui/material/Chip';
-import Divider from '@mui/material/Divider';
 import { useRecoilValue } from 'recoil';
-import Icon from '@mdi/react';
-import { mdiCardsHeartOutline, mdiSpotify } from '@mdi/js';
 import { useDebounce } from 'use-debounce';
-import IconButton from '@mui/material/IconButton';
 import produce from 'immer';
 import { tokenState } from '../store';
-import { TrackAutocomplete } from '../components/TrackAutocomplete';
 import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
 import { ArtistColumn } from '../components/ArtistColumn';
 import { AlbumColumn } from '../components/AlbumColumn';
@@ -29,6 +17,8 @@ import { ActionsColumn } from '../components/TrackTable/ActionsColumn';
 import { getRecommendedTracks, getTracks, ignoreTrack, search } from '../api';
 import { TrackChip } from '../components/TrackChip';
 import { Stack } from '@mui/material';
+import { EntityAutocomplete } from '../components/EntityAutocomplete';
+import { TrackChipSkeleton } from '../components/TrackChipSkeleton';
 
 function msToTime(duration: number) {
   const seconds = Math.floor((duration / 1000) % 60);
@@ -446,18 +436,18 @@ export function Recommendations() {
     getRecommendedTracks,
   );
 
-  const { data: songs, isLoading: isLoadingSongs } = useQuery(
+  const { data: songs, isLoading: isLoadingTracks } = useQuery(
     ['songs', token, trackIds],
     getTracks,
   );
 
-  const { data: autosongs, isLoading: isLoadingAutocomplete } = useQuery(
-    ['search', token, debouncedQuery],
-    search,
-    {
-      enabled: !!debouncedQuery,
-    },
-  );
+  const {
+    data: autosongs,
+    isLoading: isLoadingAutocomplete,
+    isFetching: isFetchingAutocomplete,
+  } = useQuery(['search', token, debouncedQuery], search, {
+    enabled: !!debouncedQuery,
+  });
 
   const { mutate } = useMutation(ignoreTrack, {
     onSuccess(_, { id, isIgnored }) {
@@ -493,25 +483,24 @@ export function Recommendations() {
     <>
       <PageTitle>Recommendations</PageTitle>
 
-      {/* <TrackAutocomplete
-        isDisabled={(songs || []).length === 5}
-        isLoading={isLoadingAutocomplete}
+      <EntityAutocomplete
+        tracks={autosongs || []}
+        isDisabled={trackIds.length > 5}
+        isLoading={isFetchingAutocomplete}
         query={query}
         onQueryChange={setQuery}
         onTrackSelection={(b) => {
-          queryClient.setQueryData(
-            ['songs', `${trackIds},${b.id}`],
-            songs.concat(b),
-          );
           const q = new URLSearchParams(searchParams);
           q.append('trackId', b.id);
           setSearchParams(q);
         }}
-      /> */}
+      />
 
       <Box sx={{ my: 2 }}>
         <Stack direction="row" spacing={2}>
-          {!songs && trackIds.length > 0 && trackIds.map((id) => <TrackChipSkeleton key={id}  />)}
+          {!songs &&
+            trackIds.length > 0 &&
+            trackIds.map((id) => <TrackChipSkeleton key={id} />)}
           {(songs || []).map((track) => (
             <TrackChip
               id={track.id}

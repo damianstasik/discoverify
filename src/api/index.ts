@@ -118,7 +118,7 @@ export const search: QueryFunction<
     q: queryKey[2],
   });
 
-  const req = await fetch(`${import.meta.env.VITE_API_URL}/search?${q}`, {
+  const req = await fetch(`${import.meta.env.VITE_API_URL}/seed/search?${q}`, {
     signal,
     headers: {
       Authorization: `Bearer ${queryKey[1]}`,
@@ -127,5 +127,5 @@ export const search: QueryFunction<
 
   const body = await req.json();
 
-  return body.songs;
+  return body;
 };
