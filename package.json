@@ -36,6 +36,6 @@
     "format": "rome format --write ."
   },
   "devDependencies": {
-    "rome": "^10.0.0"
+    "rome": "^10.0.1"
   }
 }
