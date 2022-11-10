@@ -509,8 +509,9 @@ export function Recommendations() {
         }}
       /> */}
 
-      <Box sx={{ overflowX: 'auto', my: 2 }}>
+      <Box sx={{ my: 2 }}>
         <Stack direction="row" spacing={2}>
+          {!songs && trackIds.length > 0 && trackIds.map((id) => <TrackChipSkeleton key={id}  />)}
           {(songs || []).map((track) => (
             <TrackChip
               id={track.id}
