@@ -16,7 +16,6 @@
     "@types/spotify-web-playback-sdk": "^0.1.15",
     "@vitejs/plugin-react": "^2.2.0",
     "date-fns": "^2.29.3",
-    "eslint": "^8.27.0",
     "immer": "^9.0.16",
     "jwt-decode": "^3.1.2",
     "notistack": "2.0.8",
