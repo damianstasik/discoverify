@@ -13,54 +13,30 @@ import {
   trackPreviewState,
 } from '../store';
 import { PlaybackState } from '../types.d';
+import { CircularProgress } from '@mui/material';
+import { useGridApiContext } from '@mui/x-data-grid-premium';
 
 interface Props {
   track: any | null;
 }
 
 export const TrackPreviewColumn = memo(({ track }: Props) => {
-  const [playerTrack, setPlayerTrack] = useRecoilState(playerTrackAtom);
-  const [trackPreview, setTrackPreview] = useRecoilState(trackPreviewState);
-  const isLoadingTrackPreview = useRecoilValue(loadingTrackPreview);
-  const token = useRecoilValue(tokenState);
-  const isPlayerTrack = playerTrack?.uri === track?.uri; // && trackPreview?.context === context
-  const [playerState, setPlayerState] = useRecoilState(playerStateAtom);
-  const deviceId = useRecoilValue(deviceIdAtom);
+  const apiRef = useGridApiContext();
+  const playerTrack = useRecoilValue(playerTrackAtom);
+  const isPlayingTrack = playerTrack?.uri === track?.uri; // && trackPreview?.context === context
+  const playerState = useRecoilValue(playerStateAtom);
 
-  const { mutate } = useMutation(async (track) => {
-    await fetch(
-      `${import.meta.env.VITE_API_URL}/track/${
-        track.uri
-      }/play?deviceId=${deviceId}`,
-      {
-        method: 'post',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
-  });
-
-  if (!track) {
-    return null;
-  }
-
-  const handleClick = () => {
-    setPlayerState('loading');
-    setPlayerTrack(track);
-    mutate(track);
-  };
-
-  return (
+  return isPlayingTrack && playerState === PlaybackState.LOADING ? (
+    <CircularProgress size={24} sx={{ mx: 'auto' }} />
+  ) : (
     <IconButton
-      color={isPlayerTrack ? 'primary' : 'default'}
-      onClick={handleClick}
-      disabled={isPlayerTrack && playerState === 'loading'}
-      aria-label={isPlayerTrack ? 'Pause' : 'Play'}
+      color={isPlayingTrack ? 'primary' : 'default'}
+      onClick={() => apiRef.current.publishEvent('playPauseTrack', track)}
+      aria-label={isPlayingTrack ? 'Pause' : 'Play'}
     >
       <Icon
         path={
-          isPlayerTrack && playerState === PlaybackState.PLAYING
+          isPlayingTrack && playerState === PlaybackState.PLAYING
             ? mdiPauseCircle
             : mdiPlayCircle
         }

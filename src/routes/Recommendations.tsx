@@ -1,12 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { type GridColumns, useGridApiRef } from '@mui/x-data-grid-premium';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Box from '@mui/material/Box';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { useDebounce } from 'use-debounce';
 import produce from 'immer';
-import { tokenState } from '../store';
+import {
+  deviceIdAtom,
+  playerStateAtom,
+  playerTrackAtom,
+  tokenState,
+} from '../store';
 import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
 import { ArtistColumn } from '../components/ArtistColumn';
 import { AlbumColumn } from '../components/AlbumColumn';
@@ -19,6 +24,7 @@ import { TrackChip } from '../components/TrackChip';
 import { Stack } from '@mui/material';
 import { EntityAutocomplete } from '../components/EntityAutocomplete';
 import { TrackChipSkeleton } from '../components/TrackChipSkeleton';
+import { PlaybackState } from '../types.d';
 
 function msToTime(duration: number) {
   const seconds = Math.floor((duration / 1000) % 60);
@@ -465,7 +471,45 @@ export function Recommendations() {
     },
   });
 
+  const deviceId = useRecoilValue(deviceIdAtom);
+
+  const { mutate: play } = useMutation(async ({ ids, offset }) => {
+    const qs = new URLSearchParams();
+    qs.append('deviceId', deviceId);
+    qs.append('offset', offset);
+    for (let id of ids) {
+      qs.append('id', id);
+    }
+    await fetch(`${import.meta.env.VITE_API_URL}/player/play?${qs}`, {
+      method: 'post',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  });
+
+  const setPlayerState = useSetRecoilState(playerStateAtom);
+  const setPlayerTrack = useSetRecoilState(playerTrackAtom);
+
   const apiRef = useGridApiRef();
+
+  const ids = useMemo(() => (data || []).map((t) => t.uri), [data]);
+
+  useEffect(() => {
+    const handlePlayPauseTrack = (track) => {
+      setPlayerState(PlaybackState.LOADING);
+      setPlayerTrack(track);
+      play({
+        ids,
+        offset: track.uri,
+      });
+    };
+
+    return apiRef.current.subscribeEvent(
+      'playPauseTrack',
+      handlePlayPauseTrack,
+    );
+  }, [apiRef, ids]);
 
   useEffect(() => {
     const handleIgnoreTrack = (params) => {

@@ -7,6 +7,7 @@ export interface Attribute<Value> {
 export enum PlaybackState {
   PLAYING,
   PAUSED,
+  LOADING,
 }
 
 export interface User {
