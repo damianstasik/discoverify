@@ -27,7 +27,7 @@ import { saveTrack } from '../api';
 
 export function Player() {
   const [trackPreview, setTrackPreview] = useRecoilState(trackPreviewState);
-  const [playerTrack] = useRecoilState(playerTrackAtom);
+  const [playerTrack, setPlayerTrack] = useRecoilState(playerTrackAtom);
   const [isLoadingTrackPreview, setLoadingTrackPreview] =
     useRecoilState(loadingTrackPreview);
 
@@ -77,6 +77,10 @@ export function Player() {
     },
     [status],
   );
+
+  useEffect(() => {
+    setPlayerTrack(meta?.current_item ?? null);
+  }, [meta]);
 
   useEffect(() => {
     if (isSeeking && status === 'RUNNING') {

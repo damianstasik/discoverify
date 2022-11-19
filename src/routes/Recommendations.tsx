@@ -6,12 +6,7 @@ import Box from '@mui/material/Box';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { useDebounce } from 'use-debounce';
 import produce from 'immer';
-import {
-  deviceIdAtom,
-  playerStateAtom,
-  playerTrackAtom,
-  tokenState,
-} from '../store';
+import { deviceIdAtom, playerStateAtom, tokenState } from '../store';
 import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
 import { ArtistColumn } from '../components/ArtistColumn';
 import { AlbumColumn } from '../components/AlbumColumn';
@@ -489,7 +484,6 @@ export function Recommendations() {
   });
 
   const setPlayerState = useSetRecoilState(playerStateAtom);
-  const setPlayerTrack = useSetRecoilState(playerTrackAtom);
 
   const apiRef = useGridApiRef();
 
@@ -498,7 +492,6 @@ export function Recommendations() {
   useEffect(() => {
     const handlePlayPauseTrack = (track) => {
       setPlayerState(PlaybackState.LOADING);
-      setPlayerTrack(track);
       play({
         ids,
         offset: track.uri,
