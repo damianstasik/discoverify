@@ -477,7 +477,7 @@ export function Recommendations() {
     };
 
     return apiRef.current.subscribeEvent('ignoreTrack', handleIgnoreTrack);
-  }, [apiRef]);
+  }, [apiRef, token]);
 
   return (
     <>
