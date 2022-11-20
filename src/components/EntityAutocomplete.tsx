@@ -14,7 +14,6 @@ import { Box } from '@mui/system';
 
 const menuItemStyle: SxProps<Theme> = {
   display: 'flex',
-  flexDirection: 'column',
   justifyContent: 'flex-start',
   alignItems: 'flex-start !important',
   // border: '1px solid red',
@@ -25,10 +24,13 @@ const renderOption = (option: HTMLAttributes<HTMLLIElement>, track: any) => {
     case 'track':
       return (
         <MenuItem {...option} sx={menuItemStyle}>
-          <Typography display="block">{track.name}</Typography>
-          <Typography variant="caption" display="block">
-            {track.artists.map((artist: any) => artist.name).join(', ')}
-          </Typography>
+          <Avatar src={track.img} sx={{ mr: 1.5 }} variant="rounded" />
+          <Box sx={{ ...menuItemStyle, flexDirection: 'column' }}>
+            <Typography display="block">{track.name}</Typography>
+            <Typography variant="caption" display="block">
+              {track.artists.map((artist: any) => artist.name).join(', ')}
+            </Typography>
+          </Box>
         </MenuItem>
       );
     case 'genre':
