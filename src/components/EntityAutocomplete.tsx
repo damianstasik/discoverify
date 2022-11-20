@@ -20,10 +20,6 @@ const menuItemStyle: SxProps<Theme> = {
   // border: '1px solid red',
 };
 
-const autocompleteStyle: SxProps<Theme> = {
-  width: 300,
-};
-
 const renderOption = (option: HTMLAttributes<HTMLLIElement>, track: any) => {
   switch (track.type) {
     case 'track':
@@ -67,8 +63,8 @@ export function EntityAutocomplete({
 }) {
   return (
     <Autocomplete
+      fullWidth
       id="track-autocomplete"
-      sx={autocompleteStyle}
       renderOption={renderOption}
       options={tracks || []}
       disabled={isDisabled}
