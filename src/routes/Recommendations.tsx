@@ -435,6 +435,9 @@ export function Recommendations() {
   const { data, isFetching } = useQuery(
     ['recommended', token, trackIds, values],
     getRecommendedTracks,
+    {
+      enabled: trackIds.length > 0,
+    },
   );
 
   const { data: songs, isLoading: isLoadingTracks } = useQuery(
