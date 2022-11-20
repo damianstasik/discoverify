@@ -106,6 +106,14 @@ export function Player() {
     },
   });
 
+  const handlePrevious = useCallback(() => {
+    player?.previousTrack();
+  }, [player]);
+
+  const handleNext = useCallback(() => {
+    player?.nextTrack();
+  }, [player]);
+
   const handlePlayPause = useCallback(() => {
     player?.togglePlay();
   }, [player]);
@@ -159,6 +167,8 @@ export function Player() {
             <PlaybackControl
               state={playerState}
               onPlayPauseClick={handlePlayPause}
+              onNextClick={handleNext}
+              onPreviousClick={handlePrevious}
             />
             <SeekControl
               position={time}
