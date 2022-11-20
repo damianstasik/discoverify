@@ -108,6 +108,9 @@ export function Recommendations() {
   const { data: songs, isLoading: isLoadingTracks } = useQuery(
     ['songs', token, trackIds],
     getTracks,
+    {
+      enabled: trackIds.length > 0,
+    },
   );
 
   const {
