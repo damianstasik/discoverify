@@ -1,5 +1,5 @@
 import { useCallback, useState, useEffect } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import jwt_decode from 'jwt-decode';
 import { IconButton, Paper, Stack } from '@mui/material';
 import Grid2 from '@mui/material/Unstable_Grid2';
@@ -15,6 +15,7 @@ import {
   playerStateAtom,
   playerTrackAtom,
   playerVolumeAtom,
+  queueVisibilityAtom,
 } from '../store';
 import { useSpotifyWebPlaybackSdk } from '../hooks/useSpotifyWebPlaybackSdk';
 import { VolumeControl } from './Player/VolumeControl';
@@ -51,6 +52,7 @@ export function Player() {
   const [isChangingVolume, setIsChangingVolume] = useState(false);
   const [isSeeking, setIsSeeking] = useState(false);
   const [playerState, setPlayerState] = useRecoilState(playerStateAtom);
+  const setIsQueueOpen = useSetRecoilState(queueVisibilityAtom);
 
   const [meta, setMeta] = useState<Spotify.PlaybackContextMetadata | null>(
     null,
@@ -195,7 +197,7 @@ export function Player() {
           <IconButton>
             <FavoriteBorderIcon />
           </IconButton>
-          <IconButton>
+          <IconButton onClick={() => setIsQueueOpen(true)}>
             <QueueMusicIcon />
           </IconButton>
           <IconButton>

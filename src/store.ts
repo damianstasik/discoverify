@@ -13,6 +13,13 @@ export const playerTrackAtom = atom<any | null>({
   default: null,
 });
 
+// queue
+
+export const queueVisibilityAtom = atom<boolean>({
+  key: 'queueVisibility',
+  default: false,
+});
+
 // non-player
 
 export const likedIdsState = atom({

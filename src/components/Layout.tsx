@@ -10,8 +10,9 @@ import {
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Sidebar } from './Sidebar';
 import { Player } from './Player';
-import { tokenState, userAtom } from '../store';
+import { queueVisibilityAtom, tokenState, userAtom } from '../store';
 import { getCurrentUser, refreshAccessToken } from '../api';
+import { Drawer, List, ListItem } from '@mui/material';
 
 const drawerWidth = 300;
 
@@ -19,6 +20,25 @@ export function Layout() {
   const location = useLocation();
   const setUser = useSetRecoilState(userAtom);
   const [token, setToken] = useRecoilState(tokenState);
+  const [isQueueOpen, setIsQueueOpen] = useRecoilState(
+    queueVisibilityAtom,
+  );
+
+  const { data: queue } = useQuery(
+    ['queue', token],
+    async () => {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/player/queue`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const body = await res.json();
+      return body;
+    },
+    {
+      enabled: !!token && isQueueOpen,
+    },
+  );
 
   const { mutate } = useMutation(refreshAccessToken, {
     onSuccess(freshToken) {
@@ -86,6 +106,18 @@ export function Layout() {
       >
         <Player />
       </AppBar>
+      <Drawer
+        anchor="bottom"
+        open={isQueueOpen}
+        onClose={() => setIsQueueOpen(false)}
+        sx={{ p: 8 }}
+      >
+        <List>
+          {(queue || []).map((track, index) => (
+            <ListItem key={track.id}>{index + 1}. {track.name}</ListItem>
+          ))}
+        </List>
+      </Drawer>
     </div>
   );
 }
