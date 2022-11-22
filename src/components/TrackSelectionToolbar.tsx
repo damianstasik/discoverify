@@ -2,6 +2,7 @@ import { Divider } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Collapse from '@mui/material/Collapse';
+import { memo } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
 function extractId(value: string) {
@@ -12,8 +13,7 @@ function extractId(value: string) {
   return value;
 }
 
-export function TrackSelectionToolbar({ rows }) {
-
+export const TrackSelectionToolbar = memo(({ rows }) => {
   return (
     <Collapse in={rows.length > 0}>
       <Box sx={{ p: 1 }}>
@@ -23,7 +23,10 @@ export function TrackSelectionToolbar({ rows }) {
             to={{
               pathname: '/recommendations',
               search: `?${rows
-                .map((selectedRow) => `trackId=${extractId(selectedRow.original.id)}`)
+                .map(
+                  (selectedRow) =>
+                    `trackId=${extractId(selectedRow.original.id)}`,
+                )
                 .join('&')}`,
             }}
           >
@@ -36,7 +39,10 @@ export function TrackSelectionToolbar({ rows }) {
           to={{
             pathname: '/playlist/create',
             search: `?${rows
-              .map((selectedRow) => `trackId=${extractId(selectedRow.original.id)}`)
+              .map(
+                (selectedRow) =>
+                  `trackId=${extractId(selectedRow.original.id)}`,
+              )
               .join('&')}`,
           }}
         >
@@ -46,4 +52,4 @@ export function TrackSelectionToolbar({ rows }) {
       <Divider />
     </Collapse>
   );
-}
+});
