@@ -22,6 +22,11 @@ import { TrackChipSkeleton } from '../components/TrackChipSkeleton';
 import { PlaybackState } from '../types.d';
 import { useAttributes } from '../hooks/useAttributes';
 import { attributes as attributesConfig } from '../config/attributes';
+import { usePlayPauseTrackHook } from '../hooks/usePlayPauseTrackHook';
+import { useIgnoreTrackHook } from '../hooks/useIgnoreTrackHook';
+import { useSaveTrackHook } from '../hooks/useSaveTrackHook';
+import { VirtualTable } from '../components/VirtualTable';
+import { ColumnDef } from '@tanstack/react-table';
 
 function msToTime(duration: number) {
   const seconds = Math.floor((duration / 1000) % 60);
@@ -33,53 +38,43 @@ function msToTime(duration: number) {
   return `${m}:${s}`;
 }
 
-const columns: GridColumns = [
+const columns: ColumnDef<any>[]= [
   {
-    field: 'preview_url',
-    headerName: '',
-    width: 60,
-    sortable: false,
-    renderCell: (params) => <TrackPreviewColumn track={params.row} />,
+    id: 'preview_url',
+    header: '',
+    size: 60,
+    cell: (params) => <TrackPreviewColumn track={params.row.original} />,
   },
   {
-    field: 'name',
-    headerName: 'Name',
-    flex: 0.2,
-    sortable: false,
-    renderCell: (params) => (
-      <TrackNameColumn id={params.row.id} name={params.value} />
+    accessorKey: 'name',
+    header: 'Name',
+    cell: (params) => (
+      <TrackNameColumn id={params.row.original.id} name={params.getValue()} />
     ),
   },
   {
-    field: 'artist',
-    headerName: 'Artist(s)',
-    flex: 0.2,
-    sortable: false,
-    renderCell: (params) => <ArtistColumn artists={params.value} />,
+    accessorKey: 'artist',
+    header: 'Artist(s)',
+    cell: (params) => <ArtistColumn artists={params.getValue()} />,
   },
   {
-    field: 'album',
-    headerName: 'Album',
-    flex: 0.2,
-    renderCell: (params) => (
-      <AlbumColumn id={params.row.id} name={params.row.name} />
+    accessorKey: 'album',
+    header: 'Album',
+    cell: (params) => (
+      <AlbumColumn id={params.row.original.id} name={params.row.original.name} />
     ),
   },
   {
-    field: 'duration',
-    headerName: 'Duration',
-    flex: 0.1,
-    sortable: false,
-    valueFormatter: (params: any) => {
-      return msToTime(params.value);
+    accessorKey: 'duration',
+    header: 'Duration',
+    cell: (params) => {
+      return msToTime(params.getValue());
     },
   },
   {
-    field: 'actions',
-    headerName: 'Actions',
-    sortable: false,
-    flex: 0.15,
-    renderCell: (params) => <ActionsColumn track={params.row} />,
+    id: 'actions',
+    header: 'Actions',
+    cell: (params) => <ActionsColumn track={params.row.original} />,
   },
 ];
 
@@ -121,71 +116,13 @@ export function Recommendations() {
     enabled: !!debouncedQuery,
   });
 
-  const { mutate } = useMutation(ignoreTrack, {
-    onSuccess(_, { id, isIgnored }) {
-      queryClient.setQueryData<{ id: string }[]>(
-        ['recommended', token, trackIds, values],
-        produce((draft) => {
-          if (!draft) return;
-          const item = draft.find((t) => t.id === id);
-
-          if (item) {
-            item.isIgnored = !isIgnored;
-          }
-        }),
-      );
-    },
-  });
-
-  const deviceId = useRecoilValue(deviceIdAtom);
-
-  const { mutate: play } = useMutation(async ({ ids, offset }) => {
-    const qs = new URLSearchParams();
-    qs.append('deviceId', deviceId);
-    qs.append('offset', offset);
-    for (let id of ids) {
-      qs.append('id', id);
-    }
-    await fetch(`${import.meta.env.VITE_API_URL}/player/play?${qs}`, {
-      method: 'post',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-  });
-
-  const setPlayerState = useSetRecoilState(playerStateAtom);
-
-  const apiRef = useGridApiRef();
-
   const ids = useMemo(() => (data || []).map((t) => t.uri), [data]);
 
-  useEffect(() => {
-    const handlePlayPauseTrack = (track) => {
-      setPlayerState(PlaybackState.LOADING);
-      play({
-        ids,
-        offset: track.uri,
-      });
-    };
+  usePlayPauseTrackHook(ids);
 
-    return apiRef.current.subscribeEvent(
-      'playPauseTrack',
-      handlePlayPauseTrack,
-    );
-  }, [apiRef, ids]);
+  useIgnoreTrackHook();
 
-  useEffect(() => {
-    const handleIgnoreTrack = (params) => {
-      mutate({
-        id: params.id,
-        isIgnored: params.isIgnored,
-        token,
-      });
-    };
-
-    return apiRef.current.subscribeEvent('ignoreTrack', handleIgnoreTrack);
-  }, [apiRef, token]);
+  useSaveTrackHook();
 
   return (
     <>
@@ -235,15 +172,12 @@ export function Recommendations() {
       ))} */}
 
       <div style={{ height: 800 }}>
-        <Table
+        <VirtualTable
+          data={data || []}
           columns={columns}
-          checkboxSelection
-          onSelectionModelChange={(value) => setSelectedSongs(value)}
-          selectionModel={selectedSongs}
-          rows={data || []}
-          loading={isFetching}
-          apiRef={apiRef}
-          getRowClassName={(row) => (row.row.isIgnored ? 'disabled' : '')}
+          isLoading={isFetching}
+          hasNextPage={false}
+          fetchNextPage={null}
         />
       </div>
     </>
