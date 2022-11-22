@@ -1,13 +1,5 @@
 import { formatRelative } from 'date-fns';
 import {
-  type GridColumns,
-  GridActionsCellItem,
-  useGridApiContext,
-  type GridRowId,
-  useGridApiRef,
-  DataGridPremium,
-} from '@mui/x-data-grid-premium';
-import {
   type QueryFunction,
   useInfiniteQuery,
   useMutation,
@@ -58,6 +50,25 @@ function msToTime(duration: number) {
   return `${m}:${s}`;
 }
 
+const CheckboxColumn = memo(({ isRow, table, row }) => {
+  if (isRow) {
+    return (
+      <Checkbox
+        checked={row.getIsSelected()}
+        indeterminate={row.getIsSomeSelected()}
+        onChange={row.getToggleSelectedHandler()}
+      />
+    );
+  }
+  return (
+    <Checkbox
+      checked={table.getIsAllRowsSelected()}
+      indeterminate={table.getIsSomeRowsSelected()}
+      onChange={table.getToggleAllRowsSelectedHandler()}
+    />
+  );
+});
+
 const columns: ColumnDef<{
   preview_url: string;
   name: string;
@@ -69,22 +80,8 @@ const columns: ColumnDef<{
   {
     size: 50,
     id: 'select',
-    header: ({ table }) => (
-      <Checkbox
-        checked={table.getIsAllRowsSelected()}
-        indeterminate={table.getIsSomeRowsSelected()}
-        onChange={table.getToggleAllRowsSelectedHandler()}
-      />
-    ),
-    cell: ({ row }) => (
-      <div className="px-1">
-        <Checkbox
-          checked={row.getIsSelected()}
-          indeterminate={row.getIsSomeSelected()}
-          onChange={row.getToggleSelectedHandler()}
-        />
-      </div>
-    ),
+    header: ({ table }) => <CheckboxColumn table={table} />,
+    cell: ({ row }) => <CheckboxColumn row={row} isRow />,
   },
   {
     id: 'play',
@@ -161,6 +158,122 @@ interface Track {
   isIgnored: boolean;
 }
 
+const TableHeader = memo(({ table }) => {
+  return (
+    <div>
+      {table.getHeaderGroups().map((headerGroup) => (
+        <div key={headerGroup.id} style={{ display: 'flex' }}>
+          {headerGroup.headers.map((header) => {
+            return (
+              <div key={header.id} style={{ width: header.getSize() }}>
+                {header.isPlaceholder ? null : (
+                  <div>
+                    {flexRender(
+                      header.column.columnDef.header,
+                      header.getContext(),
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      ))}
+    </div>
+  );
+});
+
+const TableCell = memo(({ cell }) => {
+  return (
+    <div
+      style={{
+        width: cell.column.getSize(),
+      }}
+    >
+      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+    </div>
+  );
+});
+
+const TableVirtualRow = memo(({ row, virtualItem }) => {
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: `${virtualItem.size}px`,
+        transform: `translateY(${virtualItem.start}px)`,
+        display: 'flex',
+        background: row.original.isIgnored ? 'red' : '',
+      }}
+    >
+      {row.getVisibleCells().map((cell) => {
+        return <TableCell key={cell.id} cell={cell} />;
+      })}
+    </div>
+  );
+});
+
+const VirtualTable = memo(({ data, isLoading, hasNextPage, fetchNextPage }) => {
+  const table = useReactTable({
+    data,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+  });
+
+  const contRef = useRef<HTMLDivElement>(null);
+
+  const handleInfiniteLoadingScroll = useInfiniteLoading({
+    ref: contRef,
+    fetchNextPage,
+    isFetching: isLoading,
+    hasNextPage,
+  });
+
+  const rowVirtualizer = useVirtualizer({
+    getScrollElement: () => contRef.current,
+    count: data.length,
+    estimateSize: () => 35,
+  });
+  const rows = table.getSelectedRowModel().flatRows;
+  return (
+    <div>
+      <TrackSelectionToolbar rows={rows} />
+      <TableHeader table={table} />
+      <div
+        className="container"
+        ref={contRef}
+        style={{
+          height: `800px`,
+          overflow: 'auto',
+        }}
+        onScroll={handleInfiniteLoadingScroll}
+      >
+        <div
+          style={{
+            height: `${rowVirtualizer.getTotalSize()}px`,
+            width: '100%',
+            position: 'relative',
+          }}
+        >
+          {rowVirtualizer.getVirtualItems().map((virtualItem) => {
+            const row = table.getRowModel().rows[virtualItem.index];
+            return (
+              <TableVirtualRow
+                row={row}
+                key={row.id}
+                virtualItem={virtualItem}
+              />
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+});
+
 export function Liked() {
   const token = useRecoilValue(tokenState);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -175,12 +288,12 @@ export function Liked() {
     onSuccess(data) {
       const page = data.pageParams[data.pageParams.length - 1];
 
-      if (page) {
-        setSearchParams((prev) => {
-          prev.set('page', page);
-          return prev;
-        });
-      }
+      // if (page) {
+      //   setSearchParams((prev) => {
+      //     prev.set('page', page);
+      //     return prev;
+      //   });
+      // }
     },
   });
 
@@ -193,108 +306,19 @@ export function Liked() {
 
   usePlayPauseTrackHook(ids);
 
-  const table = useReactTable({
-    data: flatData,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-  });
-
-  const contRef = useRef<HTMLDivElement>(null);
-
-  const handleInfiniteLoadingScroll = useInfiniteLoading({
-    ref: contRef,
-    fetchNextPage,
-    isFetching,
-    hasNextPage,
-  });
-
-  const rowVirtualizer = useVirtualizer({
-    getScrollElement: () => contRef.current,
-    count: flatData.length,
-    estimateSize: () => 35,
-  });
-
   useIgnoreTrackHook();
-
-  const rows = table.getSelectedRowModel().flatRows;
 
   return (
     <>
       <PageTitle>Liked tracks</PageTitle>
-      <TrackSelectionToolbar rows={rows} />
       <div style={{ height: 800 }}>
-        <div>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <div key={headerGroup.id} style={{ display: 'flex' }}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <div key={header.id} style={{ width: header.getSize() }}>
-                    {header.isPlaceholder ? null : (
-                      <div>
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          ))}
-        </div>
-        <div
-          className="container"
-          ref={contRef}
-          style={{
-            height: `400px`,
-            overflow: 'auto',
-          }}
-          onScroll={handleInfiniteLoadingScroll}
-        >
-          <div
-            style={{
-              height: `${rowVirtualizer.getTotalSize()}px`,
-              width: '100%',
-              position: 'relative',
-            }}
-          >
-            {rowVirtualizer.getVirtualItems().map((virtualItem) => {
-              const row = table.getRowModel().rows[virtualItem.index];
-              return (
-                <div
-                  key={virtualItem.key}
-                  style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    width: '100%',
-                    height: `${virtualItem.size}px`,
-                    transform: `translateY(${virtualItem.start}px)`,
-                    display: 'flex',
-                    background: row.original.isIgnored ? 'red' : '',
-                  }}
-                >
-                  {row.getVisibleCells().map((cell) => {
-                    return (
-                      <div
-                        key={cell.id}
-                        style={{
-                          width: cell.column.getSize(),
-                        }}
-                      >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              );
-            })}
-          </div>
-        </div>
+        <VirtualTable
+          data={flatData}
+          columns={columns}
+          isLoading={isFetching}
+          hasNextPage={hasNextPage}
+          fetchNextPage={fetchNextPage}
+        />
       </div>
     </>
   );
