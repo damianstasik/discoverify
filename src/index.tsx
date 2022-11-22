@@ -11,6 +11,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { LicenseInfo } from '@mui/x-data-grid-premium';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Router } from './Router';
+import { EventBusProvider } from './components/EventBus';
 // import './dark.css';
 
 const queryClient = new QueryClient({
@@ -366,18 +367,20 @@ const root = createRoot(document.getElementById('root')!);
 
 root.render(
   <StrictMode>
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <SnackbarProvider maxSnack={3}>
-        <QueryClientProvider client={queryClient}>
-          <ReactQueryDevtools initialIsOpen={false} />
-          <RecoilRoot>
-            <BrowserRouter>
-              <SuspensedApp />
-            </BrowserRouter>
-          </RecoilRoot>
-        </QueryClientProvider>
-      </SnackbarProvider>
-    </ThemeProvider>
+    <EventBusProvider>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <SnackbarProvider maxSnack={3}>
+          <QueryClientProvider client={queryClient}>
+            <ReactQueryDevtools initialIsOpen={false} />
+            <RecoilRoot>
+              <BrowserRouter>
+                <SuspensedApp />
+              </BrowserRouter>
+            </RecoilRoot>
+          </QueryClientProvider>
+        </SnackbarProvider>
+      </ThemeProvider>
+    </EventBusProvider>
   </StrictMode>,
 );

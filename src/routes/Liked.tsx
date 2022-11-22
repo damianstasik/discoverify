@@ -5,6 +5,7 @@ import {
   useGridApiContext,
   type GridRowId,
   useGridApiRef,
+  DataGridPremium,
 } from '@mui/x-data-grid-premium';
 import {
   type QueryFunction,
@@ -17,7 +18,7 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import Icon from '@mdi/react';
 import { mdiCardsHeartOutline, mdiSpotify } from '@mdi/js';
 import IconButton from '@mui/material/IconButton';
-import { memo, useEffect, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { dislikedTrackIdsAtom, tokenState } from '../store';
 import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
@@ -30,6 +31,22 @@ import { PageTitle } from '../components/PageTitle';
 import { ActionsColumn } from '../components/TrackTable/ActionsColumn';
 import produce from 'immer';
 import { ignoreTrack } from '../api';
+import {
+  ColumnDef,
+  createColumnHelper,
+  flexRender,
+  getCoreRowModel,
+  getSortedRowModel,
+  Row,
+  SortingState,
+  useReactTable,
+} from '@tanstack/react-table';
+import { useVirtualizer } from '@tanstack/react-virtual';
+import { Checkbox } from '@mui/material';
+import { useEventBus } from '../components/EventBus';
+import { usePlayPauseTrackHook } from '../hooks/usePlayPauseTrackHook';
+import { useInfiniteLoading } from '../hooks/useInfiniteLoading';
+import { useIgnoreTrackHook } from '../hooks/useIgnoreTrackHook';
 
 function msToTime(duration: number) {
   const seconds = Math.floor((duration / 1000) % 60);
@@ -41,63 +58,78 @@ function msToTime(duration: number) {
   return `${m}:${s}`;
 }
 
-const columns: GridColumns = [
+const columns: ColumnDef<{
+  preview_url: string;
+  name: string;
+  artists: any[];
+  album: any;
+  added_at: string;
+  duration_ms: number;
+}>[] = [
   {
-    field: 'preview_url',
-    headerName: '',
-    width: 60,
-    sortable: false,
-    renderCell: (params) => <TrackPreviewColumn track={params.row} />,
-  },
-  {
-    field: 'name',
-    headerName: 'Name',
-    flex: 0.2,
-    sortable: false,
-    renderCell: (params) => (
-      <TrackNameColumn id={params.row.id} name={params.value} />
+    size: 50,
+    id: 'select',
+    header: ({ table }) => (
+      <Checkbox
+        checked={table.getIsAllRowsSelected()}
+        indeterminate={table.getIsSomeRowsSelected()}
+        onChange={table.getToggleAllRowsSelectedHandler()}
+      />
+    ),
+    cell: ({ row }) => (
+      <div className="px-1">
+        <Checkbox
+          checked={row.getIsSelected()}
+          indeterminate={row.getIsSomeSelected()}
+          onChange={row.getToggleSelectedHandler()}
+        />
+      </div>
     ),
   },
   {
-    field: 'artists',
-    headerName: 'Artist(s)',
-    flex: 0.2,
-    sortable: false,
-    renderCell: (params) => <ArtistColumn artists={params.value} />,
+    id: 'play',
+    header: '',
+    size: 50,
+    cell: (params) => <TrackPreviewColumn track={params.row.original} />,
   },
   {
-    field: 'album',
-    headerName: 'Album',
-    flex: 0.2,
-    sortable: false,
-    renderCell: (params) => (
-      <AlbumColumn id={params.value.id} name={params.value.name} />
+    accessorKey: 'name',
+    header: 'Name',
+    size: 300,
+    cell: (params) => (
+      <TrackNameColumn id={params.row.original.id} name={params.getValue()} />
     ),
   },
   {
-    field: 'added_at',
-    headerName: 'Added at',
-    flex: 0.1,
-    sortable: false,
-    valueFormatter: (params: any) => {
-      return formatRelative(new Date(params.value), new Date());
+    accessorKey: 'artists',
+    header: 'Artist(s)',
+    cell: (params) => <ArtistColumn artists={params.getValue()} />,
+  },
+  {
+    accessorKey: 'album',
+    header: 'Album',
+    cell: (params) => (
+      <AlbumColumn id={params.getValue().id} name={params.getValue().name} />
+    ),
+  },
+  {
+    accessorKey: 'added_at',
+    header: 'Added at',
+    cell: (params) => {
+      return formatRelative(new Date(params.getValue()), new Date());
     },
   },
   {
-    field: 'duration_ms',
-    headerName: 'Duration',
-    flex: 0.1,
-    sortable: false,
-    valueFormatter: (params: any) => {
-      return msToTime(params.value);
+    accessorKey: 'duration_ms',
+    header: 'Duration',
+    cell: (params) => {
+      return msToTime(params.getValue());
     },
   },
   {
-    field: 'actions',
-    headerName: 'Actions',
-    sortable: false,
-    flex: 0.15,
-    renderCell: (params) => <ActionsColumn track={params.row} />,
+    id: 'actions',
+    header: 'Actions',
+    cell: (params) => <ActionsColumn track={params.row.original} />,
   },
 ];
 
@@ -131,7 +163,6 @@ interface Track {
 
 export function Liked() {
   const token = useRecoilValue(tokenState);
-  const [selectedTracks, setSelectedTracks] = useState<Array<GridRowId>>([]);
   const [searchParams, setSearchParams] = useSearchParams();
 
   const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery<
@@ -141,10 +172,6 @@ export function Liked() {
     LikedQueryKey
   >(['liked', token], likedQuery, {
     getNextPageParam: (lastPage) => lastPage.nextPage,
-    select: (d) => ({
-      pages: d.pages.map((page) => page.tracks).flat(),
-      pageParams: d.pageParams,
-    }),
     onSuccess(data) {
       const page = data.pageParams[data.pageParams.length - 1];
 
@@ -157,62 +184,117 @@ export function Liked() {
     },
   });
 
-  const rows = data?.pages || [];
-  const queryClient = useQueryClient();
+  const flatData = useMemo(
+    () => data?.pages?.flatMap((page) => page.tracks) ?? [],
+    [data],
+  );
 
-  const { mutate } = useMutation(ignoreTrack, {
-    onSuccess(_, { id, isIgnored }) {
-      queryClient.setQueryData<InfiniteData<LikedRes>>(
-        ['liked', token],
-        produce((draft) => {
-          if (!draft) return;
+  const ids = useMemo(() => flatData.map((t) => t.uri), [flatData]);
 
-          for (const page of draft.pages) {
-            const item = page.tracks.find((t) => t.id === id);
+  usePlayPauseTrackHook(ids);
 
-            if (item) {
-              item.isIgnored = !isIgnored;
-              break;
-            }
-          }
-        }),
-      );
-    },
+  const table = useReactTable({
+    data: flatData,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
   });
 
-  const apiRef = useGridApiRef();
+  const contRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const handleIgnoreTrack = (params) => {
-      mutate({
-        id: params.id,
-        isIgnored: params.isIgnored,
-        token,
-      });
-    };
+  const handleInfiniteLoadingScroll = useInfiniteLoading({
+    ref: contRef,
+    fetchNextPage,
+    isFetching,
+    hasNextPage,
+  });
 
-    return apiRef.current.subscribeEvent('ignoreTrack', handleIgnoreTrack);
-  }, [apiRef]);
+  const rowVirtualizer = useVirtualizer({
+    getScrollElement: () => contRef.current,
+    count: flatData.length,
+    estimateSize: () => 35,
+  });
+
+  useIgnoreTrackHook();
+
+  const rows = table.getSelectedRowModel().flatRows;
 
   return (
     <>
       <PageTitle>Liked tracks</PageTitle>
-
+      <TrackSelectionToolbar rows={rows} />
       <div style={{ height: 800 }}>
-        <Table
-          columns={columns}
-          checkboxSelection
-          onSelectionModelChange={(value) => setSelectedTracks(value)}
-          selectionModel={selectedTracks}
-          rows={rows}
-          loading={isFetching}
-          onRowsScrollEnd={() => hasNextPage && fetchNextPage()}
-          components={{
-            Toolbar: TrackSelectionToolbar,
+        <div>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <div key={headerGroup.id} style={{ display: 'flex' }}>
+              {headerGroup.headers.map((header) => {
+                return (
+                  <div key={header.id} style={{ width: header.getSize() }}>
+                    {header.isPlaceholder ? null : (
+                      <div>
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          ))}
+        </div>
+        <div
+          className="container"
+          ref={contRef}
+          style={{
+            height: `400px`,
+            overflow: 'auto',
           }}
-          apiRef={apiRef}
-          getRowClassName={(row) => (row.row.isIgnored ? 'disabled' : '')}
-        />
+          onScroll={handleInfiniteLoadingScroll}
+        >
+          <div
+            style={{
+              height: `${rowVirtualizer.getTotalSize()}px`,
+              width: '100%',
+              position: 'relative',
+            }}
+          >
+            {rowVirtualizer.getVirtualItems().map((virtualItem) => {
+              const row = table.getRowModel().rows[virtualItem.index];
+              return (
+                <div
+                  key={virtualItem.key}
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: `${virtualItem.size}px`,
+                    transform: `translateY(${virtualItem.start}px)`,
+                    display: 'flex',
+                    background: row.original.isIgnored ? 'red' : '',
+                  }}
+                >
+                  {row.getVisibleCells().map((cell) => {
+                    return (
+                      <div
+                        key={cell.id}
+                        style={{
+                          width: cell.column.getSize(),
+                        }}
+                      >
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })}
+          </div>
+        </div>
       </div>
     </>
   );
