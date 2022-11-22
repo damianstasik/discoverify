@@ -1,13 +1,6 @@
 import { memo, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
-import {
-  GridActionsCellItem,
-  type GridColumns,
-  useGridApiContext,
-  useGridApiRef,
-  type GridRowId,
-} from '@mui/x-data-grid-premium';
 import { useRecoilValue } from 'recoil';
 import { IconButton } from '@mui/material';
 import { useInfiniteQuery, useMutation } from '@tanstack/react-query';
@@ -20,7 +13,7 @@ import { TrackSelectionToolbar } from '../components/TrackSelectionToolbar';
 import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
 import { ArtistColumn } from '../components/ArtistColumn';
 import { TrackNameColumn } from '../components/TrackNameColumn';
-import { Table } from '../components/Table';
+import { VirtualTable } from '../components/VirtualTable';
 
 const OpenInSpotify = memo(({ row }) => {
   return (
@@ -35,51 +28,32 @@ const OpenInSpotify = memo(({ row }) => {
   );
 });
 
-const Save = memo(({ row }) => {
-  const apiRef = useGridApiContext();
-  return (
-    <GridActionsCellItem
-      icon={<Icon path={mdiCardsHeartOutline} size={1} />}
-      onClick={() => apiRef.current.publishEvent('saveTrack', row)}
-      label="Save"
-    />
-  );
-});
-
-const columns: GridColumns = [
+const columns = [
   {
-    field: 'preview_url',
-    headerName: '',
-    width: 60,
-    sortable: false,
-    renderCell: (params) => (
-      <TrackPreviewColumn url={params.value} context={params.row} />
+    id: 'preview_url',
+    header: '',
+    cell: (params) => (
+      <TrackPreviewColumn url={params.getValue()} context={params.row.original} />
     ),
   },
   {
-    field: 'name',
-    sortable: false,
-    headerName: 'Name',
-    flex: 0.3,
-    renderCell: (params) => (
-      <TrackNameColumn id={params.row.id} name={params.value} />
+    accessorKey: 'name',
+    header: 'Name',
+    cell: (params) => (
+      <TrackNameColumn id={params.row.original.id} name={params.getValue()} />
     ),
   },
   {
-    field: 'artists',
-    headerName: 'Artist(s)',
-    flex: 0.7,
-    sortable: false,
-    renderCell: (params) => <ArtistColumn artists={params.value} />,
+    accessorKey: 'artists',
+    header: 'Artist(s)',
+    cell: (params) => <ArtistColumn artists={params.getValue()} />,
   },
   {
-    field: 'actions',
-    headerName: 'Actions',
-    sortable: false,
-    renderCell: (params) => (
+    id: 'actions',
+    header: 'Actions',
+    cell: (params) => (
       <>
-        <OpenInSpotify row={params.row} />
-        <Save row={params.row} />
+        <OpenInSpotify row={params.row.original} />
       </>
     ),
   },
@@ -88,7 +62,6 @@ const columns: GridColumns = [
 export function FollowedArtistsTopTracks() {
   const token = useRecoilValue(tokenState);
   const [searchParams] = useSearchParams();
-  const apiRef = useGridApiRef();
   const genre = searchParams.get('genre');
 
   const { mutateAsync: saveTrack } = useMutation<void, Error, string>(
@@ -108,14 +81,6 @@ export function FollowedArtistsTopTracks() {
       getNextPageParam: (lastPage) => lastPage.nextPage,
     },
   );
-
-  useEffect(() => {
-    if (!apiRef.current || isFetching) return;
-
-    apiRef.current.subscribeEvent('saveTrack', (params) => {
-      saveTrack(params.id);
-    });
-  }, [apiRef, isFetching]);
 
   const rows = useMemo(
     () => (data?.pages || []).map((page) => page.tracks).flat(),
@@ -137,20 +102,12 @@ export function FollowedArtistsTopTracks() {
       </Typography>
 
       <div style={{ height: 800 }}>
-        <Table
-          pagination
-          paginationMode="server"
-          onRowsScrollEnd={() => hasNextPage && fetchNextPage()}
-          checkboxSelection
-          onSelectionModelChange={(value) => setSelectedTracks(value)}
-          selectionModel={selectedTracks}
-          apiRef={apiRef}
-          rows={rows}
+        <VirtualTable
+          fetchNextPage={fetchNextPage}
+          hasNextPage={hasNextPage}
+          isLoading={isFetching}
+          data={rows}
           columns={columns}
-          loading={isFetching}
-          components={{
-            Toolbar: TrackSelectionToolbar,
-          }}
         />
       </div>
     </>

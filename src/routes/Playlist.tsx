@@ -2,7 +2,6 @@ import { useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { GridColumns, GridRowId } from '@mui/x-data-grid-premium';
 import { formatRelative } from 'date-fns';
 import { tokenState } from '../store';
 import { TrackSelectionToolbar } from '../components/TrackSelectionToolbar';
@@ -10,10 +9,10 @@ import { AlbumColumn } from '../components/AlbumColumn';
 import { ArtistColumn } from '../components/ArtistColumn';
 import { TrackNameColumn } from '../components/TrackNameColumn';
 import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
-import { Table } from '../components/Table';
 import { PageTitle } from '../components/PageTitle';
 import { ActionsColumn } from '../components/TrackTable/ActionsColumn';
 import { Skeleton } from '@mui/material';
+import { VirtualTable } from '../components/VirtualTable';
 
 function msToTime(duration: number) {
   const seconds = Math.floor((duration / 1000) % 60);
@@ -25,65 +24,52 @@ function msToTime(duration: number) {
   return `${m}:${s}`;
 }
 
-const columns: GridColumns = [
+const columns = [
   {
-    field: 'preview_url',
-    headerName: '',
-    width: 60,
-    sortable: false,
-    renderCell: (params) => <TrackPreviewColumn track={params.row.track} />,
+    id: 'preview_url',
+    header: '',
+    cell: (params) => <TrackPreviewColumn track={params.row.original.track} />,
   },
   {
-    field: 'name',
-    headerName: 'Name',
-    flex: 0.2,
-    sortable: false,
-    renderCell: (params) => (
-      <TrackNameColumn id={params.row.id} name={params.row.track.name} />
+    accessorKey: 'name',
+    header: 'Name',
+    cell: (params) => (
+      <TrackNameColumn id={params.row.original.id} name={params.row.original.track.name} />
     ),
   },
   {
-    field: 'artist',
-    headerName: 'Artist(s)',
-    flex: 0.2,
-    renderCell: (params) => <ArtistColumn artists={params.row.track.artists} />,
+    accessorKey: 'artist',
+    header: 'Artist(s)',
+    cell: (params) => <ArtistColumn artists={params.row.original.track.artists} />,
   },
   {
-    field: 'album',
-    headerName: 'Album',
-    flex: 0.2,
-    sortable: false,
-    renderCell: (params) => (
+    accessorKey: 'album',
+    header: 'Album',
+    cell: (params) => (
       <AlbumColumn
-        id={params.row.track.album.id}
-        name={params.row.track.album.name}
+        id={params.row.original.track.album.id}
+        name={params.row.original.track.album.name}
       />
     ),
   },
   {
-    field: 'added_at',
-    headerName: 'Added at',
-    flex: 0.1,
-    sortable: false,
-    valueFormatter: (params: any) => {
-      return formatRelative(new Date(params.value), new Date());
+    accessorKey: 'added_at',
+    header: 'Added at',
+    cell: (params: any) => {
+      return formatRelative(new Date(params.getValue()), new Date());
     },
   },
   // {
-  //   field: 'duration',
-  //   headerName: 'Duration',
-  //   flex: 0.1,
-  //   sortable: false,
-  //   valueFormatter: (params: any) => {
-  //     return msToTime(params.value);
+  //   accessorKey: 'duration',
+  //   header: 'Duration',
+  //   cell: (params: any) => {
+  //     return msToTime(params.getValue());
   //   },
   // },
   {
-    field: 'actions',
-    headerName: 'Actions',
-    sortable: false,
-    flex: 0.15,
-    renderCell: (params) => <ActionsColumn track={params.row.track} />,
+    id: 'actions',
+    header: 'Actions',
+    cell: (params) => <ActionsColumn track={params.row.original.track} />,
   },
 ];
 
@@ -108,8 +94,6 @@ export function Playlist() {
     },
   );
 
-  const [selectedTracks, setSelectedTracks] = useState<Array<GridRowId>>([]);
-
   return (
     <>
       <PageTitle>
@@ -122,18 +106,10 @@ export function Playlist() {
       </PageTitle>
 
       <div style={{ height: 800 }}>
-        <Table
+        <VirtualTable
           columns={columns}
-          checkboxSelection
-          onSelectionModelChange={(value) => setSelectedTracks(value)}
-          selectionModel={selectedTracks}
-          rows={data?.tracks?.items || []}
-          loading={isFetching}
-          // onRowsScrollEnd={() => hasNextPage && fetchNextPage()}
-          components={{
-            Toolbar: TrackSelectionToolbar,
-          }}
-          getRowId={(row) => `${row.track.id}::${row.added_at}`}
+          data={data?.tracks?.items || []}
+          isLoading={isFetching}
         />
       </div>
     </>

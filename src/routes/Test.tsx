@@ -8,61 +8,51 @@ import {
 import { useRecoilValue } from 'recoil';
 
 import Typography from '@mui/material/Typography';
-import {
-  DataGridPremium,
-  type GridColumns,
-  useGridApiRef,
-} from '@mui/x-data-grid-premium';
 import { IconButton, Link } from '@mui/material';
 import { mdiSpotify } from '@mdi/js';
 import Icon from '@mdi/react';
 import { tokenState } from '../store';
 import * as trackApi from '../api/track';
 import * as playlistApi from '../api/playlist';
-import { Table } from '../components/Table';
 import { PageTitle } from '../components/PageTitle';
 import { TrackAutocomplete } from '../components/TrackAutocomplete';
+import { VirtualTable } from '../components/VirtualTable';
 
-const columns: GridColumns = [
+const columns = [
   {
-    field: 'name',
-    sortable: false,
-    headerName: 'Name',
-    flex: 0.3,
-    renderCell: (params) => (
+    accessorKey: 'name',
+    header: 'Name',
+    cell: (params) => (
       <Link
         component={RouterLink}
-        to={`/playlist/${params.row.id}`}
+        to={`/playlist/${params.row.original.id}`}
         color="#fff"
       >
-        {params.value}
+        {params.getValue()}
       </Link>
     ),
   },
   {
-    field: 'owner',
-    headerName: 'Owner',
-    flex: 0.7,
-    sortable: false,
-    renderCell: (params) => (
+    accessorKey: 'owner',
+    header: 'Owner',
+    cell: (params) => (
       <Link
         component={RouterLink}
-        to={`/artist/${params.value.id}`}
+        to={`/artist/${params.getValue().id}`}
         color="#fff"
       >
-        {params.value.display_name}
+        {params.getValue().display_name}
       </Link>
     ),
   },
   {
-    field: 'actions',
-    headerName: 'Actions',
-    sortable: false,
-    renderCell: (params) => (
+    id: 'actions',
+    header: 'Actions',
+    cell: (params) => (
       <IconButton
         size="small"
         aria-label="Open in Spotify"
-        href={params.row.uri}
+        href={params.row.original.uri}
         target="_blank"
       >
         <Icon path={mdiSpotify} size={1} />
@@ -144,14 +134,10 @@ export function Test() {
       />
 
       <div style={{ height: 800 }}>
-        <Table
-          // pagination
-          // paginationMode="server"
-          // onRowsScrollEnd={() => hasNextPage && fetchNextPage()}
-          // apiRef={apiRef}
-          rows={data || []}
+        <VirtualTable
+          data={data || []}
           columns={columns}
-          loading={isLoading}
+          isLoading={isLoading}
         />
       </div>
     </>

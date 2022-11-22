@@ -1,6 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { type GridColumns, useGridApiRef } from '@mui/x-data-grid-premium';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Box from '@mui/material/Box';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
@@ -11,7 +10,6 @@ import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
 import { ArtistColumn } from '../components/ArtistColumn';
 import { AlbumColumn } from '../components/AlbumColumn';
 import { TrackNameColumn } from '../components/TrackNameColumn';
-import { Table } from '../components/Table';
 import { PageTitle } from '../components/PageTitle';
 import { ActionsColumn } from '../components/TrackTable/ActionsColumn';
 import { getRecommendedTracks, getTracks, ignoreTrack, search } from '../api';
@@ -38,7 +36,7 @@ function msToTime(duration: number) {
   return `${m}:${s}`;
 }
 
-const columns: ColumnDef<any>[]= [
+const columns: ColumnDef<any>[] = [
   {
     id: 'preview_url',
     header: '',
@@ -61,7 +59,10 @@ const columns: ColumnDef<any>[]= [
     accessorKey: 'album',
     header: 'Album',
     cell: (params) => (
-      <AlbumColumn id={params.row.original.id} name={params.row.original.name} />
+      <AlbumColumn
+        id={params.row.original.id}
+        name={params.row.original.name}
+      />
     ),
   },
   {

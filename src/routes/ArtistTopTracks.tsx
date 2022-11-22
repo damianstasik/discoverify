@@ -1,13 +1,12 @@
-import { GridColumns } from '@mui/x-data-grid-premium';
 import { useRecoilValue } from 'recoil';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { AlbumColumn } from '../components/AlbumColumn';
 import { ArtistColumn } from '../components/ArtistColumn';
-import { Table } from '../components/Table';
 import { TrackNameColumn } from '../components/TrackNameColumn';
 import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
 import { tokenState } from '../store';
+import { VirtualTable } from '../components/VirtualTable';
 
 function msToTime(duration: number) {
   const seconds = Math.floor((duration / 1000) % 60);
@@ -19,44 +18,39 @@ function msToTime(duration: number) {
   return `${m}:${s}`;
 }
 
-const columns: GridColumns = [
+const columns = [
   {
-    field: 'preview_url',
-    headerName: '',
-    width: 60,
-    sortable: false,
-    renderCell: (params) => (
-      <TrackPreviewColumn url={params.value} context={params.row} />
+    id: 'preview_url',
+    header: '',
+    cell: (params) => (
+      <TrackPreviewColumn
+        url={params.getValue()}
+        context={params.row.original}
+      />
     ),
   },
   {
-    field: 'name',
-    headerName: 'Name',
-    flex: 0.2,
-    sortable: false,
-    renderCell: (params) => (
-      <TrackNameColumn id={params.row.id} name={params.value} />
+    accessorKey: 'name',
+    header: 'Name',
+    cell: (params) => (
+      <TrackNameColumn id={params.row.original.id} name={params.getValue()} />
     ),
   },
   {
-    field: 'artists',
-    headerName: 'Artist(s)',
-    flex: 0.2,
-    renderCell: (params) => <ArtistColumn artists={params.value} />,
+    accessorKey: 'artists',
+    header: 'Artist(s)',
+    cell: (params) => <ArtistColumn artists={params.getValue()} />,
   },
   {
-    field: 'album',
-    headerName: 'Album',
-    flex: 0.2,
-    renderCell: (params) => <AlbumColumn data={params.value} />,
+    accessorKey: 'album',
+    header: 'Album',
+    cell: (params) => <AlbumColumn data={params.getValue()} />,
   },
   {
-    field: 'duration_ms',
-    headerName: 'Duration',
-    flex: 0.1,
-    sortable: false,
-    valueFormatter: (params: any) => {
-      return msToTime(params.value);
+    accessorKey: 'duration_ms',
+    header: 'Duration',
+    cell: (params: any) => {
+      return msToTime(params.getValue());
     },
   },
 ];
@@ -84,7 +78,7 @@ export function ArtistTopTracks() {
 
   return (
     <div style={{ height: 800 }}>
-      <Table columns={columns} rows={data || []} loading={isFetching} />
+      <VirtualTable columns={columns} rows={data || []} isLoading={isFetching} />
     </div>
   );
 }

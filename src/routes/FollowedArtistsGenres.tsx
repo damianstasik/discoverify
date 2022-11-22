@@ -1,35 +1,28 @@
 import Button from '@mui/material/Button';
 import { Link as RouterLink } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
-import { type GridColumns } from '@mui/x-data-grid-premium';
 import { useRecoilValue } from 'recoil';
 import { useQuery } from '@tanstack/react-query';
 import { tokenState } from '../store';
-import { Table } from '../components/Table';
+import { VirtualTable } from '../components/VirtualTable';
 
-const columns: GridColumns = [
+const columns = [
   {
-    field: 'name',
-    headerName: 'Name',
-    width: 300,
-    sortable: false,
+    accessorKey: 'name',
+    header: 'Name',
   },
   {
-    field: 'count',
-    headerName: 'Count',
-    width: 100,
-    sortable: false,
+    accessorKey: 'count',
+    header: 'Count',
   },
   {
-    field: 'actions',
-    headerName: 'Top tracks from genre',
-    width: 300,
-    sortable: false,
-    renderCell: (params) => (
+    id: 'actions',
+    header: 'Top tracks from genre',
+    cell: (params) => (
       <Button
         component={RouterLink}
         to={`/followed-artists/top-tracks?genre=${encodeURIComponent(
-          params.row.name,
+          params.row.original.name,
         )}`}
       >
         Top tracks
@@ -69,11 +62,10 @@ export function FollowedArtistsGenres() {
       </Typography>
 
       <div style={{ height: 800 }}>
-        <Table
-          loading={isLoading}
+        <VirtualTable
+          isLoading={isLoading}
           rows={data}
           columns={columns}
-          getRowId={(row) => row.name}
         />
       </div>
     </>

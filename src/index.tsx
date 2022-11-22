@@ -8,7 +8,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SnackbarProvider } from 'notistack';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
-import { LicenseInfo } from '@mui/x-data-grid-premium';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Router } from './Router';
 import { EventBusProvider } from './components/EventBus';
@@ -25,12 +24,6 @@ const queryClient = new QueryClient({
     },
   },
 });
-
-const muiLicenseKey = import.meta.env.VITE_MUI_LICENSE_KEY;
-
-if (muiLicenseKey) {
-  LicenseInfo.setLicenseKey(muiLicenseKey);
-}
 
 const theme = createTheme({
   palette: {

@@ -5,11 +5,6 @@ import {
   useSearchParams,
 } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
-import {
-  DataGridPremium,
-  type GridColumns,
-  useGridApiRef,
-} from '@mui/x-data-grid-premium';
 import { useRecoilValue } from 'recoil';
 import { IconButton, Link } from '@mui/material';
 import {
@@ -22,35 +17,30 @@ import Icon from '@mdi/react';
 import { tokenState } from '../store';
 import * as trackApi from '../api/track';
 import * as playlistApi from '../api/playlist';
-import { Table } from '../components/Table';
+import { VirtualTable } from '../components/VirtualTable';
 
-const columns: GridColumns = [
+const columns = [
   {
-    field: 'name',
-    sortable: false,
-    headerName: 'Name',
-    flex: 0.3,
+    accessorKey: 'name',
+    header: 'Name',
   },
   {
-    field: 'owner',
-    headerName: 'Owner',
-    flex: 0.7,
-    sortable: false,
-    renderCell: (params) => (
-      <Link component={RouterLink} to={`/artist/${params.value.id}`}>
-        {params.value.display_name}
+    accessorKey: 'owner',
+    header: 'Owner',
+    cell: (params) => (
+      <Link component={RouterLink} to={`/artist/${params.row.original.id}`}>
+        {params.getValue().display_name}
       </Link>
     ),
   },
   {
-    field: 'actions',
-    headerName: 'Actions',
-    sortable: false,
-    renderCell: (params) => (
+    id: 'actions',
+    header: 'Actions',
+    cell: (params) => (
       <IconButton
         size="small"
         aria-label="Open in Spotify"
-        href={params.row.uri}
+        href={params.row.original.uri}
         target="_blank"
       >
         <Icon path={mdiSpotify} size={1} />
@@ -61,10 +51,7 @@ const columns: GridColumns = [
 
 export function Playlists() {
   const token = useRecoilValue(tokenState);
-  const apiRef = useGridApiRef();
   const { id } = useParams<{ id: string }>();
-
-  const queryClient = useQueryClient();
 
   const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery(
     ['playlists', id],
@@ -76,29 +63,6 @@ export function Playlists() {
         lastPage.hasNextPage ? pages.length : false,
     },
   );
-
-  const { mutateAsync: saveTrack } = useMutation<void, Error, string>(
-    async (trackId) => trackApi.saveTrack(token, trackId),
-    {
-      onSuccess(trackId) {
-        queryClient.setQueryData(['related-artists-top-tracks', id], (old) => {
-          return old;
-        });
-      },
-    },
-  );
-
-  useEffect(() => {
-    if (!apiRef.current || isFetching) return;
-
-    apiRef.current.subscribeEvent('saveTrack', (params) => {
-      saveTrack(params.id);
-    });
-
-    apiRef.current.subscribeEvent('removeTrack', (params) => {
-      saveTrack(params.id);
-    });
-  }, [apiRef, isFetching]);
 
   const rows = useMemo(
     () => (data?.pages || []).map((page) => page.playlists).flat(),
@@ -112,14 +76,12 @@ export function Playlists() {
       </Typography>
 
       <div style={{ height: 800 }}>
-        <Table
-          pagination
-          paginationMode="server"
-          onRowsScrollEnd={() => hasNextPage && fetchNextPage()}
-          apiRef={apiRef}
-          rows={rows}
+        <VirtualTable
+          hasNextPage={hasNextPage}
+          fetchNextPage={fetchNextPage}
+          data={rows}
           columns={columns}
-          loading={isFetching}
+          isLoading={isFetching}
         />
       </div>
     </>

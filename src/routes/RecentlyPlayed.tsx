@@ -1,13 +1,6 @@
 import { memo, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
-import {
-  GridActionsCellItem,
-  type GridColumns,
-  useGridApiContext,
-  useGridApiRef,
-  type GridRowId,
-} from '@mui/x-data-grid-premium';
 import { useRecoilValue } from 'recoil';
 import { IconButton } from '@mui/material';
 import { useInfiniteQuery, useMutation } from '@tanstack/react-query';
@@ -20,7 +13,7 @@ import { TrackSelectionToolbar } from '../components/TrackSelectionToolbar';
 import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
 import { ArtistColumn } from '../components/ArtistColumn';
 import { TrackNameColumn } from '../components/TrackNameColumn';
-import { Table } from '../components/Table';
+import { VirtualTable } from '../components/VirtualTable';
 
 const OpenInSpotify = memo(({ row }) => {
   return (
@@ -35,63 +28,42 @@ const OpenInSpotify = memo(({ row }) => {
   );
 });
 
-const Save = memo(({ row }) => {
-  const apiRef = useGridApiContext();
-  return (
-    <GridActionsCellItem
-      icon={<Icon path={mdiCardsHeartOutline} size={1} />}
-      onClick={() => apiRef.current.publishEvent('saveTrack', row)}
-      label="Save"
-    />
-  );
-});
-
-const columns: GridColumns = [
+const columns = [
   {
-    field: 'preview_url',
-    headerName: '',
-    width: 60,
-    sortable: false,
-    renderCell: (params) => (
+    id: 'preview_url',
+    header: '',
+    cell: (params) => (
       <TrackPreviewColumn
-        url={params.row.track.preview_url}
-        context={params.row.track}
+        url={params.row.original.track.preview_url}
+        context={params.row.original.track}
       />
     ),
   },
   {
-    field: 'name',
-    sortable: false,
-    headerName: 'Name',
-    flex: 0.3,
-    renderCell: (params) => (
-      <TrackNameColumn id={params.row.track.id} name={params.row.track.name} />
+    accessorKey: 'name',
+    header: 'Name',
+    cell: (params) => (
+      <TrackNameColumn id={params.row.original.track.id} name={params.row.original.track.name} />
     ),
   },
   {
-    field: 'artists',
-    headerName: 'Artist(s)',
-    flex: 0.6,
-    sortable: false,
-    renderCell: (params) => <ArtistColumn artists={params.row.track.artists} />,
+    accessorKey: 'artists',
+    header: 'Artist(s)',
+    cell: (params) => <ArtistColumn artists={params.row.original.track.artists} />,
   },
   {
-    field: 'played_at',
-    headerName: 'Played at',
-    flex: 0.2,
-    sortable: false,
-    valueFormatter: (params: any) => {
-      return formatRelative(new Date(params.value), new Date());
+    accessorKey: 'played_at',
+    header: 'Played at',
+    cell: (params: any) => {
+      return formatRelative(new Date(params.getValue()), new Date());
     },
   },
   {
-    field: 'actions',
-    headerName: 'Actions',
-    sortable: false,
-    renderCell: (params) => (
+    id: 'actions',
+    header: 'Actions',
+    cell: (params) => (
       <>
-        <OpenInSpotify row={params.row.track} />
-        <Save row={params.row.track} />
+        <OpenInSpotify row={params.row.original.track} />
       </>
     ),
   },
@@ -100,11 +72,6 @@ const columns: GridColumns = [
 export function RecentlyPlayed() {
   const token = useRecoilValue(tokenState);
   const [searchParams] = useSearchParams();
-  const apiRef = useGridApiRef();
-
-  const { mutateAsync: saveTrack } = useMutation<void, Error, string>(
-    async (id) => trackApi.saveTrack(token, id),
-  );
 
   const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery(
     ['recently-played'],
@@ -125,20 +92,10 @@ export function RecentlyPlayed() {
     },
   );
 
-  useEffect(() => {
-    if (!apiRef.current || isFetching) return;
-
-    apiRef.current.subscribeEvent('saveTrack', (params) => {
-      saveTrack(params.id);
-    });
-  }, [apiRef, isFetching]);
-
   const rows = useMemo(
     () => (data?.pages || []).map((page) => page.tracks).flat(),
     [data],
   );
-
-  const [selectedTracks, setSelectedTracks] = useState<Array<GridRowId>>([]);
 
   return (
     <>
@@ -151,21 +108,12 @@ export function RecentlyPlayed() {
       </Typography>
 
       <div style={{ height: 800 }}>
-        <Table
-          pagination
-          paginationMode="server"
-          onRowsScrollEnd={() => hasNextPage && fetchNextPage()}
-          checkboxSelection
-          onSelectionModelChange={(value) => setSelectedTracks(value)}
-          selectionModel={selectedTracks}
-          apiRef={apiRef}
-          rows={rows}
+        <VirtualTable
+          hasNextPage={hasNextPage}
+          fetchNextPage={fetchNextPage}
+          isLoading={isFetching}
+          data={rows}
           columns={columns}
-          loading={isFetching}
-          components={{
-            Toolbar: TrackSelectionToolbar,
-          }}
-          getRowId={(row) => row.track.id + row.played_at}
         />
       </div>
     </>

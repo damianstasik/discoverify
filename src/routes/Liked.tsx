@@ -18,7 +18,6 @@ import { ArtistColumn } from '../components/ArtistColumn';
 import { AlbumColumn } from '../components/AlbumColumn';
 import { TrackSelectionToolbar } from '../components/TrackSelectionToolbar';
 import { TrackNameColumn } from '../components/TrackNameColumn';
-import { Table } from '../components/Table';
 import { PageTitle } from '../components/PageTitle';
 import { ActionsColumn } from '../components/TrackTable/ActionsColumn';
 import produce from 'immer';
