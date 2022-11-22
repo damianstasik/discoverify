@@ -25,6 +25,7 @@ import { PlaybackControl } from './Player/PlaybackControl';
 import { PlaybackState } from '../types.d';
 import { useTimer } from '../hooks/useTimer';
 import { saveTrack } from '../api';
+import { useThrottledCallback } from 'use-debounce';
 
 export function Player() {
   const [trackPreview, setTrackPreview] = useRecoilState(trackPreviewState);
@@ -133,18 +134,31 @@ export function Player() {
     [player],
   );
 
-  const handleVolumeCommit = useCallback(
+  const changeVolume = useCallback(
     (v) => {
       player?.setVolume(v);
-      setIsChangingVolume(false);
     },
     [player],
   );
 
-  const handleVolumeChange = useCallback((v) => {
-    setIsChangingVolume(true);
-    setVolume(v);
-  }, []);
+  const handleVolumeCommit = useCallback(
+    (v) => {
+      changeVolume(v);
+      setIsChangingVolume(false);
+    },
+    [changeVolume],
+  );
+
+  const thottledVolumeChange = useThrottledCallback(changeVolume, 100);
+
+  const handleVolumeChange = useCallback(
+    (v) => {
+      setIsChangingVolume(true);
+      setVolume(v);
+      thottledVolumeChange(v);
+    },
+    [thottledVolumeChange],
+  );
 
   const { mutate: saveTrackMut } = useMutation(saveTrack);
 
