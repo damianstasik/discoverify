@@ -39,6 +39,7 @@ import { useEventBus } from '../components/EventBus';
 import { usePlayPauseTrackHook } from '../hooks/usePlayPauseTrackHook';
 import { useInfiniteLoading } from '../hooks/useInfiniteLoading';
 import { useIgnoreTrackHook } from '../hooks/useIgnoreTrackHook';
+import { useSaveTrackHook } from '../hooks/useSaveTrackHook';
 
 function msToTime(duration: number) {
   const seconds = Math.floor((duration / 1000) % 60);
@@ -307,6 +308,8 @@ export function Liked() {
   usePlayPauseTrackHook(ids);
 
   useIgnoreTrackHook();
+
+  useSaveTrackHook();
 
   return (
     <>
