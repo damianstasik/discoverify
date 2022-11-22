@@ -19,7 +19,6 @@ import Icon from '@mdi/react';
 import { tokenState } from '../store';
 import * as trackApi from '../api/track';
 import * as playlistApi from '../api/playlist';
-import { useSeedSelection } from '../hooks/useSeedSelection';
 import { Table } from '../components/Table';
 import { PageTitle } from '../components/PageTitle';
 import { TrackAutocomplete } from '../components/TrackAutocomplete';
