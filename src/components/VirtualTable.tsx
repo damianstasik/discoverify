@@ -1,3 +1,4 @@
+import { Box } from '@mui/material';
 import {
   flexRender,
   getCoreRowModel,
@@ -35,13 +36,15 @@ const TableHeader = memo(({ table }) => {
 
 const TableCell = memo(({ cell }) => {
   return (
-    <div
+    <Box
+      sx={{ display: 'flex', alignItems: 'center' }}
+      flexShrink={0}
       style={{
         width: cell.column.getSize(),
       }}
     >
       {flexRender(cell.column.columnDef.cell, cell.getContext())}
-    </div>
+    </Box>
   );
 });
 
