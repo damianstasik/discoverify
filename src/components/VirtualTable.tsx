@@ -93,10 +93,11 @@ export const VirtualTable = memo(
       estimateSize: () => 45,
       overscan: 10,
     });
-    const rows = table.getSelectedRowModel().flatRows;
+    const { flatRows } = table.getSelectedRowModel();
+    const { rows } = table.getRowModel();
     return (
       <div>
-        <TrackSelectionToolbar rows={rows} />
+        <TrackSelectionToolbar rows={flatRows} />
         <TableHeader table={table} />
         <div
           className="container"
@@ -115,7 +116,7 @@ export const VirtualTable = memo(
             }}
           >
             {rowVirtualizer.getVirtualItems().map((virtualItem) => {
-              const row = table.getRowModel().rows[virtualItem.index];
+              const row = rows[virtualItem.index];
               return (
                 <TableVirtualRow
                   ref={rowVirtualizer.measureElement}
