@@ -10,7 +10,7 @@
     "@mui/material": "^5.10.15",
     "@tanstack/react-query": "^4.16.1",
     "@tanstack/react-query-devtools": "^4.16.1",
-    "@tanstack/react-table": "^8.6.0",
+    "@tanstack/react-table": "^8.7.0",
     "@tanstack/react-virtual": "^3.0.0-beta.23",
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.9",
