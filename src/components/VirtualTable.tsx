@@ -88,6 +88,7 @@ export const VirtualTable = memo(
       getScrollElement: () => contRef.current,
       count: data.length,
       estimateSize: () => 45,
+      overscan: 10,
     });
     const rows = table.getSelectedRowModel().flatRows;
     return (
