@@ -96,7 +96,11 @@ export const VirtualTable = memo(
     const { flatRows } = table.getSelectedRowModel();
     const { rows } = table.getRowModel();
     return (
-      <div>
+      <Box
+        sx={{
+          fontSize: '14px',
+        }}
+      >
         <TrackSelectionToolbar rows={flatRows} />
         <TableHeader table={table} />
         <div
@@ -128,7 +132,7 @@ export const VirtualTable = memo(
             })}
           </div>
         </div>
-      </div>
+      </Box>
     );
   },
 );
