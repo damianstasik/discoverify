@@ -4,7 +4,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { memo, useRef } from 'react';
+import { forwardRef, memo, useRef } from 'react';
 import { useInfiniteLoading } from '../hooks/useInfiniteLoading';
 import { TrackSelectionToolbar } from './TrackSelectionToolbar';
 
@@ -45,15 +45,16 @@ const TableCell = memo(({ cell }) => {
   );
 });
 
-const TableVirtualRow = memo(({ row, virtualItem }) => {
+const TableVirtualRow = forwardRef(({ row, virtualItem }, ref) => {
   return (
     <div
+      data-index={virtualItem.index}
+      ref={ref}
       style={{
         position: 'absolute',
         top: 0,
         left: 0,
         width: '100%',
-        height: `${virtualItem.size}px`,
         transform: `translateY(${virtualItem.start}px)`,
         display: 'flex',
         background: row.original.isIgnored ? 'red' : '',
@@ -86,7 +87,7 @@ export const VirtualTable = memo(
     const rowVirtualizer = useVirtualizer({
       getScrollElement: () => contRef.current,
       count: data.length,
-      estimateSize: () => 35,
+      estimateSize: () => 45,
     });
     const rows = table.getSelectedRowModel().flatRows;
     return (
@@ -113,6 +114,7 @@ export const VirtualTable = memo(
               const row = table.getRowModel().rows[virtualItem.index];
               return (
                 <TableVirtualRow
+                  ref={rowVirtualizer.measureElement}
                   row={row}
                   key={row.id}
                   virtualItem={virtualItem}
