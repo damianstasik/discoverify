@@ -1,4 +1,3 @@
-import { formatRelative } from 'date-fns';
 import {
   type QueryFunction,
   useInfiniteQuery,
@@ -41,6 +40,7 @@ import { useIgnoreTrackHook } from '../hooks/useIgnoreTrackHook';
 import { useSaveTrackHook } from '../hooks/useSaveTrackHook';
 import { VirtualTable } from '../components/VirtualTable';
 import { CheckboxColumn } from '../components/CheckboxColumn';
+import { AddedAtColumn } from '../components/AddedAtColumn';
 
 function msToTime(duration: number) {
   const seconds = Math.floor((duration / 1000) % 60);
@@ -95,9 +95,7 @@ const columns: ColumnDef<{
   {
     accessorKey: 'added_at',
     header: 'Added at',
-    cell: (params) => {
-      return formatRelative(new Date(params.getValue()), new Date());
-    },
+    cell: AddedAtColumn,
   },
   {
     accessorKey: 'duration_ms',

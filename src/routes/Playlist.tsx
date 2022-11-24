@@ -1,10 +1,8 @@
 import { useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { useQuery } from '@tanstack/react-query';
-import { useMemo, useState } from 'react';
-import { formatRelative } from 'date-fns';
+import { useMemo } from 'react';
 import { tokenState } from '../store';
-import { TrackSelectionToolbar } from '../components/TrackSelectionToolbar';
 import { AlbumColumn } from '../components/AlbumColumn';
 import { ArtistColumn } from '../components/ArtistColumn';
 import { TrackNameColumn } from '../components/TrackNameColumn';
@@ -18,6 +16,8 @@ import { usePlayPauseTrackHook } from '../hooks/usePlayPauseTrackHook';
 import { useIgnoreTrackHook } from '../hooks/useIgnoreTrackHook';
 import { useSaveTrackHook } from '../hooks/useSaveTrackHook';
 import { getPlaylist } from '../api';
+import { ColumnDef } from '@tanstack/react-table';
+import { AddedAtColumn } from '../components/AddedAtColumn';
 
 function msToTime(duration: number) {
   const seconds = Math.floor((duration / 1000) % 60);
@@ -29,7 +29,7 @@ function msToTime(duration: number) {
   return `${m}:${s}`;
 }
 
-const columns = [
+const columns: ColumnDef<any>[] = [
   {
     size: 50,
     id: 'select',
@@ -83,9 +83,7 @@ const columns = [
   {
     accessorKey: 'added_at',
     header: 'Added at',
-    cell: (params: any) => {
-      return formatRelative(new Date(params.getValue()), new Date());
-    },
+    cell: AddedAtColumn,
   },
   // {
   //   accessorKey: 'duration',
