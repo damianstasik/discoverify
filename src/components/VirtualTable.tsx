@@ -76,6 +76,11 @@ export const VirtualTable = memo(
       data,
       columns,
       getCoreRowModel: getCoreRowModel(),
+      state: {
+        columnVisibility: {
+          id: false,
+        },
+      },
     });
 
     const contRef = useRef<HTMLDivElement>(null);
