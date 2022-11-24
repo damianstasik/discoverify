@@ -11,8 +11,9 @@ import { TrackNameColumn } from '../components/TrackNameColumn';
 import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
 import { PageTitle } from '../components/PageTitle';
 import { ActionsColumn } from '../components/TrackTable/ActionsColumn';
-import { Skeleton } from '@mui/material';
+import { Checkbox, Skeleton } from '@mui/material';
 import { VirtualTable } from '../components/VirtualTable';
+import { CheckboxColumn } from '../components/CheckboxColumn';
 
 function msToTime(duration: number) {
   const seconds = Math.floor((duration / 1000) % 60);
@@ -25,6 +26,24 @@ function msToTime(duration: number) {
 }
 
 const columns = [
+  {
+    size: 50,
+    id: 'select',
+    header: ({ table }) => (
+      <Checkbox
+        onChange={table.getToggleAllRowsSelectedHandler()}
+        checked={table.getIsAllRowsSelected()}
+        indeterminate={table.getIsSomeRowsSelected()}
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        indeterminate={row.getIsSomeSelected()}
+        onChange={row.getToggleSelectedHandler()}
+      />
+    ),
+  },
   {
     id: 'preview_url',
     header: '',
