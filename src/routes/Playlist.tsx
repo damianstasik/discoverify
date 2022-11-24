@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { formatRelative } from 'date-fns';
 import { tokenState } from '../store';
 import { TrackSelectionToolbar } from '../components/TrackSelectionToolbar';
@@ -14,6 +14,9 @@ import { ActionsColumn } from '../components/TrackTable/ActionsColumn';
 import { Checkbox, Skeleton } from '@mui/material';
 import { VirtualTable } from '../components/VirtualTable';
 import { CheckboxColumn } from '../components/CheckboxColumn';
+import { usePlayPauseTrackHook } from '../hooks/usePlayPauseTrackHook';
+import { useIgnoreTrackHook } from '../hooks/useIgnoreTrackHook';
+import { useSaveTrackHook } from '../hooks/useSaveTrackHook';
 
 function msToTime(duration: number) {
   const seconds = Math.floor((duration / 1000) % 60);
@@ -53,13 +56,18 @@ const columns = [
     accessorKey: 'name',
     header: 'Name',
     cell: (params) => (
-      <TrackNameColumn id={params.row.original.id} name={params.row.original.track.name} />
+      <TrackNameColumn
+        id={params.row.original.id}
+        name={params.row.original.track.name}
+      />
     ),
   },
   {
     accessorKey: 'artist',
     header: 'Artist(s)',
-    cell: (params) => <ArtistColumn artists={params.row.original.track.artists} />,
+    cell: (params) => (
+      <ArtistColumn artists={params.row.original.track.artists} />
+    ),
   },
   {
     accessorKey: 'album',
@@ -112,6 +120,17 @@ export function Playlist() {
       return body;
     },
   );
+
+  const ids = useMemo(
+    () => (data?.tracks?.items || []).map((t) => t.track.uri),
+    [data],
+  );
+
+  usePlayPauseTrackHook(ids);
+
+  useIgnoreTrackHook();
+
+  useSaveTrackHook();
 
   return (
     <>
