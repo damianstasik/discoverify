@@ -147,3 +147,21 @@ export const playTrack: MutationFunction<
     },
   });
 };
+
+export const getPlaylist: QueryFunction<
+  Array<{ name: string; tracks: any[] }>,
+  [key: string, token: string, id: string]
+> = async ({ queryKey, signal }) => {
+  const res = await fetch(
+    `${import.meta.env.VITE_API_URL}/playlist/${queryKey[2]}`,
+    {
+      signal,
+      headers: {
+        Authorization: `Bearer ${queryKey[1]}`,
+      },
+    },
+  );
+  const body = await res.json();
+
+  return body;
+};

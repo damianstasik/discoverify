@@ -17,6 +17,7 @@ import { CheckboxColumn } from '../components/CheckboxColumn';
 import { usePlayPauseTrackHook } from '../hooks/usePlayPauseTrackHook';
 import { useIgnoreTrackHook } from '../hooks/useIgnoreTrackHook';
 import { useSaveTrackHook } from '../hooks/useSaveTrackHook';
+import { getPlaylist } from '../api';
 
 function msToTime(duration: number) {
   const seconds = Math.floor((duration / 1000) % 60);
@@ -102,23 +103,11 @@ const columns = [
 
 export function Playlist() {
   const token = useRecoilValue(tokenState);
-  const params = useParams<{ id: string }>();
+  const params = useParams<'id'>();
 
   const { data, isFetching } = useQuery(
-    ['playlist', params.id, token],
-    async function playlistQuery() {
-      const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/playlist/${params.id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
-      const body = await res.json();
-
-      return body;
-    },
+    ['playlist', token, params.id!],
+    getPlaylist,
   );
 
   const ids = useMemo(
