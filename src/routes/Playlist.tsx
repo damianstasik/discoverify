@@ -54,14 +54,9 @@ const columns: ColumnDef<any>[] = [
     cell: (params) => <TrackPreviewColumn track={params.row.original.track} />,
   },
   {
-    accessorKey: 'name',
+    accessorFn: (row) => row.track.name,
     header: 'Name',
-    cell: (params) => (
-      <TrackNameColumn
-        id={params.row.original.id}
-        name={params.row.original.track.name}
-      />
-    ),
+    cell: TrackNameColumn,
   },
   {
     accessorKey: 'artist',

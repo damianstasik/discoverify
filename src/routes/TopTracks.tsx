@@ -44,9 +44,7 @@ const columns = [
   {
     accessorKey: 'name',
     header: 'Name',
-    cell: (params) => (
-      <TrackNameColumn id={params.row.original.id} name={params.getValue()} />
-    ),
+    cell: TrackNameColumn,
   },
   {
     accessorKey: 'artists',

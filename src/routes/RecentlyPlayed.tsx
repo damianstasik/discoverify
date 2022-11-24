@@ -40,11 +40,9 @@ const columns = [
     ),
   },
   {
-    accessorKey: 'name',
+    accessorFn: (row) => row.track.name,
     header: 'Name',
-    cell: (params) => (
-      <TrackNameColumn id={params.row.original.track.id} name={params.row.original.track.name} />
-    ),
+    cell: TrackNameColumn,
   },
   {
     accessorKey: 'artists',

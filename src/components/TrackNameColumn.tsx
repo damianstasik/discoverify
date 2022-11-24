@@ -1,16 +1,15 @@
-import Link from '@mui/material/Link';
+import { Link } from '@mui/material';
+import { CellContext } from '@tanstack/react-table';
 import { Link as RouterLink } from 'react-router-dom';
-import { memo } from 'react';
 
-interface Props {
-  id: string;
-  name: string;
-}
-
-export const TrackNameColumn = memo(({ id, name }: Props) => {
+export const TrackNameColumn = (props: CellContext<any, any>) => {
   return (
-    <Link component={RouterLink} to={`/track/${id}`} color="#fff" py={1}>
-      {name}
+    <Link
+      component={RouterLink}
+      to={`/track/${props.row.original.id}`}
+      color="#fff"
+    >
+      {props.getValue()}
     </Link>
   );
-});
+};

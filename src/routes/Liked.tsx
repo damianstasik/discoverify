@@ -76,9 +76,7 @@ const columns: ColumnDef<{
     accessorKey: 'name',
     header: 'Name',
     size: 300,
-    cell: (params) => (
-      <TrackNameColumn id={params.row.original.id} name={params.getValue()} />
-    ),
+    cell: TrackNameColumn,
   },
   {
     accessorKey: 'artists',
