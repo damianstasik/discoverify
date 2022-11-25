@@ -65,14 +65,9 @@ const columns: ColumnDef<any>[] = [
     cell: ArtistColumn,
   },
   {
-    accessorKey: 'album',
+    accessorFn: (row) => row.track.album,
     header: 'Album',
-    cell: (params) => (
-      <AlbumColumn
-        id={params.row.original.track.album.id}
-        name={params.row.original.track.album.name}
-      />
-    ),
+    cell: AlbumColumn,
   },
   {
     accessorKey: 'added_at',

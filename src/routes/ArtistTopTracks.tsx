@@ -38,7 +38,7 @@ const columns = [
   {
     accessorKey: 'album',
     header: 'Album',
-    cell: (params) => <AlbumColumn data={params.getValue()} />,
+    cell: AlbumColumn,
   },
   {
     accessorKey: 'duration_ms',

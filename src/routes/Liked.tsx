@@ -84,9 +84,7 @@ const columns = [
   {
     accessorKey: 'album',
     header: 'Album',
-    cell: (params) => (
-      <AlbumColumn id={params.getValue().id} name={params.getValue().name} />
-    ),
+    cell: AlbumColumn,
   } as Column<'album'>,
   {
     accessorKey: 'added_at',

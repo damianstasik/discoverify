@@ -2,7 +2,6 @@ import { useRecoilValue } from 'recoil';
 import { useQuery } from '@tanstack/react-query';
 import { useParams, Link as RouterLink } from 'react-router-dom';
 import Link from '@mui/material/Link';
-import { AlbumColumn } from '../components/AlbumColumn';
 import { ArtistColumn } from '../components/ArtistColumn';
 import { tokenState } from '../store';
 import { VirtualTable } from '../components/VirtualTable';

@@ -55,12 +55,7 @@ const columns: ColumnDef<any>[] = [
   {
     accessorKey: 'album',
     header: 'Album',
-    cell: (params) => (
-      <AlbumColumn
-        id={params.row.original.id}
-        name={params.row.original.name}
-      />
-    ),
+    cell: AlbumColumn,
   },
   {
     accessorKey: 'duration',
