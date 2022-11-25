@@ -25,16 +25,7 @@ import { useIgnoreTrackHook } from '../hooks/useIgnoreTrackHook';
 import { useSaveTrackHook } from '../hooks/useSaveTrackHook';
 import { VirtualTable } from '../components/VirtualTable';
 import { ColumnDef } from '@tanstack/react-table';
-
-function msToTime(duration: number) {
-  const seconds = Math.floor((duration / 1000) % 60);
-  const minutes = Math.floor((duration / (1000 * 60)) % 60);
-
-  const m = minutes < 10 ? `0${minutes}` : minutes;
-  const s = seconds < 10 ? `0${seconds}` : seconds;
-
-  return `${m}:${s}`;
-}
+import { DurationColumn } from '../components/DurationColumn';
 
 const columns: ColumnDef<any>[] = [
   {
@@ -60,9 +51,7 @@ const columns: ColumnDef<any>[] = [
   {
     accessorKey: 'duration',
     header: 'Duration',
-    cell: (params) => {
-      return msToTime(params.getValue());
-    },
+    cell: DurationColumn,
   },
   {
     id: 'actions',

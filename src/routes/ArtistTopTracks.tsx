@@ -7,16 +7,7 @@ import { TrackNameColumn } from '../components/TrackNameColumn';
 import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
 import { tokenState } from '../store';
 import { VirtualTable } from '../components/VirtualTable';
-
-function msToTime(duration: number) {
-  const seconds = Math.floor((duration / 1000) % 60);
-  const minutes = Math.floor((duration / (1000 * 60)) % 60);
-
-  const m = minutes < 10 ? `0${minutes}` : minutes;
-  const s = seconds < 10 ? `0${seconds}` : seconds;
-
-  return `${m}:${s}`;
-}
+import { DurationColumn } from '../components/DurationColumn';
 
 const columns = [
   {
@@ -43,9 +34,7 @@ const columns = [
   {
     accessorKey: 'duration_ms',
     header: 'Duration',
-    cell: (params: any) => {
-      return msToTime(params.getValue());
-    },
+    cell: DurationColumn,
   },
 ];
 

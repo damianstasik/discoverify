@@ -19,16 +19,6 @@ import { getPlaylist } from '../api';
 import { ColumnDef } from '@tanstack/react-table';
 import { AddedAtColumn } from '../components/AddedAtColumn';
 
-function msToTime(duration: number) {
-  const seconds = Math.floor((duration / 1000) % 60);
-  const minutes = Math.floor((duration / (1000 * 60)) % 60);
-
-  const m = minutes < 10 ? `0${minutes}` : minutes;
-  const s = seconds < 10 ? `0${seconds}` : seconds;
-
-  return `${m}:${s}`;
-}
-
 const columns: ColumnDef<any>[] = [
   {
     size: 50,
@@ -77,9 +67,7 @@ const columns: ColumnDef<any>[] = [
   // {
   //   accessorKey: 'duration',
   //   header: 'Duration',
-  //   cell: (params: any) => {
-  //     return msToTime(params.getValue());
-  //   },
+  //   cell: DurationColumn,
   // },
   {
     id: 'actions',
