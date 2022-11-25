@@ -49,9 +49,10 @@ const columns: ColumnDef<any>[] = [
     ),
   },
   {
-    id: 'preview_url',
+    accessorKey: 'uri',
     header: '',
-    cell: (params) => <TrackPreviewColumn track={params.row.original.track} />,
+    size: 50,
+    cell: TrackPreviewColumn,
   },
   {
     accessorFn: (row) => row.track.name,

@@ -19,6 +19,7 @@ import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
 import { ArtistColumn } from '../components/ArtistColumn';
 import { TrackNameColumn } from '../components/TrackNameColumn';
 import { VirtualTable } from '../components/VirtualTable';
+import { ColumnDef } from '@tanstack/react-table';
 
 const OpenInSpotify = memo(({ row }) => {
   return (
@@ -33,13 +34,12 @@ const OpenInSpotify = memo(({ row }) => {
   );
 });
 
-const columns = [
+const columns: ColumnDef<any>[] = [
   {
-    id: 'preview_url',
+    accessorKey: 'uri',
     header: '',
-    cell: (params) => (
-      <TrackPreviewColumn url={params.getValue()} context={params.row.original} />
-    ),
+    size: 50,
+    cell: TrackPreviewColumn,
   },
   {
     accessorKey: 'name',

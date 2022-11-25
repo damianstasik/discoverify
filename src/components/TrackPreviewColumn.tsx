@@ -2,20 +2,17 @@ import { mdiPauseCircle, mdiPlayCircle } from '@mdi/js';
 import Icon from '@mdi/react';
 import IconButton from '@mui/material/IconButton';
 import { useRecoilValue } from 'recoil';
-import { memo } from 'react';
 import { playerStateAtom, playerTrackAtom } from '../store';
 import { PlaybackState } from '../types.d';
 import { CircularProgress } from '@mui/material';
 import { useEventBus } from './EventBus';
+import { CellContext } from '@tanstack/react-table';
 
-interface Props {
-  track: any | null;
-}
-
-export const TrackPreviewColumn = memo(({ track }: Props) => {
+export const TrackPreviewColumn = (props: CellContext<any, string>) => {
+  const uri = props.getValue();
   const eventBus = useEventBus();
   const playerTrack = useRecoilValue(playerTrackAtom);
-  const isPlayingTrack = playerTrack?.uri === track?.uri; // && trackPreview?.context === context
+  const isPlayingTrack = playerTrack?.uri === uri; // && trackPreview?.context === context
   const playerState = useRecoilValue(playerStateAtom);
 
   return isPlayingTrack && playerState === PlaybackState.LOADING ? (
@@ -23,7 +20,7 @@ export const TrackPreviewColumn = memo(({ track }: Props) => {
   ) : (
     <IconButton
       color={isPlayingTrack ? 'primary' : 'default'}
-      onClick={() => eventBus.emit('playPauseTrack', track.uri)}
+      onClick={() => eventBus.emit('playPauseTrack', uri)}
       aria-label={isPlayingTrack ? 'Pause' : 'Play'}
     >
       <Icon
@@ -36,4 +33,4 @@ export const TrackPreviewColumn = memo(({ track }: Props) => {
       />
     </IconButton>
   );
-});
+};

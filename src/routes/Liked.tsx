@@ -68,7 +68,7 @@ const columns = [
     header: '',
     accessorKey: 'uri',
     size: 50,
-    cell: (params) => <TrackPreviewColumn track={params.row.original} />,
+    cell: TrackPreviewColumn,
   } as Column<'name'>,
   {
     accessorKey: 'name',

@@ -4,7 +4,6 @@ import { useParams, Link as RouterLink } from 'react-router-dom';
 import Link from '@mui/material/Link';
 import { AlbumColumn } from '../components/AlbumColumn';
 import { ArtistColumn } from '../components/ArtistColumn';
-import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
 import { tokenState } from '../store';
 import { VirtualTable } from '../components/VirtualTable';
 

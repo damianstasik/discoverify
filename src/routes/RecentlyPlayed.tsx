@@ -30,14 +30,10 @@ const OpenInSpotify = memo(({ row }) => {
 
 const columns = [
   {
-    id: 'preview_url',
+    accessorKey: 'uri',
     header: '',
-    cell: (params) => (
-      <TrackPreviewColumn
-        url={params.row.original.track.preview_url}
-        context={params.row.original.track}
-      />
-    ),
+    size: 50,
+    cell: TrackPreviewColumn,
   },
   {
     accessorFn: (row) => row.track.name,

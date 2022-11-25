@@ -38,11 +38,11 @@ function msToTime(duration: number) {
 
 const columns: ColumnDef<any>[] = [
   {
-    id: 'preview_url',
+    accessorKey: 'uri',
     header: '',
-    size: 60,
-    cell: (params) => <TrackPreviewColumn track={params.row.original} />,
   },
+    size: 50,
+    cell: TrackPreviewColumn,
   {
     accessorKey: 'name',
     header: 'Name',

@@ -20,14 +20,10 @@ function msToTime(duration: number) {
 
 const columns = [
   {
-    id: 'preview_url',
+    accessorKey: 'uri',
     header: '',
-    cell: (params) => (
-      <TrackPreviewColumn
-        url={params.getValue()}
-        context={params.row.original}
-      />
-    ),
+    size: 50,
+    cell: TrackPreviewColumn,
   },
   {
     accessorKey: 'name',
