@@ -41,6 +41,7 @@ import { useSaveTrackHook } from '../hooks/useSaveTrackHook';
 import { VirtualTable } from '../components/VirtualTable';
 import { CheckboxColumn } from '../components/CheckboxColumn';
 import { AddedAtColumn } from '../components/AddedAtColumn';
+import { RouterOutput, trpc } from '../trpc';
 
 function msToTime(duration: number) {
   const seconds = Math.floor((duration / 1000) % 60);
@@ -109,56 +110,36 @@ const columns: ColumnDef<{
   },
 ];
 
-type LikedRes = { tracks: Track[]; nextPage: number | null };
-type LikedQueryKey = [key: string, token: string];
-
-const likedQuery: QueryFunction<LikedRes, LikedQueryKey> = async ({
-  queryKey,
+const likedQuery: QueryFunction<RouterOutput['track']['saved']> = async ({
   pageParam = 1,
   signal,
 }) => {
-  const res = await fetch(
-    `${import.meta.env.VITE_API_URL}/user/liked?page=${pageParam}`,
-    {
-      signal,
-      headers: {
-        Authorization: `Bearer ${queryKey[1]}`,
-      },
-    },
-  );
+  const tracks = await trpc.track.saved.query({ page: pageParam }, { signal });
 
-  const body = await res.json();
-
-  return body;
+  return tracks;
 };
-
-interface Track {
-  id: string;
-  isIgnored: boolean;
-}
 
 export function Liked() {
   const token = useRecoilValue(tokenState);
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery<
-    LikedRes,
-    Error,
-    Track,
-    LikedQueryKey
-  >(['liked', token], likedQuery, {
-    getNextPageParam: (lastPage) => lastPage.nextPage,
-    onSuccess(data) {
-      const page = data.pageParams[data.pageParams.length - 1];
+  const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery(
+    ['liked', token],
+    likedQuery,
+    {
+      getNextPageParam: (lastPage) => lastPage.nextPage,
+      onSuccess(data) {
+        const page = data.pageParams[data.pageParams.length - 1];
 
-      // if (page) {
-      //   setSearchParams((prev) => {
-      //     prev.set('page', page);
-      //     return prev;
-      //   });
-      // }
+        // if (page) {
+        //   setSearchParams((prev) => {
+        //     prev.set('page', page);
+        //     return prev;
+        //   });
+        // }
+      },
     },
-  });
+  );
 
   const flatData = useMemo(
     () => data?.pages?.flatMap((page) => page.tracks) ?? [],

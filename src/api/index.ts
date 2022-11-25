@@ -1,4 +1,5 @@
 import { MutationFunction, QueryFunction } from '@tanstack/react-query';
+import { RouterOutput, trpc } from '../trpc';
 import { User } from '../types.d';
 
 export function createUrl(
@@ -28,20 +29,13 @@ export const refreshAccessToken: MutationFunction<string, string> = async (
   throw new Error();
 };
 
-export const getCurrentUser: QueryFunction<User, [key: string, token: string]> =
-  async ({ queryKey, signal }) => {
-    const req = await fetch(`${import.meta.env.VITE_API_URL}/auth/me`, {
+export const getCurrentUser: QueryFunction<RouterOutput['auth']['me']> =
+  async ({ signal }) => {
+    const user = await trpc.auth.me.query(undefined, {
       signal,
-      headers: {
-        Authorization: `Bearer ${queryKey[1]}`,
-      },
     });
 
-    if (!req.ok) {
-      throw new Error();
-    }
-
-    return req.json();
+    return user;
   };
 
 export const ignoreTrack: MutationFunction<
