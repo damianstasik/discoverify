@@ -53,61 +53,58 @@ function msToTime(duration: number) {
   return `${m}:${s}`;
 }
 
-const columns: ColumnDef<{
-  preview_url: string;
-  name: string;
-  artists: any[];
-  album: any;
-  added_at: string;
-  duration_ms: number;
-}>[] = [
+type TrackType = RouterOutput['track']['saved']['tracks'][number];
+
+type Column<Key extends keyof TrackType> = ColumnDef<TrackType, TrackType[Key]>;
+
+const columns = [
   {
     size: 50,
     id: 'select',
     header: ({ table }) => <CheckboxColumn table={table} />,
     cell: ({ row }) => <CheckboxColumn row={row} isRow />,
-  },
+  } as ColumnDef<TrackType, void>,
   {
-    id: 'play',
     header: '',
+    accessorKey: 'uri',
     size: 50,
     cell: (params) => <TrackPreviewColumn track={params.row.original} />,
-  },
+  } as Column<'name'>,
   {
     accessorKey: 'name',
     header: 'Name',
     size: 300,
     cell: TrackNameColumn,
-  },
+  } as Column<'name'>,
   {
     accessorKey: 'artists',
     header: 'Artist(s)',
     cell: (params) => <ArtistColumn artists={params.getValue()} />,
-  },
+  } as Column<'artists'>,
   {
     accessorKey: 'album',
     header: 'Album',
     cell: (params) => (
       <AlbumColumn id={params.getValue().id} name={params.getValue().name} />
     ),
-  },
+  } as Column<'album'>,
   {
     accessorKey: 'added_at',
     header: 'Added at',
     cell: AddedAtColumn,
-  },
+  } as Column<'added_at'>,
   {
     accessorKey: 'duration_ms',
     header: 'Duration',
     cell: (params) => {
       return msToTime(params.getValue());
     },
-  },
+  } as Column<'duration_ms'>,
   {
     id: 'actions',
     header: 'Actions',
     cell: (params) => <ActionsColumn track={params.row.original} />,
-  },
+  } as ColumnDef<TrackType, void>,
 ];
 
 const likedQuery: QueryFunction<RouterOutput['track']['saved']> = async ({
