@@ -30,7 +30,7 @@ const columns = [
   {
     accessorKey: 'artists',
     header: 'Artist(s)',
-    cell: (params) => <ArtistColumn artists={params.getValue()} />,
+    cell: ArtistColumn,
   },
 ];
 

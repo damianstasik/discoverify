@@ -41,9 +41,9 @@ const columns = [
     cell: TrackNameColumn,
   },
   {
-    accessorKey: 'artists',
+    accessorFn: row => row.track.artists,
     header: 'Artist(s)',
-    cell: (params) => <ArtistColumn artists={params.row.original.track.artists} />,
+    cell: ArtistColumn,
   },
   {
     accessorKey: 'played_at',

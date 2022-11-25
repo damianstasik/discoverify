@@ -50,7 +50,7 @@ const columns: ColumnDef<any>[] = [
   {
     accessorKey: 'artist',
     header: 'Artist(s)',
-    cell: (params) => <ArtistColumn artists={params.getValue()} />,
+    cell: ArtistColumn,
   },
   {
     accessorKey: 'album',

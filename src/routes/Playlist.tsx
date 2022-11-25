@@ -60,11 +60,9 @@ const columns: ColumnDef<any>[] = [
     cell: TrackNameColumn,
   },
   {
-    accessorKey: 'artist',
+    accessorFn: (row) => row.track.artists,
     header: 'Artist(s)',
-    cell: (params) => (
-      <ArtistColumn artists={params.row.original.track.artists} />
-    ),
+    cell: ArtistColumn,
   },
   {
     accessorKey: 'album',
