@@ -3,23 +3,14 @@ import { useSetRecoilState } from 'recoil';
 import { type QueryFunction, useQuery } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import { tokenState } from '../store';
+import { trpc } from '../trpc';
 
-const authorizeQuery: QueryFunction<
-  string,
-  [key: string, code: string | null]
-> = async ({ queryKey }) => {
-  const res = await fetch(
-    `${import.meta.env.VITE_API_URL}/auth/authorize?code=${queryKey[1]}`,
-  );
+const authorizeQuery: QueryFunction<string, [key: string, code: string]> =
+  async ({ queryKey, signal }) => {
+    const token = await trpc.auth.authorize.query(queryKey[1], { signal });
 
-  const body = await res.json();
-
-  if (res.ok && body?.token) {
-    return body.token;
-  }
-
-  throw new Error();
-};
+    return token;
+  };
 
 export function Authorize() {
   const [searchParams] = useSearchParams();
@@ -28,7 +19,7 @@ export function Authorize() {
 
   const code = searchParams.get('code');
 
-  const { isSuccess } = useQuery(['authorize', code], authorizeQuery, {
+  const { isSuccess } = useQuery(['authorize', code!], authorizeQuery, {
     enabled: !!code,
     suspense: true,
     useErrorBoundary: false,

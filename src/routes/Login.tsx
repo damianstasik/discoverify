@@ -2,17 +2,12 @@ import { LoadingButton } from '@mui/lab';
 import { type MutationFunction, useMutation } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import { Card, Box, Typography } from '@mui/material';
+import { trpc } from '../trpc';
 
 const authUrlMutation: MutationFunction<string, void> = async () => {
-  const req = await fetch(`${import.meta.env.VITE_API_URL}/auth/url`);
+  const url = await trpc.auth.url.mutate();
 
-  if (!req.ok) {
-    throw new Error();
-  }
-
-  const res = await req.json();
-
-  return res?.url;
+  return url;
 };
 
 export function Login() {
