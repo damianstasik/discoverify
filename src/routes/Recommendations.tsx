@@ -40,7 +40,6 @@ const columns: ColumnDef<any>[] = [
   {
     accessorKey: 'uri',
     header: '',
-  },
     size: 50,
     cell: TrackPreviewColumn,
   {
@@ -92,7 +91,7 @@ export function Recommendations() {
   const trackIds = searchParams.getAll('trackId');
 
   const { data, isFetching } = useQuery(
-    ['recommended', token, trackIds, values],
+    ['recommended', trackIds, values],
     getRecommendedTracks,
     {
       enabled: trackIds.length > 0,

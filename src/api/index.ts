@@ -61,27 +61,17 @@ export const saveTrack: MutationFunction<void, { token: string; id: string }> =
   };
 
 export const getRecommendedTracks: QueryFunction<
-  any,
-  [key: string, token: string, trackIds: string[], values: any]
+  RouterOutput['track']['recommended'],
+  [key: string, trackIds: string[], values: any]
 > = async ({ queryKey, signal }) => {
-  const q = new URLSearchParams({
-    trackId: queryKey[2].join(),
-    ...queryKey[3],
-  });
-
-  const res = await fetch(
-    `${import.meta.env.VITE_API_URL}/track/recommended?${q}`,
+  const tracks = await trpc.track.recommended.query(
     {
-      signal,
-      headers: {
-        Authorization: `Bearer ${queryKey[1]}`,
-      },
+      trackIds: queryKey[2],
     },
+    { signal },
   );
 
-  const body = await res.json();
-
-  return body.songs;
+  return tracks;
 };
 
 export const getTracks: QueryFunction<
