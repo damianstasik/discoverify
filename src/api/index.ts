@@ -9,23 +9,10 @@ export function createUrl(
   return `${import.meta.env.VITE_API_URL}/${path}?${query}`;
 }
 
-export const refreshAccessToken: MutationFunction<string, string> = async (
-  token,
-) => {
-  const req = await fetch(`${import.meta.env.VITE_API_URL}/auth/refresh`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+export const refreshAccessToken: Mutation<'auth.refresh'> = async () => {
+  const token = await trpc.auth.refresh.query();
 
-  const body = await req.json();
-
-  if (body?.token) {
-    return body.token;
-  }
-
-  throw new Error();
+  return token;
 };
 
 export const getCurrentUser: Query<'auth.me'> = async ({ signal }) => {
