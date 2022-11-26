@@ -80,3 +80,9 @@ export const getPlaylist: Query<'playlist.byId', [key: string, id: string]> =
 
     return playlist;
   };
+
+export const authUrlMutation: Mutation<'auth.url', void> = async () => {
+  const url = await trpc.auth.url.mutate();
+
+  return url;
+};

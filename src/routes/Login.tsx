@@ -2,13 +2,7 @@ import { LoadingButton } from '@mui/lab';
 import { useMutation } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import { Card, Box, Typography } from '@mui/material';
-import { trpc } from '../trpc';
-
-const authUrlMutation: Mutation<'auth.url', void> = async () => {
-  const url = await trpc.auth.url.mutate();
-
-  return url;
-};
+import { authUrlMutation } from '../api';
 
 export function Login() {
   const { enqueueSnackbar } = useSnackbar();
