@@ -1,10 +1,10 @@
 import { LoadingButton } from '@mui/lab';
-import { type MutationFunction, useMutation } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import { Card, Box, Typography } from '@mui/material';
 import { trpc } from '../trpc';
 
-const authUrlMutation: MutationFunction<string, void> = async () => {
+const authUrlMutation: Mutation<'auth.url', void> = async () => {
   const url = await trpc.auth.url.mutate();
 
   return url;

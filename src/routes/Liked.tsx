@@ -94,21 +94,17 @@ const columns = [
   } as ColumnDef<TrackType, void>,
 ];
 
-const likedQuery: QueryFunction<RouterOutput['track']['saved']> = async ({
-  pageParam = 1,
-  signal,
-}) => {
+const likedQuery: Query<'track.saved'> = async ({ pageParam = 1, signal }) => {
   const tracks = await trpc.track.saved.query({ page: pageParam }, { signal });
 
   return tracks;
 };
 
 export function Liked() {
-  const token = useRecoilValue(tokenState);
   const [searchParams, setSearchParams] = useSearchParams();
 
   const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery(
-    ['liked', token],
+    ['liked'],
     likedQuery,
     {
       getNextPageParam: (lastPage) => lastPage.nextPage,

@@ -1,11 +1,11 @@
 import { Navigate, useSearchParams } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
-import { type QueryFunction, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import { tokenState } from '../store';
 import { trpc } from '../trpc';
 
-const authorizeQuery: QueryFunction<string, [key: string, code: string]> =
+const authorizeQuery: Query<'auth.authorize', [key: string, code: string]> =
   async ({ queryKey, signal }) => {
     const token = await trpc.auth.authorize.query(queryKey[1], { signal });
 

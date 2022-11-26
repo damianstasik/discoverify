@@ -1,6 +1,5 @@
-import { MutationFunction, QueryFunction } from '@tanstack/react-query';
-import { RouterOutput, trpc } from '../trpc';
-import { User } from '../types.d';
+import { MutationFunction } from '@tanstack/react-query';
+import { trpc } from '../trpc';
 
 export function createUrl(
   path: string,
@@ -29,14 +28,13 @@ export const refreshAccessToken: MutationFunction<string, string> = async (
   throw new Error();
 };
 
-export const getCurrentUser: QueryFunction<RouterOutput['auth']['me']> =
-  async ({ signal }) => {
-    const user = await trpc.auth.me.query(undefined, {
-      signal,
-    });
+export const getCurrentUser: Query<'auth.me'> = async ({ signal }) => {
+  const user = await trpc.auth.me.query(undefined, {
+    signal,
+  });
 
-    return user;
-  };
+  return user;
+};
 
 export const ignoreTrack: MutationFunction<
   void,
@@ -60,8 +58,8 @@ export const saveTrack: MutationFunction<void, { token: string; id: string }> =
     });
   };
 
-export const getRecommendedTracks: QueryFunction<
-  RouterOutput['track']['recommended'],
+export const getRecommendedTracks: Query<
+  'track.recommended',
   [key: string, trackIds: string[], values: any]
 > = async ({ queryKey, signal }) => {
   const tracks = await trpc.track.recommended.query(
@@ -74,8 +72,8 @@ export const getRecommendedTracks: QueryFunction<
   return tracks;
 };
 
-export const getTracks: QueryFunction<
-  RouterOutput['track']['tracksById'],
+export const getTracks: Query<
+  'track.tracksById',
   [key: string, trackIds: string[]]
 > = async ({ queryKey, signal }) => {
   const tracks = await trpc.track.tracksById.query(queryKey[1], { signal });
@@ -83,14 +81,12 @@ export const getTracks: QueryFunction<
   return tracks;
 };
 
-export const search: QueryFunction<
-  RouterOutput['seed']['search'],
-  [key: string, query: string]
-> = async ({ queryKey, signal }) => {
-  const results = await trpc.seed.search.query(queryKey[1], { signal });
+export const search: Query<'seed.search', [key: string, query: string]> =
+  async ({ queryKey, signal }) => {
+    const results = await trpc.seed.search.query(queryKey[1], { signal });
 
-  return results;
-};
+    return results;
+  };
 
 export const playTrack: MutationFunction<
   void,
