@@ -83,7 +83,7 @@ export function Recommendations() {
   );
 
   const { data: songs, isLoading: isLoadingTracks } = useQuery(
-    ['songs', token, trackIds],
+    ['songs', trackIds],
     getTracks,
     {
       enabled: trackIds.length > 0,
@@ -94,7 +94,7 @@ export function Recommendations() {
     data: autosongs,
     isLoading: isLoadingAutocomplete,
     isFetching: isFetchingAutocomplete,
-  } = useQuery(['search', token, debouncedQuery], search, {
+  } = useQuery(['search', debouncedQuery], search, {
     enabled: !!debouncedQuery,
   });
 

@@ -66,7 +66,7 @@ export const getRecommendedTracks: QueryFunction<
 > = async ({ queryKey, signal }) => {
   const tracks = await trpc.track.recommended.query(
     {
-      trackIds: queryKey[2],
+      trackIds: queryKey[1],
     },
     { signal },
   );
@@ -75,43 +75,21 @@ export const getRecommendedTracks: QueryFunction<
 };
 
 export const getTracks: QueryFunction<
-  Array<{ id: string; title: string }>,
-  [key: string, token: string, trackIds: string[]]
+  RouterOutput['track']['tracksById'],
+  [key: string, trackIds: string[]]
 > = async ({ queryKey, signal }) => {
-  const q = new URLSearchParams({
-    id: queryKey[2].join(),
-  });
+  const tracks = await trpc.track.tracksById.query(queryKey[1], { signal });
 
-  const req = await fetch(`${import.meta.env.VITE_API_URL}/track/tracks?${q}`, {
-    signal,
-    headers: {
-      Authorization: `Bearer ${queryKey[1]}`,
-    },
-  });
-
-  const body = await req.json();
-
-  return body.tracks;
+  return tracks;
 };
 
 export const search: QueryFunction<
-  Array<{ id: string; title: string }>,
-  [key: string, token: string, query: string]
+  RouterOutput['seed']['search'],
+  [key: string, query: string]
 > = async ({ queryKey, signal }) => {
-  const q = new URLSearchParams({
-    q: queryKey[2],
-  });
+  const results = await trpc.seed.search.query(queryKey[1], { signal });
 
-  const req = await fetch(`${import.meta.env.VITE_API_URL}/seed/search?${q}`, {
-    signal,
-    headers: {
-      Authorization: `Bearer ${queryKey[1]}`,
-    },
-  });
-
-  const body = await req.json();
-
-  return body;
+  return results;
 };
 
 export const playTrack: MutationFunction<
