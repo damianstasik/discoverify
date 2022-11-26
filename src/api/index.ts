@@ -88,21 +88,14 @@ export const search: Query<'seed.search', [key: string, query: string]> =
     return results;
   };
 
-export const playTrack: MutationFunction<
-  void,
-  { token: string; ids: string[]; offset: string; deviceId: string }
-> = async ({ token, ids, offset, deviceId }) => {
-  const qs = new URLSearchParams();
-  qs.append('deviceId', deviceId);
-  qs.append('offset', offset);
-  for (let id of ids) {
-    qs.append('id', id);
-  }
-  await fetch(`${import.meta.env.VITE_API_URL}/player/play?${qs}`, {
-    method: 'post',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+export const playTrack: Mutation<
+  'track.play',
+  { trackIds: string[]; offset: string; deviceId: string }
+> = async ({ trackIds, offset, deviceId }) => {
+  await trpc.track.play.query({
+    trackIds,
+    offset,
+    deviceId,
   });
 };
 

@@ -3,23 +3,21 @@ import { useCallback, useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import { playTrack } from '../api';
 import { useEventBus } from '../components/EventBus';
-import { deviceIdAtom, tokenState } from '../store';
+import { deviceIdAtom } from '../store';
 
-export function usePlayPauseTrackHook(ids: string[]) {
+export function usePlayPauseTrackHook(trackIds: string[]) {
   const eventBus = useEventBus();
   const deviceId = useRecoilValue(deviceIdAtom);
-  const token = useRecoilValue(tokenState);
   const { mutate } = useMutation(playTrack);
 
   const play = useCallback<(offset: string) => void>(
     (offset) =>
       mutate({
-        token,
-        ids,
+        trackIds,
         offset,
         deviceId,
       }),
-    [token, ids, deviceId],
+    [trackIds, deviceId],
   );
 
   useEffect(() => {
