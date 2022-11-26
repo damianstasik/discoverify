@@ -1,41 +1,13 @@
-import {
-  type QueryFunction,
-  useInfiniteQuery,
-  useMutation,
-  useQueryClient,
-  InfiniteData,
-} from '@tanstack/react-query';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import Icon from '@mdi/react';
-import { mdiCardsHeartOutline, mdiSpotify } from '@mdi/js';
-import IconButton from '@mui/material/IconButton';
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { dislikedTrackIdsAtom, tokenState } from '../store';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { useMemo } from 'react';
 import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
 import { ArtistColumn } from '../components/ArtistColumn';
 import { AlbumColumn } from '../components/AlbumColumn';
-import { TrackSelectionToolbar } from '../components/TrackSelectionToolbar';
 import { TrackNameColumn } from '../components/TrackNameColumn';
 import { PageTitle } from '../components/PageTitle';
 import { ActionsColumn } from '../components/TrackTable/ActionsColumn';
-import produce from 'immer';
-import { ignoreTrack } from '../api';
-import {
-  ColumnDef,
-  createColumnHelper,
-  flexRender,
-  getCoreRowModel,
-  getSortedRowModel,
-  Row,
-  SortingState,
-  useReactTable,
-} from '@tanstack/react-table';
-import { useVirtualizer } from '@tanstack/react-virtual';
-import { Checkbox } from '@mui/material';
-import { useEventBus } from '../components/EventBus';
+import { ColumnDef } from '@tanstack/react-table';
 import { usePlayPauseTrackHook } from '../hooks/usePlayPauseTrackHook';
-import { useInfiniteLoading } from '../hooks/useInfiniteLoading';
 import { useIgnoreTrackHook } from '../hooks/useIgnoreTrackHook';
 import { useSaveTrackHook } from '../hooks/useSaveTrackHook';
 import { VirtualTable } from '../components/VirtualTable';
@@ -101,23 +73,11 @@ const likedQuery: Query<'track.saved'> = async ({ pageParam = 1, signal }) => {
 };
 
 export function Liked() {
-  const [searchParams, setSearchParams] = useSearchParams();
-
   const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery(
     ['liked'],
     likedQuery,
     {
       getNextPageParam: (lastPage) => lastPage.nextPage,
-      onSuccess(data) {
-        const page = data.pageParams[data.pageParams.length - 1];
-
-        // if (page) {
-        //   setSearchParams((prev) => {
-        //     prev.set('page', page);
-        //     return prev;
-        //   });
-        // }
-      },
     },
   );
 

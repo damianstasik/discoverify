@@ -1,14 +1,6 @@
 import { MutationFunction } from '@tanstack/react-query';
 import { trpc } from '../trpc';
 
-export function createUrl(
-  path: string,
-  params: Record<string, string>,
-): string {
-  const query = new URLSearchParams(params);
-  return `${import.meta.env.VITE_API_URL}/${path}?${query}`;
-}
-
 export const refreshAccessToken: Mutation<'auth.refresh'> = async () => {
   const token = await trpc.auth.refresh.query();
 
