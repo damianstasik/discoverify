@@ -30,7 +30,7 @@ export const ActionsColumn = memo(({ track }: Props) => {
       <IconButton
         size="small"
         aria-label="Save"
-        onClick={() => eventBus.emit('saveTrack', track)}
+        onClick={() => eventBus.emit('saveTrack', track.uri)}
       >
         <Icon
           path={track.isLiked ? mdiCardsHeart : mdiCardsHeartOutline}

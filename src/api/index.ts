@@ -27,15 +27,9 @@ export const ignoreTrack: MutationFunction<
   });
 };
 
-export const saveTrack: MutationFunction<void, { token: string; id: string }> =
-  async ({ token, id }) => {
-    await fetch(`${import.meta.env.VITE_API_URL}/track/${id}/save`, {
-      method: 'put',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-  };
+export const saveTrack: Mutation<'track.save', string> = async (id) => {
+  await trpc.track.save.mutate(id);
+};
 
 export const getRecommendedTracks: Query<
   'track.recommended',
