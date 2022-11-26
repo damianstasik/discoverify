@@ -2,7 +2,7 @@ import { MutationFunction } from '@tanstack/react-query';
 import { trpc } from '../trpc';
 
 export const refreshAccessToken: Mutation<'auth.refresh'> = async () => {
-  const token = await trpc.auth.refresh.query();
+  const token = await trpc.auth.refresh.mutate();
 
   return token;
 };
