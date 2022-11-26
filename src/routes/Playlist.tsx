@@ -80,10 +80,7 @@ export function Playlist() {
   const token = useRecoilValue(tokenState);
   const params = useParams<'id'>();
 
-  const { data, isFetching } = useQuery(
-    ['playlist', token, params.id!],
-    getPlaylist,
-  );
+  const { data, isFetching } = useQuery(['playlist', params.id!], getPlaylist);
 
   const ids = useMemo(
     () => (data?.tracks?.items || []).map((t) => t.track.uri),
