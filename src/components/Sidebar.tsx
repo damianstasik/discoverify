@@ -31,6 +31,7 @@ import styled from '@emotion/styled';
 import { Skeleton } from '@mui/material';
 import { tokenState, userState } from '../store';
 import { Navbar } from './Navbar';
+import { trpc } from '../trpc';
 
 const Heading = styled(Divider)`
   &::before {
@@ -101,22 +102,14 @@ const drawerWidth = 300;
 export const Sidebar = memo(() => {
   const token = useRecoilValue(tokenState);
 
-  const { data, isLoading } = useQuery<{
-    playlists: any[];
-    hasNextPage: boolean;
-  }>(['playlists'], async function playlistsQuery() {
-    const res = await fetch(
-      `${import.meta.env.VITE_API_URL}/user/playlists?limit=10`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
-    const body = await res.json();
+  const { data, isLoading } = useQuery(
+    ['playlists'],
+    async function playlistsQuery() {
+      const playlists = await trpc.user.playlists.query();
 
-    return body;
-  });
+      return playlists;
+    },
+  );
 
   return (
     <Drawer
