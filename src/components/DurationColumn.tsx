@@ -10,6 +10,6 @@ function msToTime(duration: number) {
   return `${m}:${s}`;
 }
 
-export const DurationColumn = (props: CellContext<any, number>) => {
+export const DurationColumn = <Data,>(props: CellContext<Data, number>) => {
   return msToTime(props.getValue());
 };

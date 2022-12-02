@@ -3,7 +3,14 @@ import Link from '@mui/material/Link';
 import { CellContext } from '@tanstack/react-table';
 import { Link as RouterLink } from 'react-router-dom';
 
-export const ArtistColumn = (props: CellContext<any, any[]>) => {
+interface Artist {
+  id: string;
+  name: string;
+}
+
+export const ArtistColumn = <Data extends { artists: Artist[] }>(
+  props: CellContext<Data, Artist[]>,
+) => {
   const artists = props.getValue();
   return (
     <Breadcrumbs sx={{ fontSize: 'inherit', py: 1 }} component="div">

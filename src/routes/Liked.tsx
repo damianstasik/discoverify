@@ -6,7 +6,7 @@ import { AlbumColumn } from '../components/AlbumColumn';
 import { TrackNameColumn } from '../components/TrackNameColumn';
 import { PageTitle } from '../components/PageTitle';
 import { ActionsColumn } from '../components/TrackTable/ActionsColumn';
-import { ColumnDef } from '@tanstack/react-table';
+import { ColumnDef, createColumnHelper } from '@tanstack/react-table';
 import { usePlayPauseTrackHook } from '../hooks/usePlayPauseTrackHook';
 import { useIgnoreTrackHook } from '../hooks/useIgnoreTrackHook';
 import { useSaveTrackHook } from '../hooks/useSaveTrackHook';
@@ -18,52 +18,47 @@ import { DurationColumn } from '../components/DurationColumn';
 
 type TrackType = RouterOutput['track']['saved']['tracks'][number];
 
-type Column<Key extends keyof TrackType> = ColumnDef<TrackType, TrackType[Key]>;
+const columnHelper = createColumnHelper<TrackType>();
 
 const columns = [
-  {
+  columnHelper.display({
     size: 50,
     id: 'select',
     header: ({ table }) => <CheckboxColumn table={table} />,
     cell: ({ row }) => <CheckboxColumn row={row} isRow />,
-  } as ColumnDef<TrackType, void>,
-  {
+  }),
+  columnHelper.accessor('uri', {
     header: '',
-    accessorKey: 'uri',
+    id: 'preview',
     size: 50,
     cell: TrackPreviewColumn,
-  } as Column<'name'>,
-  {
-    accessorKey: 'name',
+  }),
+  columnHelper.accessor('name', {
     header: 'Name',
     size: 300,
     cell: TrackNameColumn,
-  } as Column<'name'>,
-  {
-    accessorKey: 'artists',
+  }),
+  columnHelper.accessor('artists', {
     header: 'Artist(s)',
     cell: ArtistColumn,
-  } as Column<'artists'>,
-  {
-    accessorKey: 'album',
+  }),
+  columnHelper.accessor('album', {
     header: 'Album',
     cell: AlbumColumn,
-  } as Column<'album'>,
-  {
-    accessorKey: 'added_at',
-    header: 'Added at',
+  }),
+  columnHelper.accessor('added_at', {
+    header: 'Added At',
     cell: AddedAtColumn,
-  } as Column<'added_at'>,
-  {
-    accessorKey: 'duration_ms',
+  }),
+  columnHelper.accessor('duration_ms', {
     header: 'Duration',
     cell: DurationColumn,
-  } as Column<'duration_ms'>,
-  {
+  }),
+  columnHelper.display({
+    header: '',
     id: 'actions',
-    header: 'Actions',
-    cell: (params) => <ActionsColumn track={params.row.original} />,
-  } as ColumnDef<TrackType, void>,
+    cell: (params) => <ActionsColumn track={params.row.original} />, // TODO: refactor this into smaller, separate columns
+  }),
 ];
 
 const likedQuery: Query<'track.saved'> = async ({ pageParam = 1, signal }) => {
