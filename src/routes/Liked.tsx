@@ -5,8 +5,7 @@ import { ArtistColumn } from '../components/ArtistColumn';
 import { AlbumColumn } from '../components/AlbumColumn';
 import { TrackNameColumn } from '../components/TrackNameColumn';
 import { PageTitle } from '../components/PageTitle';
-import { ActionsColumn } from '../components/TrackTable/ActionsColumn';
-import { ColumnDef, createColumnHelper } from '@tanstack/react-table';
+import { createColumnHelper } from '@tanstack/react-table';
 import { usePlayPauseTrackHook } from '../hooks/usePlayPauseTrackHook';
 import { useIgnoreTrackHook } from '../hooks/useIgnoreTrackHook';
 import { useSaveTrackHook } from '../hooks/useSaveTrackHook';
@@ -15,6 +14,9 @@ import { CheckboxColumn } from '../components/CheckboxColumn';
 import { AddedAtColumn } from '../components/AddedAtColumn';
 import { RouterOutput, trpc } from '../trpc';
 import { DurationColumn } from '../components/DurationColumn';
+import { SaveColumn } from '../components/SaveColumn';
+import { IgnoreColumn } from '../components/IgnoreColumn';
+import { SpotifyLinkColumn } from '../components/SpotifyLinkColumn';
 
 type TrackType = RouterOutput['track']['saved']['tracks'][number];
 
@@ -54,10 +56,21 @@ const columns = [
     header: 'Duration',
     cell: DurationColumn,
   }),
-  columnHelper.display({
+  columnHelper.accessor('isLiked', {
     header: '',
-    id: 'actions',
-    cell: (params) => <ActionsColumn track={params.row.original} />, // TODO: refactor this into smaller, separate columns
+    size: 40,
+    cell: SaveColumn,
+  }),
+  columnHelper.accessor('isIgnored', {
+    header: '',
+    size: 40,
+    cell: IgnoreColumn,
+  }),
+  columnHelper.accessor('uri', {
+    id: 'open',
+    header: '',
+    size: 40,
+    cell: SpotifyLinkColumn,
   }),
 ];
 
