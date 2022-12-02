@@ -48,7 +48,9 @@ export function Layout() {
     },
   });
 
-  const { data: user } = useQuery(['user', token], getCurrentUser, {
+  const { data: user } = useQuery({
+    queryFn: getCurrentUser,
+    queryKey: ['user'],
     suspense: true,
     enabled: !!token,
     refetchOnMount: true,
