@@ -94,11 +94,7 @@ export const tokenState = atom({
   effects: [localStorageEffect<string>('token')],
 });
 
-export const userAtom = atom<{
-  email: string;
-  photoUrl: string;
-  displayName: string;
-} | null>({
+export const userAtom = atom<Output<'auth.me'> | null>({
   key: 'user',
   default: null,
 });
