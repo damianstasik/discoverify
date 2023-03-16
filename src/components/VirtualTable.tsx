@@ -9,28 +9,40 @@ import { forwardRef, memo, useRef } from 'react';
 import { useInfiniteLoading } from '../hooks/useInfiniteLoading';
 import { TrackSelectionToolbar } from './TrackSelectionToolbar';
 
-const TableHeader = memo(({ table }) => {
+interface TableHeaderProps {
+  table: Table<any>;
+}
+
+const TableHeader = memo(({ table }: TableHeaderProps) => {
   return (
-    <div>
+    <Box>
       {table.getHeaderGroups().map((headerGroup) => (
-        <div key={headerGroup.id} style={{ display: 'flex' }}>
+        <Box
+          key={headerGroup.id}
+          display="flex"
+          borderBottom="1px solid rgba(255,255,255,.1)"
+        >
           {headerGroup.headers.map((header) => {
             return (
-              <div key={header.id} style={{ width: header.getSize() }}>
-                {header.isPlaceholder ? null : (
-                  <div>
-                    {flexRender(
+              <Box
+                key={header.id}
+                style={{ width: header.getSize() }}
+                display="flex"
+                alignItems="center"
+                flexShrink={0}
+              >
+                {header.isPlaceholder
+                  ? null
+                  : flexRender(
                       header.column.columnDef.header,
                       header.getContext(),
                     )}
-                  </div>
-                )}
-              </div>
+              </Box>
             );
           })}
-        </div>
+        </Box>
       ))}
-    </div>
+    </Box>
   );
 });
 
