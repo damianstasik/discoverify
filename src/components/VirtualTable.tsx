@@ -1,7 +1,10 @@
 import { Box } from '@mui/material';
 import {
+  ColumnDef,
   flexRender,
   getCoreRowModel,
+  RowData,
+  Table,
   useReactTable,
 } from '@tanstack/react-table';
 import { useVirtualizer } from '@tanstack/react-virtual';
@@ -83,74 +86,78 @@ const TableVirtualRow = forwardRef(({ row, virtualItem }, ref) => {
   );
 });
 
-export const VirtualTable = memo(
-  ({ columns, data, isLoading, hasNextPage, fetchNextPage }) => {
-    const table = useReactTable({
-      data,
-      columns,
-      getCoreRowModel: getCoreRowModel(),
-      state: {
-        columnVisibility: {
-          id: false,
-        },
-      },
-    });
+interface Props<Data extends { spotifyId: string }> {
+  columns: ColumnDef<Data, any>[];
+}
 
-    const contRef = useRef<HTMLDivElement>(null);
+export const VirtualTable = <Data extends { spotifyId: string }>({
+  columns,
+  data,
+  isLoading,
+  hasNextPage,
+  fetchNextPage,
+}: Props<Data>) => {
+  const table = useReactTable<Data>({
+    data,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+  });
 
-    const handleInfiniteLoadingScroll = useInfiniteLoading({
-      ref: contRef,
-      fetchNextPage,
-      isFetching: isLoading,
-      hasNextPage,
-    });
+  const contRef = useRef<HTMLDivElement>(null);
 
-    const rowVirtualizer = useVirtualizer({
-      getScrollElement: () => contRef.current,
-      count: data.length,
-      estimateSize: () => 45,
-      overscan: 10,
-    });
-    const { flatRows } = table.getSelectedRowModel();
-    const { rows } = table.getRowModel();
-    return (
-      <Box
-        sx={{
-          fontSize: '14px',
+  const handleInfiniteLoadingScroll = useInfiniteLoading({
+    ref: contRef,
+    fetchNextPage,
+    isFetching: isLoading,
+    hasNextPage,
+  });
+
+  const rowVirtualizer = useVirtualizer({
+    getScrollElement: () => contRef.current,
+    count: data.length,
+    estimateSize: () => 45,
+    overscan: 10,
+  });
+  const { flatRows } = table.getSelectedRowModel();
+  const { rows } = table.getRowModel();
+  return (
+    <Box
+      sx={{
+        fontSize: '14px',
+      }}
+    >
+      <TrackSelectionToolbar rows={flatRows} />
+      <TableHeader table={table} />
+      <div
+        className="container"
+        ref={contRef}
+        style={{
+          height: `800px`,
+          overflow: 'auto',
         }}
+        onScroll={handleInfiniteLoadingScroll}
       >
-        <TrackSelectionToolbar rows={flatRows} />
-        <TableHeader table={table} />
         <div
-          className="container"
-          ref={contRef}
           style={{
-            height: `800px`,
-            overflow: 'auto',
+            height: `${rowVirtualizer.getTotalSize()}px`,
+            width: '100%',
+            position: 'relative',
+            overflow: 'hidden',
           }}
-          onScroll={handleInfiniteLoadingScroll}
         >
-          <div
-            style={{
-              height: `${rowVirtualizer.getTotalSize()}px`,
-              width: '100%',
-              position: 'relative',
-            }}
-          >
-            {rowVirtualizer.getVirtualItems().map((virtualItem) => {
-              const row = rows[virtualItem.index];
-              return (
-                <TableVirtualRow
-                  ref={rowVirtualizer.measureElement}
-                  row={row}
-                  key={row.id}
-                  virtualItem={virtualItem}
-                />
-              );
-            })}
-          </div>
+          {rowVirtualizer.getVirtualItems().map((virtualItem) => {
+            const row = rows[virtualItem.index];
+            return (
+              <TableVirtualRow
+                ref={rowVirtualizer.measureElement}
+                row={row}
+                key={row.id}
+                virtualItem={virtualItem}
+              />
+            );
+          })}
         </div>
-      </Box>
-    );
-  },
-);
+      </div>
+    </Box>
+  );
+};
