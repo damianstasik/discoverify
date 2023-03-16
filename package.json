@@ -1,4 +1,5 @@
 {
+  "name": "frontend",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.10.6",
@@ -29,7 +30,7 @@
     "react-h5-audio-player": "^3.8.6",
     "react-router-dom": "^6.9.0",
     "recoil": "^0.7.7",
-    "typescript": "^4.9.5",
+    "typescript": "^5.0.2",
     "use-debounce": "^9.0.3",
     "use-timer": "^2.0.1",
     "vite": "^4.2.0"
