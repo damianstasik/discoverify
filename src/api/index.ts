@@ -38,6 +38,7 @@ export const getRecommendedTracks: Query<
   const tracks = await trpc.track.recommended.query(
     {
       trackIds: queryKey[1],
+      attributes: queryKey[2],
     },
     { signal },
   );
