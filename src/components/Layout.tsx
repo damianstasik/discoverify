@@ -88,7 +88,8 @@ export function Layout() {
         component="main"
         sx={{
           flexGrow: 1,
-          p: 3,
+          px: 3,
+          py: 2,
           position: 'relative',
           backgroundColor: '#161616',
           // backgroundImage: 'linear-gradient(160deg, #2b2b2b 0%, #161616 30%)',

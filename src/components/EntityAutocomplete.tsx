@@ -89,6 +89,7 @@ export function EntityAutocomplete({
           {...params}
           label="Search"
           variant="outlined"
+          size='small'
           InputProps={{
             ...params.InputProps,
             endAdornment: isLoading ? (

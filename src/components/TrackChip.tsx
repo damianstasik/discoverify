@@ -12,13 +12,17 @@ import { Link as RouterLink } from 'react-router-dom';
 
 export const TrackChip = ({ id, name, artists, imageUrl }) => {
   return (
-    <Paper sx={{ p: 1, display: 'inline-flex', flexShrink: 0 }} elevation={3}>
+    <Paper sx={{ p: 0.5, display: 'inline-flex', flexShrink: 0 }} elevation={3}>
       <Grid container spacing={1}>
         <Grid xs="auto">
-          <Avatar variant="rounded" src={imageUrl} />
+          <Avatar
+            variant="rounded"
+            src={imageUrl}
+            sx={{ width: 32, height: 32 }}
+          />
         </Grid>
         <Grid xs>
-          <Typography variant="body2">
+          <Typography variant="body2" fontSize={12}>
             <Link
               component={RouterLink}
               to={`/track/${id}`}
@@ -28,7 +32,7 @@ export const TrackChip = ({ id, name, artists, imageUrl }) => {
               {name}
             </Link>
           </Typography>
-          <Typography variant="body2">
+          <Typography variant="body2" fontSize={12}>
             {artists.map((artist, index) => (
               <Fragment key={artist.id}>
                 <Link
@@ -45,8 +49,8 @@ export const TrackChip = ({ id, name, artists, imageUrl }) => {
           </Typography>
         </Grid>
         <Grid xs="auto">
-          <IconButton aria-label="delete">
-            <RemoveCircle />
+          <IconButton aria-label="delete" size="small">
+            <RemoveCircle color="blue.500" />
           </IconButton>
         </Grid>
       </Grid>
