@@ -87,7 +87,7 @@ export function EntityAutocomplete({
       renderInput={(params) => (
         <TextField
           {...params}
-          label="Search"
+          label="Search by tracks, artists or genres..."
           variant="outlined"
           size='small'
           InputProps={{
