@@ -20,9 +20,7 @@ export function Layout() {
   const location = useLocation();
   const setUser = useSetRecoilState(userAtom);
   const [token, setToken] = useRecoilState(tokenState);
-  const [isQueueOpen, setIsQueueOpen] = useRecoilState(
-    queueVisibilityAtom,
-  );
+  const [isQueueOpen, setIsQueueOpen] = useRecoilState(queueVisibilityAtom);
 
   const { data: queue } = useQuery(
     ['queue', token],
@@ -117,7 +115,9 @@ export function Layout() {
       >
         <List>
           {(queue || []).map((track, index) => (
-            <ListItem key={track.id}>{index + 1}. {track.name}</ListItem>
+            <ListItem key={track.id}>
+              {index + 1}. {track.name}
+            </ListItem>
           ))}
         </List>
       </Drawer>
