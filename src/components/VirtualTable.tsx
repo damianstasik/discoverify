@@ -58,7 +58,8 @@ const TableVirtualRow = forwardRef(({ row, virtualItem }, ref) => {
         top: 0,
         left: 0,
         width: '100%',
-        transform: `translateY(${virtualItem.start}px)`,
+
+        transform: `translate3d(0, ${virtualItem.start}px, 0)`,
         display: 'flex',
         background: row.original.isIgnored ? 'red' : '',
       }}
