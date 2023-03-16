@@ -46,7 +46,7 @@ const TableHeader = memo(({ table }: TableHeaderProps) => {
   );
 });
 
-const TableCell = memo(({ cell }) => {
+const TableCell = ({ cell }) => {
   return (
     <Box
       sx={{ display: 'flex', alignItems: 'center' }}
@@ -58,7 +58,7 @@ const TableCell = memo(({ cell }) => {
       {flexRender(cell.column.columnDef.cell, cell.getContext())}
     </Box>
   );
-});
+};
 
 const TableVirtualRow = forwardRef(({ row, virtualItem }, ref) => {
   return (
