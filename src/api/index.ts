@@ -15,16 +15,13 @@ export const getCurrentUser: Query<'auth.me'> = async ({ signal }) => {
   return user;
 };
 
-export const ignoreTrack: MutationFunction<
-  void,
-  { token: string; id: string; isIgnored: boolean }
-> = async ({ token, id, isIgnored }) => {
-  await fetch(`${import.meta.env.VITE_API_URL}/track/${id}/ignore`, {
-    method: isIgnored ? 'delete' : 'put',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+export const ignoreTrack: MutationFunction<void, string> = async (id) => {
+  // await fetch(`${import.meta.env.VITE_API_URL}/track/${id}/ignore`, {
+  //   method: isIgnored ? 'delete' : 'put',
+  //   headers: {
+  //     Authorization: `Bearer ${token}`,
+  //   },
+  // });
 };
 
 export const saveTrack: Mutation<'track.save', string> = async (id) => {
@@ -81,6 +78,17 @@ export const getPlaylist: Query<'playlist.byId', [key: string, id: string]> =
 
     return playlist;
   };
+
+export const getPlaylistTracks: Query<
+  'playlist.tracks',
+  [key: string, id: string]
+> = async ({ queryKey, signal }) => {
+  const tracks = await trpc.playlist.tracks.query(queryKey[1], {
+    signal,
+  });
+
+  return tracks;
+};
 
 export const authUrlMutation: Mutation<'auth.url', void> = async () => {
   const url = await trpc.auth.url.mutate();

@@ -8,10 +8,8 @@ import { CircularProgress } from '@mui/material';
 import { useEventBus } from './EventBus';
 import { CellContext } from '@tanstack/react-table';
 
-export const TrackPreviewColumn = <Data extends { uri: string }>(
-  props: CellContext<Data, unknown>,
-) => {
-  const { uri } = props.row.original;
+export const TrackPreviewColumn = <Data,>(props: CellContext<Data, string>) => {
+  const uri = props.getValue();
   const eventBus = useEventBus();
   const playerTrack = useRecoilValue(playerTrackAtom);
   const isPlayingTrack = playerTrack?.uri === uri; // && trackPreview?.context === context

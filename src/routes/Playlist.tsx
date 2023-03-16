@@ -1,91 +1,107 @@
-import { useParams } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
-import { useQuery } from '@tanstack/react-query';
+import { createBrowserRouter, createPath, useParams } from 'react-router-dom';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
-import { tokenState } from '../store';
 import { AlbumColumn } from '../components/AlbumColumn';
 import { ArtistColumn } from '../components/ArtistColumn';
 import { TrackNameColumn } from '../components/TrackNameColumn';
 import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
 import { PageTitle } from '../components/PageTitle';
-import { ActionsColumn } from '../components/TrackTable/ActionsColumn';
-import { Checkbox, Skeleton } from '@mui/material';
+import { Skeleton } from '@mui/material';
 import { VirtualTable } from '../components/VirtualTable';
 import { CheckboxColumn } from '../components/CheckboxColumn';
 import { usePlayPauseTrackHook } from '../hooks/usePlayPauseTrackHook';
 import { useIgnoreTrackHook } from '../hooks/useIgnoreTrackHook';
 import { useSaveTrackHook } from '../hooks/useSaveTrackHook';
-import { getPlaylist } from '../api';
-import { ColumnDef } from '@tanstack/react-table';
+import { getPlaylist, getPlaylistTracks } from '../api';
+import { createColumnHelper } from '@tanstack/react-table';
 import { AddedAtColumn } from '../components/AddedAtColumn';
+import { RouterOutput } from '../trpc';
+import { DurationColumn } from '../components/DurationColumn';
+import { SaveColumn } from '../components/SaveColumn';
+import { IgnoreColumn } from '../components/IgnoreColumn';
+import { SpotifyLinkColumn } from '../components/SpotifyLinkColumn';
+import { Router } from '@remix-run/router';
 
-const columns: ColumnDef<any>[] = [
-  {
+type PlaylistType = RouterOutput['playlist']['byId']['tracks'][number];
+
+const columnHelper = createColumnHelper<PlaylistType>();
+
+const columns = [
+  columnHelper.display({
     size: 50,
     id: 'select',
-    header: ({ table }) => (
-      <Checkbox
-        onChange={table.getToggleAllRowsSelectedHandler()}
-        checked={table.getIsAllRowsSelected()}
-        indeterminate={table.getIsSomeRowsSelected()}
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        indeterminate={row.getIsSomeSelected()}
-        onChange={row.getToggleSelectedHandler()}
-      />
-    ),
-  },
-  {
-    accessorKey: 'uri',
+    header: ({ table }) => <CheckboxColumn table={table} />,
+    cell: ({ row }) => <CheckboxColumn row={row} isRow />,
+  }),
+  columnHelper.accessor('uri', {
     header: '',
+    id: 'preview',
     size: 50,
     cell: TrackPreviewColumn,
-  },
-  {
-    accessorFn: (row) => row.track.name,
+  }),
+  columnHelper.accessor('name', {
     header: 'Name',
+    size: 300,
     cell: TrackNameColumn,
-  },
-  {
-    accessorFn: (row) => row.track.artists,
+  }),
+  columnHelper.accessor('artists', {
     header: 'Artist(s)',
     cell: ArtistColumn,
-  },
-  {
-    accessorFn: (row) => row.track.album,
+  }),
+  columnHelper.accessor('album', {
     header: 'Album',
     cell: AlbumColumn,
-  },
-  {
-    accessorKey: 'added_at',
-    header: 'Added at',
+  }),
+  columnHelper.accessor('addedAt', {
+    header: 'Added At',
     cell: AddedAtColumn,
-  },
-  // {
-  //   accessorKey: 'duration',
-  //   header: 'Duration',
-  //   cell: DurationColumn,
-  // },
-  {
-    id: 'actions',
-    header: 'Actions',
-    cell: (params) => <ActionsColumn track={params.row.original.track} />,
-  },
+  }),
+  columnHelper.accessor('duration_ms', {
+    header: 'Duration',
+    cell: DurationColumn,
+  }),
+  columnHelper.accessor('isLiked', {
+    header: '',
+    size: 40,
+    cell: SaveColumn,
+  }),
+  columnHelper.accessor('isIgnored', {
+    header: '',
+    size: 40,
+    cell: IgnoreColumn,
+  }),
+  columnHelper.accessor('uri', {
+    id: 'open',
+    header: '',
+    size: 40,
+    cell: SpotifyLinkColumn,
+  }),
 ];
 
 export function Playlist() {
-  const token = useRecoilValue(tokenState);
   const params = useParams<'id'>();
 
   const { data, isFetching } = useQuery(['playlist', params.id!], getPlaylist);
 
-  const ids = useMemo(
-    () => (data?.tracks?.items || []).map((t) => t.track.uri),
-    [data],
+  const { data: tracks } = useInfiniteQuery(
+    ['playlistTracks', params.id!],
+    getPlaylistTracks,
+    {
+      initialData: {
+        pages: data?.tracks
+          ? data?.meta.total === data?.meta.limit
+            ? [
+                data.tracks.slice(0, data?.meta.limit / 2),
+                data.tracks.slice(data?.meta.limit / 2),
+              ]
+            : [data.tracks]
+          : [],
+        pageParams: [],
+      },
+    },
   );
+
+  const ids = useMemo(() => (tracks || []).map((t) => t.uri), [data]);
 
   usePlayPauseTrackHook(ids);
 
@@ -107,7 +123,7 @@ export function Playlist() {
       <div style={{ height: 800 }}>
         <VirtualTable
           columns={columns}
-          data={data?.tracks?.items || []}
+          data={tracks || []}
           isLoading={isFetching}
         />
       </div>

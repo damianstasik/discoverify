@@ -1,21 +1,12 @@
 import { Checkbox } from '@mui/material';
 import { memo } from 'react';
 
-export const CheckboxColumn = memo(({ isRow, table, row }) => {
-  if (isRow) {
-    return (
-      <Checkbox
-        checked={row.getIsSelected()}
-        indeterminate={row.getIsSomeSelected()}
-        onChange={row.getToggleSelectedHandler()}
-      />
-    );
-  }
+export const CheckboxColumn = ({ onChange, checked, indeterminate }) => {
   return (
     <Checkbox
-      checked={table.getIsAllRowsSelected()}
-      indeterminate={table.getIsSomeRowsSelected()}
-      onChange={table.getToggleAllRowsSelectedHandler()}
+      checked={checked}
+      indeterminate={indeterminate}
+      onChange={onChange}
     />
   );
-});
+};

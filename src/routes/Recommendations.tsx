@@ -14,7 +14,7 @@ import { PageTitle } from '../components/PageTitle';
 import { ActionsColumn } from '../components/TrackTable/ActionsColumn';
 import { getRecommendedTracks, getTracks, ignoreTrack, search } from '../api';
 import { TrackChip } from '../components/TrackChip';
-import { Stack } from '@mui/material';
+import { Unstable_Grid2 as Grid, Stack, Typography } from '@mui/material';
 import { EntityAutocomplete } from '../components/EntityAutocomplete';
 import { TrackChipSkeleton } from '../components/TrackChipSkeleton';
 import { PlaybackState } from '../types.d';
@@ -24,40 +24,81 @@ import { usePlayPauseTrackHook } from '../hooks/usePlayPauseTrackHook';
 import { useIgnoreTrackHook } from '../hooks/useIgnoreTrackHook';
 import { useSaveTrackHook } from '../hooks/useSaveTrackHook';
 import { VirtualTable } from '../components/VirtualTable';
-import { ColumnDef } from '@tanstack/react-table';
+import { ColumnDef, createColumnHelper } from '@tanstack/react-table';
+import { RouterOutput } from '../trpc';
 import { DurationColumn } from '../components/DurationColumn';
+import { CheckboxColumn } from '../components/CheckboxColumn';
+import { SpotifyLinkColumn } from '../components/SpotifyLinkColumn';
+import { IgnoreColumn } from '../components/IgnoreColumn';
+import { SaveColumn } from '../components/SaveColumn';
+import { RecommendationAttribute } from '../components/RecommendationAttribute';
 
-const columns: ColumnDef<any>[] = [
-  {
-    accessorKey: 'uri',
+type TrackType = RouterOutput['track']['recommended'][number];
+
+const columnHelper = createColumnHelper<TrackType>();
+
+const columns = [
+  columnHelper.display({
+    size: 50,
+    id: 'select',
+    header: ({ table }) => (
+      <CheckboxColumn
+        {...{
+          checked: table.getIsAllRowsSelected(),
+          indeterminate: table.getIsSomeRowsSelected(),
+          onChange: table.getToggleAllRowsSelectedHandler(),
+        }}
+      />
+    ),
+    cell: ({ row }) => (
+      <CheckboxColumn
+        {...{
+          checked: row.getIsSelected(),
+          indeterminate: row.getIsSomeSelected(),
+          onChange: row.getToggleSelectedHandler(),
+        }}
+      />
+    ),
+  }),
+  columnHelper.accessor('uri', {
     header: '',
+    id: 'preview',
     size: 50,
     cell: TrackPreviewColumn,
-  {
-    accessorKey: 'name',
+  }),
+  columnHelper.accessor('name', {
     header: 'Name',
+    size: 300,
     cell: TrackNameColumn,
-  },
-  {
-    accessorKey: 'artist',
-    header: 'Artist(s)',
-    cell: ArtistColumn,
-  },
-  {
-    accessorKey: 'album',
-    header: 'Album',
-    cell: AlbumColumn,
-  },
-  {
-    accessorKey: 'duration',
+  }),
+  // columnHelper.accessor('artist', {
+  //   header: 'Artist(s)',
+  //   cell: ArtistColumn,
+  // }),
+  // columnHelper.accessor('album', {
+  //   header: 'Album',
+  //   cell: AlbumColumn,
+  // }),
+  columnHelper.accessor('duration', {
     header: 'Duration',
     cell: DurationColumn,
-  },
-  {
-    id: 'actions',
-    header: 'Actions',
-    cell: (params) => <ActionsColumn track={params.row.original} />,
-  },
+  }),
+  columnHelper.accessor('isLiked', {
+    header: '',
+    size: 40,
+    cell: SaveColumn,
+  }),
+  columnHelper.accessor('isIgnored', {
+    header: '',
+    size: 40,
+    cell: IgnoreColumn,
+  }),
+  columnHelper.accessor('uri', {
+    id: 'open',
+    header: '',
+    size: 40,
+    cell: SpotifyLinkColumn,
+  }),
 ];
 
 export function Recommendations() {
@@ -74,7 +115,7 @@ export function Recommendations() {
 
   const trackIds = searchParams.getAll('trackId');
 
-  const { data, isFetching } = useQuery(
+  const { data, isFetching, isInitialLoading } = useQuery(
     ['recommended', trackIds, values],
     getRecommendedTracks,
     {
@@ -102,9 +143,9 @@ export function Recommendations() {
 
   usePlayPauseTrackHook(ids);
 
-  useIgnoreTrackHook();
+  // useIgnoreTrackHook();
 
-  useSaveTrackHook();
+  // useSaveTrackHook();
 
   return (
     <>
@@ -123,44 +164,71 @@ export function Recommendations() {
         }}
       />
 
-      <Box sx={{ my: 2 }}>
-        <Stack direction="row" spacing={2}>
-          {!songs &&
-            trackIds.length > 0 &&
-            trackIds.map((id) => <TrackChipSkeleton key={id} />)}
-          {(songs || []).map((track) => (
-            <TrackChip
-              key={track.id}
-              id={track.id}
-              name={track.name}
-              artists={track.artists}
-              imageUrl={track.album.images[0].url}
-              onRemove={() => {
-                const q = new URLSearchParams();
-                trackIds.forEach((trackId) => {
-                  if (trackId !== track.id) {
-                    q.append('trackId', trackId);
-                  }
-                });
-                setSearchParams(q);
+      <Grid container spacing={1}>
+        <Grid xs>
+          {trackIds.length > 0 && (
+            <Box sx={{ my: 2 }}>
+              <Typography variant="subtitle2" mb={1}>
+                Selected tracks
+              </Typography>
+              <Stack direction="row" spacing={2}>
+                {!songs &&
+                  trackIds.length > 0 &&
+                  trackIds.map((id) => <TrackChipSkeleton key={id} />)}
+                {(songs || []).map((track) => (
+                  <TrackChip
+                    key={track.id}
+                    id={track.id}
+                    name={track.name}
+                    artists={track.artists}
+                    imageUrl={track.album.images[0].url}
+                    onRemove={() => {
+                      const q = new URLSearchParams();
+                      trackIds.forEach((trackId) => {
+                        if (trackId !== track.id) {
+                          q.append('trackId', trackId);
+                        }
+                      });
+                      setSearchParams(q);
+                    }}
+                  />
+                ))}
+              </Stack>
+            </Box>
+          )}
+        </Grid>
+        <Grid xs>
+          <Box sx={{ my: 2 }}>
+            <Typography variant="subtitle2">Attributes</Typography>
+            <Box
+              sx={{
+                display: 'flex',
+                gap: 1,
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                mb: 3,
+                mt: 1,
               }}
-            />
-          ))}
-        </Stack>
-      </Box>
-
-      {/* {attributes.map((attr) => (
-        <RecommendationAttribute key={attr.name} attr={attr} />
-      ))} */}
+            >
+              {attributes.map((attr) => (
+                <RecommendationAttribute key={attr.name} attr={attr} />
+              ))}
+            </Box>
+          </Box>
+        </Grid>
+      </Grid>
 
       <div style={{ height: 800 }}>
-        <VirtualTable
-          data={data || []}
-          columns={columns}
-          isLoading={isFetching}
-          hasNextPage={false}
-          fetchNextPage={null}
-        />
+        {trackIds.length > 0 && (
+          <VirtualTable
+            data={data || []}
+            columns={columns}
+            isLoading={isFetching}
+            hasNextPage={false}
+            fetchNextPage={null}
+            isInitialLoading={true}
+          />
+        )}
       </div>
     </>
   );
