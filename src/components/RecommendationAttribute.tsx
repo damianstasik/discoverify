@@ -1,11 +1,16 @@
 import { mdiMenuDown } from '@mdi/js';
 import Icon from '@mdi/react';
-import { Grid, Input, Typography } from '@mui/material';
+import {
+  Grid,
+  Typography,
+  Popover,
+  Slider,
+  Switch,
+  Chip,
+  Box,
+} from '@mui/material';
 import Button from '@mui/material/Button';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Popover from '@mui/material/Popover';
-import Slider from '@mui/material/Slider';
-import Switch from '@mui/material/Switch';
+
 import { useState } from 'react';
 import { Attribute } from '../types';
 
@@ -42,20 +47,33 @@ export function RecommendationAttribute({ attr }: Props) {
   const open = Boolean(anchorEl);
 
   return (
-    <>
-      <Button
-        aria-describedby={attr.name}
-        size="small"
+    <Box>
+      <Chip
         color={
           attr.minEnabled || attr.targetEnabled || attr.maxEnabled
-            ? 'warning'
-            : 'neutral'
+            ? 'primary'
+            : undefined
         }
+        variant="outlined"
+        size="small"
+        label={attr.label}
         onClick={handleClick}
-        endIcon={<Icon path={mdiMenuDown} size={1} />}
-      >
-        {attr.label}
-      </Button>
+        aria-describedby={attr.name}
+        avatar={
+          <div
+            style={{
+              borderRadius: '50%',
+              width: '8px',
+              height: '8px',
+              backgroundColor:
+                attr.minEnabled || attr.targetEnabled || attr.maxEnabled
+                  ? 'green'
+                  : 'gray',
+              margin: '0 0 0 8px',
+            }}
+          />
+        }
+      />
 
       <Popover
         id={attr.name}
@@ -77,7 +95,7 @@ export function RecommendationAttribute({ attr }: Props) {
           {attr.label}
         </Typography>
 
-        <Typography color="text.secondary" sx={{ mb: 2 }}>
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
           {attr.description}
         </Typography>
 
@@ -182,6 +200,6 @@ export function RecommendationAttribute({ attr }: Props) {
           Save
         </Button>
       </Popover>
-    </>
+    </Box>
   );
 }
