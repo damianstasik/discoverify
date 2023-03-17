@@ -1,18 +1,12 @@
-import { mdiMenuDown } from '@mdi/js';
-import Icon from '@mdi/react';
-import {
-  Grid,
-  Typography,
-  Popover,
-  Slider,
-  Switch,
-  Chip,
-  Box,
-} from '@mui/material';
-import Button from '@mui/material/Button';
-
 import { useState } from 'react';
 import { Attribute } from '../types';
+import * as Popover from '@radix-ui/react-popover';
+import * as Slider from '@radix-ui/react-slider';
+import { mdiClose } from '@mdi/js';
+import { Icon } from './Icon';
+import { Button } from './Button';
+import { Switch } from './Switch';
+import { twMerge } from 'tailwind-merge';
 
 interface Props<Value> {
   label: string;
@@ -27,7 +21,7 @@ interface Props<Value> {
 }
 
 export function RecommendationAttribute({ attr }: Props) {
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [oepn, setOpen] = useState(false);
   const [minValue, setMin] = useState(attr.minValue);
   const [maxValue, setMax] = useState(attr.maxValue);
   const [target, setTarget] = useState(attr.targetValue);
@@ -36,170 +30,144 @@ export function RecommendationAttribute({ attr }: Props) {
   const [useTarget, setUseTarget] = useState(attr.targetEnabled);
   const [useMax, setUseMax] = useState(attr.maxEnabled);
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const open = Boolean(anchorEl);
-
   return (
-    <Box>
-      <Chip
-        color={
-          attr.minEnabled || attr.targetEnabled || attr.maxEnabled
-            ? 'primary'
-            : undefined
-        }
-        variant="outlined"
-        size="small"
-        label={attr.label}
-        onClick={handleClick}
-        aria-describedby={attr.name}
-        avatar={
-          <div
-            style={{
-              borderRadius: '50%',
-              width: '8px',
-              height: '8px',
-              backgroundColor:
-                attr.minEnabled || attr.targetEnabled || attr.maxEnabled
-                  ? 'green'
-                  : 'gray',
-              margin: '0 0 0 8px',
-            }}
-          />
-        }
-      />
-
-      <Popover
-        id={attr.name}
-        open={open}
-        anchorEl={anchorEl}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}
-        PaperProps={{
-          sx: {
-            p: 2,
-            width: 450,
-          },
-        }}
-      >
-        <Typography variant="h6" sx={{ mb: 1 }}>
-          {attr.label}
-        </Typography>
-
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-          {attr.description}
-        </Typography>
-
-        <Typography sx={{ mt: 2 }}>
-          Minimum {attr.label.toLowerCase()}
-        </Typography>
-
-        <Grid container spacing={2} alignItems="center">
-          <Grid item>
-            <Switch
-              edge="start"
-              checked={useMin}
-              onChange={(e) => setUseMin(e.target.checked)}
-              name="useMin"
-            />
-          </Grid>
-
-          <Grid item xs display="flex" sx={{ alignItems: 'center' }}>
-            <Slider
-              valueLabelDisplay="auto"
-              min={attr.min ?? 0}
-              max={attr.max ?? 1}
-              step={typeof attr.step === 'undefined' ? 0.05 : attr.step}
-              value={minValue}
-              onChange={(e: any) => setMin(e.target.value)}
-              aria-labelledby="useMin"
-              disabled={!useMin}
-              marks={attr.marks}
-            />
-          </Grid>
-        </Grid>
-
-        <Typography sx={{ mt: 2 }}>
-          Target {attr.label.toLowerCase()}
-        </Typography>
-
-        <Grid container spacing={2} alignItems="center">
-          <Grid item>
-            <Switch
-              edge="start"
-              checked={useTarget}
-              onChange={(e) => setUseTarget(e.target.checked)}
-              name="useTarget"
-            />
-          </Grid>
-          <Grid item xs display="flex" sx={{ alignItems: 'center' }}>
-            <Slider
-              valueLabelDisplay="auto"
-              min={attr.min ?? 0}
-              max={attr.max ?? 1}
-              step={typeof attr.step === 'undefined' ? 0.05 : attr.step}
-              value={target}
-              onChange={(e: any) => setTarget(e.target.value)}
-              aria-labelledby="useTarget"
-              disabled={!useTarget}
-              marks={attr.marks}
-            />
-          </Grid>
-        </Grid>
-
-        <Typography sx={{ mt: 2 }}>
-          Maximum {attr.label.toLowerCase()}
-        </Typography>
-
-        <Grid container spacing={2} alignItems="center">
-          <Grid item>
-            <Switch
-              edge="start"
-              checked={useMax}
-              onChange={(e) => setUseMax(e.target.checked)}
-              name="useMax"
-            />
-          </Grid>
-          <Grid item xs display="flex" sx={{ alignItems: 'center' }}>
-            <Slider
-              valueLabelDisplay="auto"
-              min={attr.min ?? 0}
-              max={attr.max ?? 1}
-              step={typeof attr.step === 'undefined' ? 0.05 : attr.step}
-              value={maxValue}
-              onChange={(e: any) => setMax(e.target.value)}
-              aria-labelledby="useMax"
-              disabled={!useMax}
-              marks={attr.marks}
-            />
-          </Grid>
-        </Grid>
-
-        <Button
-          variant="contained"
-          onClick={() => {
-            attr.onSave({
-              min: useMin ? minValue : null,
-              max: useMax ? maxValue : null,
-              target: useTarget ? target : null,
-            });
-
-            handleClose();
-          }}
-          sx={{ mt: 2 }}
+    <Popover.Root open={oepn} onOpenChange={setOpen}>
+      <Popover.Trigger asChild>
+        <button
+          type="button"
+          color={
+            attr.minEnabled || attr.targetEnabled || attr.maxEnabled
+              ? 'primary'
+              : undefined
+          }
+          className={twMerge(
+            'text-sm rounded-xl border flex items-center h-6 px-2',
+            attr.minEnabled || attr.targetEnabled || attr.maxEnabled
+              ? 'border-green-600 text-green-600'
+              : 'border-neutral-600 text-neutral-300',
+          )}
+          onClick={() => setOpen(true)}
+          aria-describedby={attr.name}
         >
-          Save
-        </Button>
-      </Popover>
-    </Box>
+          <div className="rounded-full s-2 mr-2 bg-current" />
+          {attr.label}
+        </button>
+      </Popover.Trigger>
+      <Popover.Portal>
+        <Popover.Content
+          className="rounded-md p-3 w-96 bg-neutral-700"
+          sideOffset={5}
+          collisionPadding={10}
+        >
+          <h5 className="text-white font-medium">{attr.label}</h5>
+
+          <p className="py-3 text-neutral-300 text-sm leading-relaxed">
+            {attr.description}
+          </p>
+
+          <h6 className="text-white text-sm mb-1">
+            Minimum {attr.label.toLowerCase()}
+          </h6>
+
+          <div className="flex items-center gap-3">
+            <div>
+              <Switch checked={useMin} onChange={(val) => setUseMin(val)} />
+            </div>
+
+            <div className="flex-1">
+              <Slider.Root
+                className="relative flex items-center select-none touch-none w-full h-5"
+                value={[minValue]}
+                min={attr.min ?? 0}
+                max={attr.max ?? 1}
+                step={typeof attr.step === 'undefined' ? 0.05 : attr.step}
+                disabled={!useMin}
+                onValueChange={(v) => setMin(v[0])}
+              >
+                <Slider.Track className="bg-neutral-500 relative grow rounded-full h-1">
+                  <Slider.Range className="absolute bg-green-700 rounded-full h-full" />
+                </Slider.Track>
+                <Slider.Thumb className="block w-5 h-5 bg-green-500 rounded-full hover:bg-violet3 focus:outline-none" />
+              </Slider.Root>
+            </div>
+          </div>
+
+          <h6 className="text-white text-sm mt-3 mb-1">
+            Target {attr.label.toLowerCase()}
+          </h6>
+
+          <div className="flex items-center gap-3">
+            <div>
+              <Switch
+                checked={useTarget}
+                onChange={(val) => setUseTarget(val)}
+              />
+            </div>
+            <div className="flex-1">
+              <Slider.Root
+                className="relative flex items-center select-none touch-none w-full h-5"
+                value={[target]}
+                min={attr.min ?? 0}
+                max={attr.max ?? 1}
+                step={typeof attr.step === 'undefined' ? 0.05 : attr.step}
+                disabled={!useTarget}
+                onValueChange={(v) => setTarget(v[0])}
+              >
+                <Slider.Track className="bg-neutral-500 relative grow rounded-full h-1">
+                  <Slider.Range className="absolute bg-green-700 rounded-full h-full" />
+                </Slider.Track>
+                <Slider.Thumb className="block w-5 h-5 bg-green-500 rounded-full hover:bg-violet3 focus:outline-none" />
+              </Slider.Root>
+            </div>
+          </div>
+
+          <h6 className="text-white text-sm mt-3 mb-1">
+            Maximum {attr.label.toLowerCase()}
+          </h6>
+
+          <div className="flex items-center gap-3">
+            <div>
+              <Switch checked={useMax} onChange={(val) => setUseMax(val)} />
+            </div>
+            <div className="flex-1">
+              <Slider.Root
+                className="relative flex items-center select-none touch-none w-full h-5"
+                value={[maxValue]}
+                min={attr.min ?? 0}
+                max={attr.max ?? 1}
+                step={typeof attr.step === 'undefined' ? 0.05 : attr.step}
+                disabled={!useMax}
+                onValueChange={(v) => setMax(v[0])}
+              >
+                <Slider.Track className="bg-neutral-500 relative grow rounded-full h-1">
+                  <Slider.Range className="absolute bg-green-700 rounded-full h-full" />
+                </Slider.Track>
+                <Slider.Thumb className="block w-5 h-5 bg-green-500 rounded-full hover:bg-violet3 focus:outline-none" />
+              </Slider.Root>
+            </div>
+          </div>
+
+          <Button
+            onClick={() => {
+              attr.onSave({
+                min: useMin ? minValue : null,
+                max: useMax ? maxValue : null,
+                target: useTarget ? target : null,
+              });
+            }}
+            className="mt-3"
+          >
+            Save
+          </Button>
+          <Popover.Close
+            className="rounded-full h-8 w-8 p-1 inline-flex items-center justify-center text-neutral-500 hover:text-neutral-200 absolute top-2 right-2 hover:bg-white/10 outline-none"
+            aria-label="Close"
+          >
+            <Icon path={mdiClose} />
+          </Popover.Close>
+          <Popover.Arrow className="fill-neutral-700" />
+        </Popover.Content>
+      </Popover.Portal>
+    </Popover.Root>
   );
 }
