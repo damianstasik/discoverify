@@ -1,9 +1,7 @@
-import { Box } from '@mui/material';
 import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
-  RowData,
   Table,
   useReactTable,
 } from '@tanstack/react-table';
@@ -11,6 +9,7 @@ import { useVirtualizer } from '@tanstack/react-virtual';
 import { forwardRef, memo, useRef } from 'react';
 import { useInfiniteLoading } from '../hooks/useInfiniteLoading';
 import { TrackSelectionToolbar } from './TrackSelectionToolbar';
+import { twMerge } from 'tailwind-merge';
 
 interface TableHeaderProps {
   table: Table<any>;
@@ -18,21 +17,15 @@ interface TableHeaderProps {
 
 const TableHeader = memo(({ table }: TableHeaderProps) => {
   return (
-    <Box>
+    <div className="bg-black/25">
       {table.getHeaderGroups().map((headerGroup) => (
-        <Box
-          key={headerGroup.id}
-          display="flex"
-          borderBottom="1px solid rgba(255,255,255,.1)"
-        >
+        <div key={headerGroup.id} className="flex border-b border-white/10">
           {headerGroup.headers.map((header) => {
             return (
-              <Box
+              <div
                 key={header.id}
                 style={{ width: header.getSize() }}
-                display="flex"
-                alignItems="center"
-                flexShrink={0}
+                className="flex-shrink-0 items-center flex font-semibold text-white"
               >
                 {header.isPlaceholder
                   ? null
@@ -40,26 +33,25 @@ const TableHeader = memo(({ table }: TableHeaderProps) => {
                       header.column.columnDef.header,
                       header.getContext(),
                     )}
-              </Box>
+              </div>
             );
           })}
-        </Box>
+        </div>
       ))}
-    </Box>
+    </div>
   );
 });
 
 const TableCell = ({ cell }) => {
   return (
-    <Box
-      sx={{ display: 'flex', alignItems: 'center' }}
-      flexShrink={0}
+    <div
+      className="flex items-center flex-shrink-0"
       style={{
         width: cell.column.getSize(),
       }}
     >
       {flexRender(cell.column.columnDef.cell, cell.getContext())}
-    </Box>
+    </div>
   );
 };
 
@@ -68,15 +60,12 @@ const TableVirtualRow = forwardRef(({ row, virtualItem }, ref) => {
     <div
       data-index={virtualItem.index}
       ref={ref}
+      className={twMerge(
+        'absolute top-0 left-0 w-full flex',
+        row.original.isIgnored ? 'bg-red-500/5' : '',
+      )}
       style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-
         transform: `translate3d(0, ${virtualItem.start}px, 0)`,
-        display: 'flex',
-        background: row.original.isIgnored ? 'red' : '',
       }}
     >
       {row.getVisibleCells().map((cell) => {
@@ -121,20 +110,12 @@ export const VirtualTable = <Data extends { spotifyId: string }>({
   const { flatRows } = table.getSelectedRowModel();
   const { rows } = table.getRowModel();
   return (
-    <Box
-      sx={{
-        fontSize: '14px',
-      }}
-    >
+    <div className="text-sm">
       <TrackSelectionToolbar rows={flatRows} />
       <TableHeader table={table} />
       <div
-        className="container"
+        className="overflow-y-auto h-[800px]"
         ref={contRef}
-        style={{
-          height: `800px`,
-          overflow: 'auto',
-        }}
         onScroll={handleInfiniteLoadingScroll}
       >
         <div
@@ -158,6 +139,6 @@ export const VirtualTable = <Data extends { spotifyId: string }>({
           })}
         </div>
       </div>
-    </Box>
+    </div>
   );
 };
