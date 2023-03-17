@@ -1,30 +1,21 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import Box from '@mui/material/Box';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useRecoilValue } from 'recoil';
 import { useDebounce } from 'use-debounce';
-import produce from 'immer';
-import { deviceIdAtom, playerStateAtom, tokenState } from '../store';
+import { tokenState } from '../store';
 import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
-import { ArtistColumn } from '../components/ArtistColumn';
-import { AlbumColumn } from '../components/AlbumColumn';
 import { TrackNameColumn } from '../components/TrackNameColumn';
-import { PageTitle } from '../components/PageTitle';
-import { ActionsColumn } from '../components/TrackTable/ActionsColumn';
-import { getRecommendedTracks, getTracks, ignoreTrack, search } from '../api';
+import { getRecommendedTracks, getTracks, search } from '../api';
 import { TrackChip } from '../components/TrackChip';
-import { Unstable_Grid2 as Grid, Stack, Typography } from '@mui/material';
+import { Stack } from '@mui/material';
 import { EntityAutocomplete } from '../components/EntityAutocomplete';
 import { TrackChipSkeleton } from '../components/TrackChipSkeleton';
-import { PlaybackState } from '../types.d';
 import { useAttributes } from '../hooks/useAttributes';
 import { attributes as attributesConfig } from '../config/attributes';
 import { usePlayPauseTrackHook } from '../hooks/usePlayPauseTrackHook';
-import { useIgnoreTrackHook } from '../hooks/useIgnoreTrackHook';
-import { useSaveTrackHook } from '../hooks/useSaveTrackHook';
 import { VirtualTable } from '../components/VirtualTable';
-import { ColumnDef, createColumnHelper } from '@tanstack/react-table';
+import { createColumnHelper } from '@tanstack/react-table';
 import { RouterOutput } from '../trpc';
 import { DurationColumn } from '../components/DurationColumn';
 import { CheckboxColumn } from '../components/CheckboxColumn';
@@ -149,74 +140,66 @@ export function Recommendations() {
 
   return (
     <>
-      <PageTitle>Recommendations</PageTitle>
+      <div className="p-3 bg-neutral-875 border-b border-neutral-800">
+        <EntityAutocomplete
+          tracks={autosongs || []}
+          isDisabled={trackIds.length > 5}
+          isLoading={isFetchingAutocomplete}
+          query={query}
+          onQueryChange={setQuery}
+          onTrackSelection={(b) => {
+            console.log;
+            const q = new URLSearchParams(searchParams);
+            q.append('trackId', b.id);
+            setSearchParams(q);
+          }}
+        />
 
-      <EntityAutocomplete
-        tracks={autosongs || []}
-        isDisabled={trackIds.length > 5}
-        isLoading={isFetchingAutocomplete}
-        query={query}
-        onQueryChange={setQuery}
-        onTrackSelection={(b) => {
-          const q = new URLSearchParams(searchParams);
-          q.append('trackId', b.id);
-          setSearchParams(q);
-        }}
-      />
-
-      <Grid container spacing={1}>
-        <Grid xs>
-          {trackIds.length > 0 && (
-            <Box sx={{ my: 2 }}>
-              <Typography variant="subtitle2" mb={1}>
-                Selected tracks
-              </Typography>
-              <Stack direction="row" spacing={2}>
-                {!songs &&
-                  trackIds.length > 0 &&
-                  trackIds.map((id) => <TrackChipSkeleton key={id} />)}
-                {(songs || []).map((track) => (
-                  <TrackChip
-                    key={track.id}
-                    id={track.id}
-                    name={track.name}
-                    artists={track.artists}
-                    imageUrl={track.album.images[0].url}
-                    onRemove={() => {
-                      const q = new URLSearchParams();
-                      trackIds.forEach((trackId) => {
-                        if (trackId !== track.id) {
-                          q.append('trackId', trackId);
-                        }
-                      });
-                      setSearchParams(q);
-                    }}
-                  />
-                ))}
-              </Stack>
-            </Box>
-          )}
-        </Grid>
-        <Grid xs>
-          <Box sx={{ my: 2 }}>
-            <Typography variant="subtitle2">Attributes</Typography>
-            <Box
-              sx={{
-                display: 'flex',
-                gap: 1,
-                flexDirection: 'row',
-                flexWrap: 'wrap',
-                mb: 3,
-                mt: 1,
-              }}
-            >
+        <div className="flex mt-3">
+          <div className="w-1/2">
+            {trackIds.length > 0 && (
+              <div>
+                <h5 className="uppercase text-neutral-400 text-xs font-semibold pb-3 tracking-wide">
+                  Selected tracks
+                </h5>
+                <Stack direction="row" spacing={2}>
+                  {!songs &&
+                    trackIds.length > 0 &&
+                    trackIds.map((id) => <TrackChipSkeleton key={id} />)}
+                  {(songs || []).map((track) => (
+                    <TrackChip
+                      key={track.id}
+                      id={track.id}
+                      name={track.name}
+                      artists={track.artists}
+                      imageUrl={track.album.images[0].url}
+                      onRemove={() => {
+                        const q = new URLSearchParams();
+                        trackIds.forEach((trackId) => {
+                          if (trackId !== track.id) {
+                            q.append('trackId', trackId);
+                          }
+                        });
+                        setSearchParams(q);
+                      }}
+                    />
+                  ))}
+                </Stack>
+              </div>
+            )}
+          </div>
+          <div className="w-1/2">
+            <h5 className="uppercase text-neutral-400 text-xs font-semibold pb-3 tracking-wide">
+              Attributes
+            </h5>
+            <div className="flex flex-wrap gap-1">
               {attributes.map((attr) => (
                 <RecommendationAttribute key={attr.name} attr={attr} />
               ))}
-            </Box>
-          </Box>
-        </Grid>
-      </Grid>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div style={{ height: 800 }}>
         {trackIds.length > 0 && (
