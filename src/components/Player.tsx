@@ -207,7 +207,7 @@ export function Player() {
             onCommit={handleVolumeCommit}
           />
         </div>
-        <div className="w-2/12">
+        <div className="w-2/12 text-white">
           <IconButton icon={mdiHeartOutline} />
           <QueueButton
             queue={queue || []}

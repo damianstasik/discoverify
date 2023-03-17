@@ -14,7 +14,7 @@ export const IgnoreColumn = <Data extends { id: string }>(
       icon={isIgnored ? mdiThumbDown : mdiThumbDownOutline}
       label="Ignore"
       onClick={() => eventBus.emit('ignoreTrack', props.row.original.id)}
-      className="p-1"
+      className="p-1 text-white"
     />
   );
 };

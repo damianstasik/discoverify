@@ -14,7 +14,7 @@ export function SaveColumn<Data extends { id: string }>(
       icon={isSaved ? mdiCardsHeart : mdiCardsHeartOutline}
       label="Save"
       onClick={() => eventBus.emit('saveTrack', props.row.original.id)}
-      className="p-1"
+      className="p-1 text-white"
     />
   );
 }

@@ -110,7 +110,7 @@ export const VirtualTable = <Data extends { spotifyId: string }>({
   const { flatRows } = table.getSelectedRowModel();
   const { rows } = table.getRowModel();
   return (
-    <div className="text-sm">
+    <div className="text-sm text-neutral-300">
       <TrackSelectionToolbar rows={flatRows} />
       <TableHeader table={table} />
       <div

@@ -20,7 +20,7 @@ interface Props {
 export const PlaybackControl = memo(
   ({ state, onPlayPauseClick, onNextClick, onPreviousClick }: Props) => {
     return (
-      <div className="gap-2 flex items-center">
+      <div className="gap-2 flex items-center text-white">
         <IconButton icon={mdiShuffle} className="text-xs" />
 
         <IconButton icon={mdiSkipPrevious} onClick={onPreviousClick} />

@@ -18,7 +18,11 @@ export const VolumeControl = memo(({ volume, onCommit, onChange }: Props) => {
 
   return (
     <div className="flex gap-1 items-center">
-      <IconButton icon={mdiVolumeLow} label="Volume down" />
+      <IconButton
+        icon={mdiVolumeLow}
+        label="Volume down"
+        className="text-white"
+      />
 
       <Slider.Root
         className="relative flex items-center select-none touch-none w-full h-5"
@@ -31,12 +35,16 @@ export const VolumeControl = memo(({ volume, onCommit, onChange }: Props) => {
         onValueCommit={handleChangeComitted}
       >
         <Slider.Track className="bg-neutral-700 relative grow rounded-full h-1">
-          <Slider.Range className="absolute bg-green-500 rounded-full h-full" />
+          <Slider.Range className="absolute bg-green-700 rounded-full h-full" />
         </Slider.Track>
         <Slider.Thumb className="block w-5 h-5 bg-green-500 rounded-full hover:bg-violet3 focus:outline-none" />
       </Slider.Root>
 
-      <IconButton icon={mdiVolumeHigh} label="Volume up" />
+      <IconButton
+        icon={mdiVolumeHigh}
+        label="Volume up"
+        className="text-white"
+      />
     </div>
   );
 });

@@ -37,12 +37,12 @@ export const SeekControl = memo(
           onValueCommit={handleChangeComitted}
         >
           <Slider.Track className="bg-neutral-700 relative grow rounded-full h-1">
-            <Slider.Range className="absolute bg-green-500 rounded-full h-full" />
+            <Slider.Range className="absolute bg-green-700 rounded-full h-full" />
           </Slider.Track>
           <Slider.Thumb className="block w-5 h-5 bg-green-500 rounded-full hover:bg-violet3 focus:outline-none" />
         </Slider.Root>
 
-        <div className="flex items-center justify-between w-full">
+        <div className="flex items-center justify-between w-full text-neutral-400 text-sm">
           <span>{formatTime(position)}</span>
           <span>-{formatTime(duration - position)}</span>
         </div>

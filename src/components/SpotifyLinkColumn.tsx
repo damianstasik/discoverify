@@ -8,7 +8,7 @@ export const SpotifyLinkColumn = <Data,>(props: CellContext<Data, string>) => {
       icon={mdiSpotify}
       label="Open in Spotify"
       href={props.getValue()}
-      className="p-1"
+      className="p-1 text-white"
       target="_blank"
     />
   );
