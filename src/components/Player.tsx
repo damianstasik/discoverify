@@ -1,5 +1,5 @@
 import { useCallback, useState, useEffect } from 'react';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import jwt_decode from 'jwt-decode';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import {
@@ -21,7 +21,9 @@ import { useTimer } from '../hooks/useTimer';
 import { saveTrack } from '../api';
 import { useThrottledCallback } from 'use-debounce';
 import { IconButton } from './IconButton';
-import { mdiDevices, mdiHeartOutline, mdiPlaylistMusicOutline } from '@mdi/js';
+import { mdiDevices, mdiHeartOutline } from '@mdi/js';
+import { QueueButton } from './Player/QueueButton';
+import { trpc } from '../trpc';
 
 export function Player() {
   const [trackPreview, setTrackPreview] = useRecoilState(trackPreviewState);
@@ -49,7 +51,6 @@ export function Player() {
   const [isChangingVolume, setIsChangingVolume] = useState(false);
   const [isSeeking, setIsSeeking] = useState(false);
   const [playerState, setPlayerState] = useRecoilState(playerStateAtom);
-  const setIsQueueOpen = useSetRecoilState(queueVisibilityAtom);
 
   const [meta, setMeta] = useState<Spotify.PlaybackContextMetadata | null>(
     null,
@@ -156,6 +157,19 @@ export function Player() {
     [thottledVolumeChange],
   );
 
+  const [isQueueOpen, setIsQueueOpen] = useRecoilState(queueVisibilityAtom);
+
+  const { data: queue } = useQuery(
+    ['queue', token],
+    async ({ signal }) => {
+      const queue = await trpc.player.queue.query(undefined, { signal });
+      return queue;
+    },
+    {
+      enabled: !!token && isQueueOpen,
+    },
+  );
+
   const { mutate: saveTrackMut } = useMutation(saveTrack);
 
   return (
@@ -195,9 +209,10 @@ export function Player() {
         </div>
         <div className="w-2/12">
           <IconButton icon={mdiHeartOutline} />
-          <IconButton
-            icon={mdiPlaylistMusicOutline}
-            onClick={() => setIsQueueOpen(true)}
+          <QueueButton
+            queue={queue || []}
+            isOpen={isQueueOpen}
+            onVisibilityChange={(v) => setIsQueueOpen(v)}
           />
           <IconButton icon={mdiDevices} />
         </div>

@@ -8,27 +8,13 @@ import {
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Sidebar } from './Sidebar';
 import { Player } from './Player';
-import { queueVisibilityAtom, tokenState, userAtom } from '../store';
+import { tokenState, userAtom } from '../store';
 import { getCurrentUser, refreshAccessToken } from '../api';
-import { Drawer, List, ListItem } from '@mui/material';
-import { trpc } from '../trpc';
 
 export function Layout() {
   const location = useLocation();
   const setUser = useSetRecoilState(userAtom);
   const [token, setToken] = useRecoilState(tokenState);
-  const [isQueueOpen, setIsQueueOpen] = useRecoilState(queueVisibilityAtom);
-
-  const { data: queue } = useQuery(
-    ['queue', token],
-    async ({ signal }) => {
-      const queue = await trpc.player.queue.query(undefined, { signal });
-      return queue;
-    },
-    {
-      enabled: !!token && isQueueOpen,
-    },
-  );
 
   const { mutate } = useMutation(refreshAccessToken, {
     onSuccess(freshToken) {
@@ -86,21 +72,6 @@ export function Layout() {
       <div className="left-80 right-0 bottom-0 fixed">
         <Player />
       </div>
-
-      <Drawer
-        anchor="bottom"
-        open={isQueueOpen}
-        onClose={() => setIsQueueOpen(false)}
-        sx={{ p: 8 }}
-      >
-        <List>
-          {(queue || []).map((track, index) => (
-            <ListItem key={track.id}>
-              {index + 1}. {track.name}
-            </ListItem>
-          ))}
-        </List>
-      </Drawer>
     </div>
   );
 }
