@@ -1,14 +1,4 @@
-import Divider from '@mui/material/Divider';
-import Drawer from '@mui/material/Drawer';
-import List from '@mui/material/List';
-import ListSubheader from '@mui/material/ListSubheader';
-import DashboardTwoTone from '@mui/icons-material/DashboardTwoTone';
 import { useMatch, Link as RouterLink } from 'react-router-dom';
-import ListItem from '@mui/material/ListItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import RecommendIcon from '@mui/icons-material/Recommend';
-import FavoriteIcon from '@mui/icons-material/Favorite';
 import { memo } from 'react';
 import {
   mdiAccountHeart,
@@ -19,33 +9,27 @@ import {
   mdiAccountStar,
   mdiMusicNotePlus,
   mdiPlaylistMusic,
+  mdiHeart,
   mdiHistory,
 } from '@mdi/js';
-import Icon from '@mdi/react';
 import { useRecoilValue } from 'recoil';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import Avatar from '@mui/material/Avatar';
-import Collapse from '@mui/material/Collapse';
 import { useQuery } from '@tanstack/react-query';
-import styled from '@emotion/styled';
-import { Skeleton } from '@mui/material';
-import { tokenState, userState } from '../store';
+import { tokenState } from '../store';
 import { Navbar } from './Navbar';
 import { trpc } from '../trpc';
+import { recommendIconPath } from '../icons/recommend';
+import { Icon } from './Icon';
 
-const Heading = styled(Divider)`
-  &::before {
-    display: none;
-  }
-  &::after {
-    top: 0;
-  }
-  .MuiDivider-wrapper {
-    padding-left: 0;
-    font-weight: 600;
-    color: #fff;
-  }
-`;
+function Heading({ children, className }: any) {
+  return (
+    <div className={classNames('flex items-center', className)}>
+      <span className="flex-shrink pr-3 font-semibold text-sm text-white">
+        {children}
+      </span>
+      <div className="flex-grow border-t border-gray-700" />
+    </div>
+  );
+}
 
 function getRandomArbitrary(min: number, max: number) {
   return Math.random() * (max - min) + min;
@@ -55,49 +39,48 @@ function ListItemSkeleton() {
   const width = getRandomArbitrary(20, 90);
 
   return (
-    <ListItem
-      sx={{
-        width: 'auto',
-        borderRadius: 1,
-        margin: '0 -16px',
-      }}
-    >
-      <ListItemText primary={<Skeleton width={`${width}%`} />} />
-    </ListItem>
+    <p
+      className="animate-pulse h-8 rounded-md bg-gray-700"
+      role="status"
+      style={{ width: `${width}%` }}
+    />
   );
+}
+
+function classNames(...classes: Array<string | boolean | null | undefined>) {
+  return classes.filter(Boolean).join(' ');
 }
 
 function RouterListItem({ to, label, icon }: any) {
   const match = useMatch(to);
+  const isActive = match !== null;
 
   return (
-    <ListItem
-      button
-      component={RouterLink}
+    <RouterLink
       to={to}
-      selected={!!match}
-      sx={{
-        width: 'auto',
-        borderRadius: 1,
-        margin: '0 -16px',
-
-        '&.Mui-selected, &:hover, &.Mui-selected:hover': {
-          background: 'none',
-          color: '#fff',
-        },
-      }}
+      className={classNames(
+        isActive
+          ? 'bg-gray-900 text-white'
+          : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+        'group flex items-center h-8 px-2 text-sm font-medium rounded-md',
+      )}
     >
       {icon && (
-        <ListItemIcon sx={{ color: 'currentColor', minWidth: '42px' }}>
-          {icon}
-        </ListItemIcon>
+        <Icon
+          path={icon}
+          className={classNames(
+            isActive
+              ? 'text-gray-300'
+              : 'text-gray-400 group-hover:text-gray-300',
+            'mr-2 flex-shrink-0 h-5 w-5',
+          )}
+          aria-hidden="true"
+        />
       )}
-      <ListItemText primary={label} />
-    </ListItem>
+      {label}
+    </RouterLink>
   );
 }
-
-const drawerWidth = 300;
 
 export const Sidebar = memo(() => {
   const token = useRecoilValue(tokenState);
@@ -112,28 +95,10 @@ export const Sidebar = memo(() => {
   );
 
   return (
-    <Drawer
-      sx={{
-        width: drawerWidth,
-        scrollbarColor: 'rgba(255,255,255,.3) transparent',
-        flexShrink: 0,
-        '& .MuiDrawer-paper': {
-          width: drawerWidth,
-        },
-      }}
-      PaperProps={{
-        sx: {
-          background: 'rgba(0, 0, 0, .9)',
-          border: 0,
-          padding: '24px',
-        },
-      }}
-      variant="permanent"
-      anchor="left"
-    >
+    <div className="w-3/12 p-3 bg-black">
       <Navbar />
 
-      <List dense disablePadding>
+      <nav className="space-y-1 mt-3">
         {/* <RouterListItem
           label="Dashboard"
           to="/dashboard"
@@ -143,13 +108,13 @@ export const Sidebar = memo(() => {
         <RouterListItem
           label="Recommendations"
           to="/recommendations"
-          icon={<RecommendIcon />}
+          icon={recommendIconPath}
         />
-      </List>
+      </nav>
 
       {/* <Heading sx={{ mt: 3, mb: 2 }}>Artists</Heading>
 
-      <List dense disablePadding>
+      <nav className="space-y-1">
         <RouterListItem
           label="My top artists"
           to="/top-artists"
@@ -167,16 +132,12 @@ export const Sidebar = memo(() => {
           to="/similar"
           icon={<Icon path={mdiAccountMultipleOutline} size={1} />}
         />
-      </List> */}
+      </nav> */}
 
-      <Heading sx={{ mt: 3, mb: 2 }}>Tracks</Heading>
+      <Heading className="mt-3 mb-1">Tracks</Heading>
 
-      <List dense disablePadding>
-        <RouterListItem
-          label="Liked tracks"
-          to="/liked"
-          icon={<FavoriteIcon />}
-        />
+      <nav className="space-y-1">
+        <RouterListItem label="Liked tracks" to="/liked" icon={mdiHeart} />
         {/* 
         <RouterListItem
           label="My top tracks"
@@ -201,52 +162,53 @@ export const Sidebar = memo(() => {
           to="/recently-played"
           icon={<Icon path={mdiHistory} size={1} />}
         /> */}
-      </List>
+      </nav>
       {/* 
-      <Heading sx={{ mt: 3, mb: 2 }}>Genres</Heading>
+      <Heading className="mt-3 mb-1">Genres</Heading>
 
-      <List dense disablePadding>
+      <nav className="space-y-1">
         <RouterListItem
           label="From followed artists"
           to="/followed-artists/genres"
           icon={<Icon path={mdiTagText} size={1} />}
         />
-      </List>
+      </nav>
 */}
-      <Heading sx={{ mt: 3, mb: 2 }}>Playlists</Heading>
+      <Heading className="mt-3 mb-1">Playlists</Heading>
 
-      <List dense disablePadding>
-        <Collapse in timeout="auto" unmountOnExit>
-          <List component="div" disablePadding dense>
-            {isLoading && (
-              <>
-                <ListItemSkeleton />
-                <ListItemSkeleton />
-                <ListItemSkeleton />
-                <ListItemSkeleton />
-                <ListItemSkeleton />
-              </>
-            )}
-            {(data?.playlists || []).map((playlist) => (
-              <RouterListItem
-                key={playlist.id}
-                label={playlist.name}
-                to={`/playlist/${playlist.id}`}
-              />
-            ))}
+      <nav className="space-y-1">
+        {isLoading && (
+          <>
+            <ListItemSkeleton />
+            <ListItemSkeleton />
+            <ListItemSkeleton />
+            <ListItemSkeleton />
+            <ListItemSkeleton />
+            <ListItemSkeleton />
+            <ListItemSkeleton />
+            <ListItemSkeleton />
+            <ListItemSkeleton />
+            <ListItemSkeleton />
+          </>
+        )}
+        {(data?.playlists || []).map((playlist) => (
+          <RouterListItem
+            key={playlist.id}
+            label={playlist.name}
+            to={`/playlist/${playlist.id}`}
+          />
+        ))}
 
-            <RouterListItem
-              label="All playlists"
-              to="/playlists"
-              icon={<Icon path={mdiPlaylistMusic} size={1} />}
-            />
-          </List>
-        </Collapse>
-      </List>
+        <RouterListItem
+          label="All playlists"
+          to="/playlists"
+          icon={mdiPlaylistMusic}
+        />
+      </nav>
 
-      {/* <Divider sx={{ my: 3 }} />
+      {/*
 
-      <List dense disablePadding sx={{ mt: 'auto' }}>
+      <nav className="space-y-1 mt-auto">
         <ListItem button>
           <ListItemAvatar>
             <Avatar src={user.photoUrl!} style={{ marginRight: '8px' }} />
@@ -254,7 +216,7 @@ export const Sidebar = memo(() => {
 
           <ListItemText primary={user.displayName} secondary="My account" />
         </ListItem>
-      </List> */}
-    </Drawer>
+      </nav> */}
+    </div>
   );
 });

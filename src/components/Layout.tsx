@@ -74,12 +74,7 @@ export function Layout() {
   }
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        minHeight: '100vh',
-      }}
-    >
+    <div className="flex min-h-screen">
       <Sidebar />
 
       <Box

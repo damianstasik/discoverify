@@ -13,6 +13,8 @@ import { Router } from './Router';
 import { EventBusProvider } from './components/EventBus';
 // import './dark.css';
 
+import './index.css';
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
