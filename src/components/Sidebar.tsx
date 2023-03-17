@@ -27,7 +27,10 @@ function Heading({ children, className }: any) {
       <span className="flex-shrink pr-3 font-semibold text-sm text-white">
         {children}
       </span>
-      <div className="flex-grow border-t border-white/10" aria-hidden="true" />
+      <div
+        className="flex-grow border-t border-neutral-900"
+        aria-hidden="true"
+      />
     </div>
   );
 }
@@ -41,7 +44,7 @@ function ListItemSkeleton() {
 
   return (
     <p
-      className="animate-pulse h-8 rounded-md bg-white/10"
+      className="animate-pulse h-8 rounded-md bg-neutral-900"
       role="status"
       style={{ width: `${width}%` }}
     />
@@ -57,8 +60,8 @@ function RouterListItem({ to, label, icon }: any) {
       to={to}
       className={twMerge(
         isActive
-          ? 'bg-white/10 text-white'
-          : 'text-gray-300 hover:bg-white/20 hover:text-white',
+          ? 'bg-neutral-900 text-white'
+          : 'text-neutral-300 hover:bg-neutral-800 hover:text-white',
         'group flex items-center h-8 px-2 text-sm font-medium rounded-md',
       )}
     >
@@ -67,8 +70,8 @@ function RouterListItem({ to, label, icon }: any) {
           path={icon}
           className={twMerge(
             isActive
-              ? 'text-gray-300'
-              : 'text-gray-400 group-hover:text-gray-300',
+              ? 'text-neutral-300'
+              : 'text-neutral-400 group-hover:text-neutral-300',
             'mr-2 flex-shrink-0 h-5 w-5',
           )}
           aria-hidden="true"

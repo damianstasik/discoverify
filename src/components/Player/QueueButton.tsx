@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 function ArtistLink({ id, name }) {
   return (
-    <Link to={`/artist/${id}`} className="underline decoration-white/25">
+    <Link to={`/artist/${id}`} className="underline decoration-neutral-600">
       {name}
     </Link>
   );
@@ -23,7 +23,7 @@ export function QueueButton({ queue, isOpen, onVisibilityChange }) {
       </Popover.Trigger>
       <Popover.Portal>
         <Popover.Content
-          className="rounded-md p-5 w-86 bg-gray-700"
+          className="rounded-md p-5 w-86 bg-neutral-700"
           sideOffset={5}
           collisionPadding={10}
         >
@@ -51,12 +51,12 @@ export function QueueButton({ queue, isOpen, onVisibilityChange }) {
             ))}
           </ul>
           <Popover.Close
-            className="rounded-full h-8 w-8 p-1 inline-flex items-center justify-center text-gray-500 hover:text-gray-200 absolute top-2 right-2 hover:bg-white/10 outline-none"
+            className="rounded-full h-8 w-8 p-1 inline-flex items-center justify-center text-neutral-500 hover:text-neutral-200 absolute top-2 right-2 hover:bg-white/10 outline-none"
             aria-label="Close"
           >
             <Icon path={mdiClose} />
           </Popover.Close>
-          <Popover.Arrow className="fill-gray-700" />
+          <Popover.Arrow className="fill-neutral-700" />
         </Popover.Content>
       </Popover.Portal>
     </Popover.Root>

@@ -7,7 +7,7 @@ export const TrackNameColumn = <Data extends { id: string }>(
   return (
     <Link
       to={`/track/${props.row.original.id}`}
-      className="text-white underline decoration-white/30"
+      className="text-white underline decoration-neutral-600"
     >
       {props.getValue()}
     </Link>

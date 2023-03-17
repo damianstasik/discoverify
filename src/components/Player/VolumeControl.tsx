@@ -30,7 +30,7 @@ export const VolumeControl = memo(({ volume, onCommit, onChange }: Props) => {
         onValueChange={handleChange}
         onValueCommit={handleChangeComitted}
       >
-        <Slider.Track className="bg-white/25 relative grow rounded-full h-1">
+        <Slider.Track className="bg-neutral-700 relative grow rounded-full h-1">
           <Slider.Range className="absolute bg-green-500 rounded-full h-full" />
         </Slider.Track>
         <Slider.Thumb className="block w-5 h-5 bg-green-500 rounded-full hover:bg-violet3 focus:outline-none" />

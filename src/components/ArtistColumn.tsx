@@ -16,7 +16,7 @@ export const ArtistColumn = <Data extends { artists: Artist[] }>(
         <Link
           to={`/artist/${artist.id}`}
           key={artist.id}
-          className="text-white underline decoration-white/30"
+          className="text-white underline decoration-neutral-600"
         >
           {artist.name}
         </Link>
