@@ -1,6 +1,15 @@
 import { twMerge } from 'tailwind-merge';
 import { CircularProgress } from './CircularProgress';
 
+interface Props {
+  children: React.ReactNode;
+  className?: string;
+  disabled?: boolean;
+  color?: 'primary' | 'secondary';
+  loading?: boolean;
+  onClick?: () => void;
+}
+
 export function Button({
   children,
   className,
@@ -8,7 +17,7 @@ export function Button({
   color,
   loading,
   onClick,
-}) {
+}: Props) {
   return (
     <button
       type="button"
