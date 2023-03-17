@@ -5,7 +5,7 @@ import { mdiClose } from '@mdi/js';
 
 export const TrackChip = ({ id, name, artists, imageUrl }) => {
   return (
-    <div className="h-14 px-2 bg-neutral-750 rounded-md flex-shrink-0 flex items-center gap-2">
+    <div className="h-12 pl-2 pr-1 bg-neutral-750 rounded-md flex-shrink-0 flex items-center gap-2">
       <div>
         <img className="rounded s-8" src={imageUrl} alt={name} />
       </div>
