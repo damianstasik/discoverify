@@ -61,8 +61,8 @@ function RouterListItem({ to, label, icon }: any) {
       className={twMerge(
         isActive
           ? 'bg-neutral-900 text-white'
-          : 'text-neutral-300 hover:bg-neutral-800 hover:text-white',
-        'group flex items-center h-8 px-2 text-sm font-medium rounded-md',
+          : 'text-neutral-450 hover:bg-neutral-800 hover:text-white',
+        'group flex items-center h-8 px-2 text-sm rounded-md',
       )}
     >
       {icon && (
