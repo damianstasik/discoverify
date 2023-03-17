@@ -27,7 +27,7 @@ function Heading({ children, className }: any) {
       <span className="flex-shrink pr-3 font-semibold text-sm text-white">
         {children}
       </span>
-      <div className="flex-grow border-t border-gray-700" aria-hidden="true" />
+      <div className="flex-grow border-t border-white/10" aria-hidden="true" />
     </div>
   );
 }
@@ -41,7 +41,7 @@ function ListItemSkeleton() {
 
   return (
     <p
-      className="animate-pulse h-8 rounded-md bg-gray-700"
+      className="animate-pulse h-8 rounded-md bg-white/10"
       role="status"
       style={{ width: `${width}%` }}
     />
@@ -57,8 +57,8 @@ function RouterListItem({ to, label, icon }: any) {
       to={to}
       className={twMerge(
         isActive
-          ? 'bg-gray-900 text-white'
-          : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+          ? 'bg-white/10 text-white'
+          : 'text-gray-300 hover:bg-white/20 hover:text-white',
         'group flex items-center h-8 px-2 text-sm font-medium rounded-md',
       )}
     >
@@ -131,7 +131,7 @@ export const Sidebar = memo(() => {
         />
       </nav> */}
 
-      <Heading className="mt-3 mb-1">Tracks</Heading>
+      <Heading className="mt-3 mb-2">Tracks</Heading>
 
       <nav className="space-y-1">
         <RouterListItem label="Liked tracks" to="/liked" icon={mdiHeart} />
@@ -161,7 +161,7 @@ export const Sidebar = memo(() => {
         /> */}
       </nav>
       {/* 
-      <Heading className="mt-3 mb-1">Genres</Heading>
+      <Heading className="mt-3 mb-2">Genres</Heading>
 
       <nav className="space-y-1">
         <RouterListItem
@@ -171,7 +171,7 @@ export const Sidebar = memo(() => {
         />
       </nav>
 */}
-      <Heading className="mt-3 mb-1">Playlists</Heading>
+      <Heading className="mt-3 mb-2">Playlists</Heading>
 
       <nav className="space-y-1">
         {isLoading && (
