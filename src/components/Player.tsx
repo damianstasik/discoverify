@@ -1,13 +1,7 @@
 import { useCallback, useState, useEffect } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import jwt_decode from 'jwt-decode';
-import { IconButton, Paper, Stack } from '@mui/material';
-import Grid2 from '@mui/material/Unstable_Grid2';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import DevicesIcon from '@mui/icons-material/Devices';
-import QueueMusicIcon from '@mui/icons-material/QueueMusic';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-
 import {
   trackPreviewState,
   loadingTrackPreview,
@@ -26,6 +20,8 @@ import { PlaybackState } from '../types.d';
 import { useTimer } from '../hooks/useTimer';
 import { saveTrack } from '../api';
 import { useThrottledCallback } from 'use-debounce';
+import { IconButton } from './IconButton';
+import { mdiDevices, mdiHeartOutline, mdiPlaylistMusicOutline } from '@mdi/js';
 
 export function Player() {
   const [trackPreview, setTrackPreview] = useRecoilState(trackPreviewState);
@@ -163,23 +159,18 @@ export function Player() {
   const { mutate: saveTrackMut } = useMutation(saveTrack);
 
   return (
-    <Paper elevation={3} sx={{ p: 1 }}>
-      <Grid2 container spacing={2} alignItems="center">
-        <Grid2 xs={3}>
+    <div className="bg-[#222] flex px-3 py-2">
+      <div className="flex gap-2 items-center w-full">
+        <div className="w-3/12">
           <TrackInfo
             name={meta?.current_item.name}
             artists={meta?.current_item.artists}
             imageUrl={meta?.current_item.images[0].url}
           />
-        </Grid2>
+        </div>
 
-        <Grid2
-          xs={4}
-          justifyContent="center"
-          display="flex"
-          flexDirection="column"
-        >
-          <Stack alignItems="center">
+        <div className="w-4/12 justify-center flex flex-col">
+          <div className="flex flex-col items-center">
             <PlaybackControl
               state={playerState}
               onPlayPauseClick={handlePlayPause}
@@ -192,33 +183,25 @@ export function Player() {
               onChange={handlePositionChange}
               onCommit={handlePositionCommit}
             />
-          </Stack>
-        </Grid2>
+          </div>
+        </div>
 
-        <Grid2
-          xs={3}
-          justifyContent="center"
-          display="flex"
-          flexDirection="column"
-        >
+        <div className="w-3/12 justify-center flex flex-col">
           <VolumeControl
             volume={volume}
             onChange={handleVolumeChange}
             onCommit={handleVolumeCommit}
           />
-        </Grid2>
-        <Grid2 xs={2}>
-          <IconButton>
-            <FavoriteBorderIcon />
-          </IconButton>
-          <IconButton onClick={() => setIsQueueOpen(true)}>
-            <QueueMusicIcon />
-          </IconButton>
-          <IconButton>
-            <DevicesIcon />
-          </IconButton>
-        </Grid2>
-      </Grid2>
-    </Paper>
+        </div>
+        <div className="w-2/12">
+          <IconButton icon={mdiHeartOutline} />
+          <IconButton
+            icon={mdiPlaylistMusicOutline}
+            onClick={() => setIsQueueOpen(true)}
+          />
+          <IconButton icon={mdiDevices} />
+        </div>
+      </div>
+    </div>
   );
 }

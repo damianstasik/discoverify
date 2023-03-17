@@ -1,7 +1,5 @@
-import 'react-h5-audio-player/lib/styles.css';
 import { startTransition } from 'react';
 import Box from '@mui/material/Box';
-import AppBar from '@mui/material/AppBar';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import {
   useRecoilState_TRANSITION_SUPPORT_UNSTABLE as useRecoilState,
@@ -14,8 +12,6 @@ import { queueVisibilityAtom, tokenState, userAtom } from '../store';
 import { getCurrentUser, refreshAccessToken } from '../api';
 import { Drawer, List, ListItem } from '@mui/material';
 import { trpc } from '../trpc';
-
-const drawerWidth = 300;
 
 export function Layout() {
   const location = useLocation();
@@ -87,17 +83,10 @@ export function Layout() {
         <Outlet />
       </Box>
 
-      <AppBar
-        position="fixed"
-        style={{
-          width: `calc(100% - ${drawerWidth}px)`,
-          marginLeft: `${drawerWidth}px`,
-          top: 'auto',
-          bottom: 0,
-        }}
-      >
+      <div className="left-80 right-0 bottom-0 fixed">
         <Player />
-      </AppBar>
+      </div>
+
       <Drawer
         anchor="bottom"
         open={isQueueOpen}

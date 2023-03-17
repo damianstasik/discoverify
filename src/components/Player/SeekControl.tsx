@@ -1,11 +1,5 @@
-import {
-  Box,
-  Slider,
-  Stack,
-  Typography,
-  type SliderProps,
-} from '@mui/material';
 import { memo } from 'react';
+import * as Slider from '@radix-ui/react-slider';
 
 function formatTime(seconds: number) {
   const h = Math.floor(seconds / 3600);
@@ -25,43 +19,34 @@ interface Props {
 
 export const SeekControl = memo(
   ({ position, duration, onChange, onCommit }: Props) => {
-    const handleChange: SliderProps['onChange'] = (event, value) =>
-      onChange(value);
+    const handleChange = (value: number[]) => onChange(value[0]);
 
-    const handleChangeComitted: SliderProps['onChangeCommitted'] = (
-      event,
-      value,
-    ) => onCommit(value);
+    const handleChangeComitted = (value: number[]) => onCommit(value[0]);
 
     console.log('seek control render', duration);
     return (
-      <Stack
-        spacing={1}
-        direction="column"
-        alignItems="center"
-        sx={{ width: '100%' }}
-      >
-        <Slider
-          value={position}
+      <div className="flex flex-col gap-1 w-full items-center">
+        <Slider.Root
+          className="relative flex items-center select-none touch-none w-full h-5"
+          value={[position]}
           min={0}
           max={duration}
           step={1}
-          onChange={handleChange}
-          onChangeCommitted={handleChangeComitted}
-        />
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            mt: -1,
-            width: '100%',
-          }}
+          aria-label="Position"
+          onValueChange={handleChange}
+          onValueCommit={handleChangeComitted}
         >
-          <Typography>{formatTime(position)}</Typography>
-          <Typography>-{formatTime(duration - position)}</Typography>
-        </Box>
-      </Stack>
+          <Slider.Track className="bg-white/25 relative grow rounded-full h-1">
+            <Slider.Range className="absolute bg-green-500 rounded-full h-full" />
+          </Slider.Track>
+          <Slider.Thumb className="block w-5 h-5 bg-green-500 rounded-full hover:bg-violet3 focus:outline-none" />
+        </Slider.Root>
+
+        <div className="flex items-center justify-between w-full">
+          <span>{formatTime(position)}</span>
+          <span>-{formatTime(duration - position)}</span>
+        </div>
+      </div>
     );
   },
 );

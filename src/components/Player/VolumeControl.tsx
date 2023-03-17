@@ -1,7 +1,7 @@
-import { IconButton, Slider, Stack, type SliderProps } from '@mui/material';
-import VolumeDown from '@mui/icons-material/VolumeDown';
-import VolumeUp from '@mui/icons-material/VolumeUp';
 import { memo } from 'react';
+import { mdiVolumeHigh, mdiVolumeLow } from '@mdi/js';
+import { IconButton } from '../IconButton';
+import * as Slider from '@radix-ui/react-slider';
 
 interface Props {
   onChange: (value: number) => void;
@@ -10,35 +10,33 @@ interface Props {
 }
 
 export const VolumeControl = memo(({ volume, onCommit, onChange }: Props) => {
-  const handleChange: SliderProps['onChange'] = (event, value) =>
-    onChange(value);
+  const handleChange = (value: number[]) => onChange(value[0]);
 
-  const handleChangeComitted: SliderProps['onChangeCommitted'] = (
-    event,
-    value,
-  ) => onCommit(value);
+  const handleChangeComitted = (value: number[]) => onCommit(value[0]);
 
   console.log('volume control render');
 
   return (
-    <Stack spacing={1} direction="row" alignItems="center">
-      <IconButton aria-label="delete">
-        <VolumeDown />
-      </IconButton>
+    <div className="flex gap-1 items-center">
+      <IconButton icon={mdiVolumeLow} label="Volume down" />
 
-      <Slider
-        size="small"
-        aria-label="Volume"
-        onChangeCommitted={handleChangeComitted}
-        onChange={handleChange}
-        value={volume}
+      <Slider.Root
+        className="relative flex items-center select-none touch-none w-full h-5"
+        value={[volume]}
         min={0}
         max={1}
         step={0.05}
-      />
-      <IconButton aria-label="delete">
-        <VolumeUp />
-      </IconButton>
-    </Stack>
+        aria-label="Volume"
+        onValueChange={handleChange}
+        onValueCommit={handleChangeComitted}
+      >
+        <Slider.Track className="bg-white/25 relative grow rounded-full h-1">
+          <Slider.Range className="absolute bg-green-500 rounded-full h-full" />
+        </Slider.Track>
+        <Slider.Thumb className="block w-5 h-5 bg-green-500 rounded-full hover:bg-violet3 focus:outline-none" />
+      </Slider.Root>
+
+      <IconButton icon={mdiVolumeHigh} label="Volume up" />
+    </div>
   );
 });

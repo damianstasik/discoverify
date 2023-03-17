@@ -19,14 +19,15 @@ import { Navbar } from './Navbar';
 import { trpc } from '../trpc';
 import { recommendIconPath } from '../icons/recommend';
 import { Icon } from './Icon';
+import { twMerge } from 'tailwind-merge';
 
 function Heading({ children, className }: any) {
   return (
-    <div className={classNames('flex items-center', className)}>
+    <div className={twMerge('flex items-center px-2', className)}>
       <span className="flex-shrink pr-3 font-semibold text-sm text-white">
         {children}
       </span>
-      <div className="flex-grow border-t border-gray-700" />
+      <div className="flex-grow border-t border-gray-700" aria-hidden="true" />
     </div>
   );
 }
@@ -47,10 +48,6 @@ function ListItemSkeleton() {
   );
 }
 
-function classNames(...classes: Array<string | boolean | null | undefined>) {
-  return classes.filter(Boolean).join(' ');
-}
-
 function RouterListItem({ to, label, icon }: any) {
   const match = useMatch(to);
   const isActive = match !== null;
@@ -58,7 +55,7 @@ function RouterListItem({ to, label, icon }: any) {
   return (
     <RouterLink
       to={to}
-      className={classNames(
+      className={twMerge(
         isActive
           ? 'bg-gray-900 text-white'
           : 'text-gray-300 hover:bg-gray-700 hover:text-white',
@@ -68,7 +65,7 @@ function RouterListItem({ to, label, icon }: any) {
       {icon && (
         <Icon
           path={icon}
-          className={classNames(
+          className={twMerge(
             isActive
               ? 'text-gray-300'
               : 'text-gray-400 group-hover:text-gray-300',
@@ -95,7 +92,7 @@ export const Sidebar = memo(() => {
   );
 
   return (
-    <div className="w-3/12 p-3 bg-black">
+    <div className="w-80 p-3 bg-black flex-shrink-0">
       <Navbar />
 
       <nav className="space-y-1 mt-3">
