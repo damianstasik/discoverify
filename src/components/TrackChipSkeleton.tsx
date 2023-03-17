@@ -1,29 +1,11 @@
-import {
-  Avatar,
-  Paper,
-  Skeleton,
-  Typography,
-  Unstable_Grid2 as Grid,
-} from '@mui/material';
-
 export const TrackChipSkeleton = () => {
   return (
-    <Paper sx={{ p: 0.5, display: 'inline-flex', flexShrink: 0 }} elevation={3}>
-      <Grid container spacing={1}>
-        <Grid xs="auto">
-          <Skeleton variant="circular">
-            <Avatar sx={{ width: 32, height: 32 }} />
-          </Skeleton>
-        </Grid>
-        <Grid xs>
-          <Typography variant="body2" fontSize={12}>
-            <Skeleton width={180} />
-          </Typography>
-          <Typography variant="body2" fontSize={12}>
-            <Skeleton width={110} />
-          </Typography>
-        </Grid>
-      </Grid>
-    </Paper>
+    <div className="h-14 px-2 bg-neutral-750 rounded-md flex-shrink-0 flex items-center gap-2">
+      <span className="rounded s-8 animate-pulse bg-neutral-600" />
+      <div className="flex justify-center flex-col gap-1">
+        <span className="rounded text-sm h-[1em] w-32 animate-pulse bg-neutral-600" />
+        <span className="rounded text-xs h-[1em] w-24 animate-pulse bg-neutral-600" />
+      </div>
+    </div>
   );
 };
