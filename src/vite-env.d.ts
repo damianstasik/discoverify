@@ -1,10 +1,6 @@
 /// <reference types="vite/client" />
 
 import {
-  Palette as OriginalPalette,
-  PaletteOptions as OriginalPaletteOptions,
-} from '@mui/material/styles';
-import {
   MutationFunction,
   QueryFunction,
   QueryKey,
@@ -18,17 +14,6 @@ interface ImportMetaEnv {
 
 interface ImportMeta {
   readonly env: ImportMetaEnv;
-}
-
-declare module '@mui/material/styles' {
-  interface Palette {
-    neutral: OriginalPalette['primary'];
-    link: OriginalPalette['primary'];
-  }
-  interface PaletteOptions {
-    neutral: OriginalPaletteOptions['primary'];
-    link: OriginalPaletteOptions['primary'];
-  }
 }
 
 declare global {

@@ -2,17 +2,13 @@ import { StrictMode, Suspense } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { createRoot } from 'react-dom/client';
 import { RecoilRoot } from 'recoil';
-import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SnackbarProvider } from 'notistack';
-import Box from '@mui/material/Box';
-import CircularProgress from '@mui/material/CircularProgress';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Router } from './Router';
 import { EventBusProvider } from './components/EventBus';
-// import './dark.css';
-
+import { CircularProgress } from './components/CircularProgress';
 import './index.css';
 
 const queryClient = new QueryClient({
@@ -337,16 +333,9 @@ const theme = createTheme({
 
 function Loader() {
   return (
-    <Box
-      sx={{
-        height: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
+    <div className="w-screen flex items-center justify-center">
       <CircularProgress />
-    </Box>
+    </div>
   );
 }
 
@@ -364,7 +353,6 @@ root.render(
   <StrictMode>
     <EventBusProvider>
       <ThemeProvider theme={theme}>
-        <CssBaseline />
         <SnackbarProvider maxSnack={3}>
           <QueryClientProvider client={queryClient}>
             <ReactQueryDevtools initialIsOpen={false} />

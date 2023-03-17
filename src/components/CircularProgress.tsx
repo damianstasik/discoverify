@@ -1,6 +1,10 @@
 import { twMerge } from 'tailwind-merge';
 
-export function CircularProgress({ className }) {
+interface Props {
+  className?: string;
+}
+
+export function CircularProgress({ className }: Props) {
   return (
     <div role="status">
       <svg
