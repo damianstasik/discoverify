@@ -17,7 +17,7 @@ interface TableHeaderProps {
 
 const TableHeader = memo(({ table }: TableHeaderProps) => {
   return (
-    <div className="bg-black/25">
+    <div className="bg-neutral-975">
       {table.getHeaderGroups().map((headerGroup) => (
         <div key={headerGroup.id} className="flex border-b border-white/10">
           {headerGroup.headers.map((header) => {

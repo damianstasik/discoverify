@@ -1,7 +1,5 @@
-import Breadcrumbs from '@mui/material/Breadcrumbs';
-import Link from '@mui/material/Link';
 import { CellContext } from '@tanstack/react-table';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 interface Artist {
   id: string;
@@ -13,17 +11,16 @@ export const ArtistColumn = <Data extends { artists: Artist[] }>(
 ) => {
   const artists = props.getValue();
   return (
-    <Breadcrumbs sx={{ fontSize: 'inherit', py: 1 }} component="div">
+    <div className="flex gap-1">
       {artists.map((artist) => (
         <Link
-          component={RouterLink}
           to={`/artist/${artist.id}`}
           key={artist.id}
-          color="#fff"
+          className="text-white underline decoration-white/30"
         >
           {artist.name}
         </Link>
       ))}
-    </Breadcrumbs>
+    </div>
   );
 };

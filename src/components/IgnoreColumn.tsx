@@ -1,8 +1,7 @@
 import { mdiThumbDown, mdiThumbDownOutline } from '@mdi/js';
-import Icon from '@mdi/react';
-import { IconButton } from '@mui/material';
 import { CellContext } from '@tanstack/react-table';
 import { useEventBus } from './EventBus';
+import { IconButton } from './IconButton';
 
 export const IgnoreColumn = <Data extends { id: string }>(
   props: CellContext<Data, boolean>,
@@ -12,11 +11,10 @@ export const IgnoreColumn = <Data extends { id: string }>(
 
   return (
     <IconButton
-      size="small"
-      aria-label="Ignore"
+      icon={isIgnored ? mdiThumbDown : mdiThumbDownOutline}
+      label="Ignore"
       onClick={() => eventBus.emit('ignoreTrack', props.row.original.id)}
-    >
-      <Icon path={isIgnored ? mdiThumbDown : mdiThumbDownOutline} size={1} />
-    </IconButton>
+      className="p-1"
+    />
   );
 };

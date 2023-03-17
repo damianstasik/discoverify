@@ -1,5 +1,4 @@
-import Link from '@mui/material/Link';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { CellContext } from '@tanstack/react-table';
 
 interface Album {
@@ -12,7 +11,10 @@ export const AlbumColumn = <Data extends { album: Album }>(
 ) => {
   const album = props.getValue();
   return (
-    <Link component={RouterLink} to={`/album/${album.id}`} color="#fff" py={1}>
+    <Link
+      to={`/album/${album.id}`}
+      className="text-white underline decoration-white/30"
+    >
       {album.name}
     </Link>
   );
