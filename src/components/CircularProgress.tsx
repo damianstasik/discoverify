@@ -1,9 +1,14 @@
-export function CircularProgress() {
+import { twMerge } from 'tailwind-merge';
+
+export function CircularProgress({ className }) {
   return (
     <div role="status">
       <svg
         aria-hidden="true"
-        className="w-8 h-8 text-neutral-200 animate-spin dark:text-neutral-600 fill-blue-600"
+        className={twMerge(
+          's-3 animate-spin text-white/50 fill-white',
+          className,
+        )}
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
