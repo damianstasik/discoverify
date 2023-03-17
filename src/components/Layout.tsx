@@ -13,6 +13,7 @@ import { Player } from './Player';
 import { queueVisibilityAtom, tokenState, userAtom } from '../store';
 import { getCurrentUser, refreshAccessToken } from '../api';
 import { Drawer, List, ListItem } from '@mui/material';
+import { trpc } from '../trpc';
 
 const drawerWidth = 300;
 
@@ -24,14 +25,9 @@ export function Layout() {
 
   const { data: queue } = useQuery(
     ['queue', token],
-    async () => {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/player/queue`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const body = await res.json();
-      return body;
+    async ({ signal }) => {
+      const queue = await trpc.player.queue.query(undefined, { signal });
+      return queue;
     },
     {
       enabled: !!token && isQueueOpen,
