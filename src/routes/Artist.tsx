@@ -13,6 +13,7 @@ import styled from '@emotion/styled';
 import { Suspense, useEffect, useState } from 'react';
 import { tokenState } from '../store';
 import { PageTitle } from '../components/PageTitle';
+import { trpc } from '../trpc';
 
 const Bg = styled.div`
   position: absolute;
@@ -94,18 +95,12 @@ export function Artist() {
 
   const { data } = useQuery(
     ['artist', params.id, token],
-    async function artistQuery() {
-      const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/artist/${params.id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
-      const body = await res.json();
+    async function artistQuery({ queryKey, signal }) {
+      const artist = await trpc.artist.byId.query(queryKey[1], {
+        signal,
+      });
 
-      return body.artist;
+      return artist;
     },
     { refetchOnMount: true },
   );

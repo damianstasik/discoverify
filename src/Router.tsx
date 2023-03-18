@@ -1,10 +1,10 @@
 import { Navigate, RouteObject, useRoutes } from 'react-router-dom';
-// import { lazy, Suspense } from 'react';
+import { Suspense } from 'react';
 // import { useRecoilValue } from 'recoil';
 import { Login } from './routes/Login';
 import { Authorize } from './routes/Authorize';
 // import { Artists } from './routes/Artists';
-// import { Artist } from './routes/Artist';
+import { Artist } from './routes/Artist';
 // import { FollowedArtistsTopTracks } from './routes/FollowedArtistsTopTracks';
 // import { FollowedArtistsGenres } from './routes/FollowedArtistsGenres';
 // import { userState } from './store';
@@ -16,8 +16,9 @@ import { Recommendations } from './routes/Recommendations';
 // import { RecentlyPlayed } from './routes/RecentlyPlayed';
 import { Playlist } from './routes/Playlist';
 import { Layout } from './components/Layout';
-// import { ArtistTopTracks } from './routes/ArtistTopTracks';
-// import { ArtistAlbums } from './routes/ArtistAlbums';
+import { CircularProgress } from './components/CircularProgress';
+import { ArtistTopTracks } from './routes/ArtistTopTracks';
+import { ArtistAlbums } from './routes/ArtistAlbums';
 
 // import Dashboard from './routes/Dashboard';
 // import { Test } from './routes/Test';
@@ -84,24 +85,24 @@ const routes: RouteObject[] = [
       //   path: 'track/:id',
       //   element: <Track />,
       // },
-      // {
-      //   path: 'artist/:id',
-      //   element: (
-      //     <Suspense fallback={<CircularProgress />}>
-      //       <Artist />
-      //     </Suspense>
-      //   ),
-      //   children: [
-      //     {
-      //       index: true,
-      //       element: <ArtistTopTracks />,
-      //     },
-      //     {
-      //       path: 'albums',
-      //       element: <ArtistAlbums />,
-      //     },
-      //   ],
-      // },
+      {
+        path: 'artist/:id',
+        element: (
+          <Suspense fallback={<CircularProgress />}>
+            <Artist />
+          </Suspense>
+        ),
+        children: [
+          {
+            index: true,
+            element: <ArtistTopTracks />,
+          },
+          {
+            path: 'albums',
+            element: <ArtistAlbums />,
+          },
+        ],
+      },
     ],
   },
   {
