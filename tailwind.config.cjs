@@ -6,6 +6,12 @@ module.exports = {
   content: ['./index.html', './src/**/*.{ts,tsx}'],
   theme: {
     colors: lerpColors(),
+    extend: {
+      spacing: {
+        em: '1em',
+        rem: '1rem',
+      },
+    },
   },
   plugins: [
     require('@tailwindcss/forms'),
