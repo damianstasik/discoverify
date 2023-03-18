@@ -8,7 +8,6 @@ import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
 import { TrackNameColumn } from '../components/TrackNameColumn';
 import { getRecommendedTracks, getTracks, search } from '../api';
 import { TrackChip } from '../components/TrackChip';
-import { Stack } from '@mui/material';
 import { EntityAutocomplete } from '../components/EntityAutocomplete';
 import { TrackChipSkeleton } from '../components/TrackChipSkeleton';
 import { useAttributes } from '../hooks/useAttributes';
@@ -23,6 +22,7 @@ import { SpotifyLinkColumn } from '../components/SpotifyLinkColumn';
 import { IgnoreColumn } from '../components/IgnoreColumn';
 import { SaveColumn } from '../components/SaveColumn';
 import { RecommendationAttribute } from '../components/RecommendationAttribute';
+import { ArtistColumn } from '../components/ArtistColumn';
 
 type TrackType = RouterOutput['track']['recommended'][number];
 
@@ -62,10 +62,10 @@ const columns = [
     size: 300,
     cell: TrackNameColumn,
   }),
-  // columnHelper.accessor('artist', {
-  //   header: 'Artist(s)',
-  //   cell: ArtistColumn,
-  // }),
+  columnHelper.accessor('artist', {
+    header: 'Artist(s)',
+    cell: ArtistColumn,
+  }),
   // columnHelper.accessor('album', {
   //   header: 'Album',
   //   cell: AlbumColumn,
@@ -162,7 +162,7 @@ export function Recommendations() {
                 <h5 className="uppercase text-neutral-400 text-xs font-semibold pb-3 tracking-wide">
                   Selected tracks
                 </h5>
-                <Stack direction="row" spacing={2}>
+                <div className="flex flex-wrap gap-2">
                   {!songs &&
                     trackIds.length > 0 &&
                     trackIds.map((id) => <TrackChipSkeleton key={id} />)}
@@ -184,7 +184,7 @@ export function Recommendations() {
                       }}
                     />
                   ))}
-                </Stack>
+                </div>
               </div>
             )}
           </div>
