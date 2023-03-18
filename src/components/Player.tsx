@@ -173,7 +173,7 @@ export function Player() {
   const { mutate: saveTrackMut } = useMutation(saveTrack);
 
   return (
-    <div className="bg-[#222] flex px-3 py-2">
+    <div className="bg-neutral-800 flex px-3 py-2">
       <div className="flex gap-2 items-center w-full">
         <div className="w-3/12">
           <TrackInfo

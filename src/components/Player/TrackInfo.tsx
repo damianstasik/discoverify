@@ -9,7 +9,10 @@ interface Props {
 
 function ArtistLink({ id, name }) {
   return (
-    <Link to={`/artist/${id}`} className="underline decoration-neutral-600">
+    <Link
+      to={`/artist/${id}`}
+      className="text-neutral-300 underline decoration-neutral-600"
+    >
       {name}
     </Link>
   );

@@ -49,7 +49,7 @@ export function RecommendationAttribute({ attr }: Props) {
           onClick={() => setOpen(true)}
           aria-describedby={attr.name}
         >
-          <div className="rounded-full s-2 mr-2 bg-current" />
+          <div className="rounded-full s-2 mr-2 bg-current opacity-50" />
           {attr.label}
         </button>
       </Popover.Trigger>
