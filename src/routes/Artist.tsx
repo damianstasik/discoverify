@@ -5,11 +5,9 @@ import {
   useParams,
   useResolvedPath,
 } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
 import { useQuery } from '@tanstack/react-query';
 import { Skeleton } from '@mui/material';
 import { Suspense, useRef } from 'react';
-import { tokenState } from '../store';
 import { trpc } from '../trpc';
 import { twMerge } from 'tailwind-merge';
 import { Icon } from '../components/Icon';
@@ -75,11 +73,10 @@ function TabLink({ tab }) {
 }
 
 export function Artist() {
-  const token = useRecoilValue(tokenState);
   const params = useParams();
 
   const { data } = useQuery(
-    ['artist', params.id, token],
+    ['artist', params.id],
     async function artistQuery({ queryKey, signal }) {
       const artist = await trpc.artist.byId.query(queryKey[1], {
         signal,
@@ -126,24 +123,27 @@ export function Artist() {
   return (
     <>
       <Img src={data?.images?.[0].url} />
+      <div className="relative">
+        <div className="p-3">
+          <h2 className="text-xl text-white font-bold leading-none">
+            {data?.name || (
+              <div className="animate-pulse h-em w-48 bg-neutral-700 rounded-md" />
+            )}
+          </h2>
+        </div>
 
-      <div className="p-3 relative">
-        <h2 className="text-xl text-white font-bold">
-          {data?.name || (
-            <Skeleton animation="wave" variant="text" width="20%" />
-          )}
-        </h2>
+        <div className="border-b border-white/20">
+          <nav className="-mb-px flex gap-4 mx-3" aria-label="Tabs">
+            {tabs.map((tab) => (
+              <TabLink key={tab.label} tab={tab} />
+            ))}
+          </nav>
+        </div>
+
+        <Suspense fallback={<div>loading</div>}>
+          <Outlet />
+        </Suspense>
       </div>
-
-      <div className="border-b border-neutral-700 relative">
-        <nav className="-mb-px flex gap-4 mx-3" aria-label="Tabs">
-          {tabs.map((tab) => (
-            <TabLink key={tab.label} tab={tab} />
-          ))}
-        </nav>
-      </div>
-
-      <Suspense fallback={<div>loading</div>}>{/* <Outlet /> */}</Suspense>
     </>
   );
 }

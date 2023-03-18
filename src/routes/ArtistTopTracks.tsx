@@ -1,67 +1,105 @@
-import { useRecoilValue } from 'recoil';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { AlbumColumn } from '../components/AlbumColumn';
 import { ArtistColumn } from '../components/ArtistColumn';
 import { TrackNameColumn } from '../components/TrackNameColumn';
 import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
-import { tokenState } from '../store';
 import { VirtualTable } from '../components/VirtualTable';
 import { DurationColumn } from '../components/DurationColumn';
+import { RouterOutput, trpc } from '../trpc';
+import { createColumnHelper } from '@tanstack/react-table';
+import { SaveColumn } from '../components/SaveColumn';
+import { IgnoreColumn } from '../components/IgnoreColumn';
+import { SpotifyLinkColumn } from '../components/SpotifyLinkColumn';
+import { CheckboxColumn } from '../components/CheckboxColumn';
+
+type TrackType = RouterOutput['artist']['topTracks'][number];
+
+const columnHelper = createColumnHelper<TrackType>();
 
 const columns = [
-  {
-    accessorKey: 'uri',
+  columnHelper.display({
+    size: 50,
+    id: 'select',
+    header: ({ table }) => (
+      <CheckboxColumn
+        {...{
+          checked: table.getIsAllRowsSelected(),
+          indeterminate: table.getIsSomeRowsSelected(),
+          onChange: table.getToggleAllRowsSelectedHandler(),
+        }}
+      />
+    ),
+    cell: ({ row }) => (
+      <CheckboxColumn
+        {...{
+          checked: row.getIsSelected(),
+          indeterminate: row.getIsSomeSelected(),
+          onChange: row.getToggleSelectedHandler(),
+        }}
+      />
+    ),
+  }),
+  columnHelper.accessor('uri', {
     header: '',
+    id: 'preview',
     size: 50,
     cell: TrackPreviewColumn,
-  },
-  {
-    accessorKey: 'name',
+  }),
+  columnHelper.accessor('name', {
     header: 'Name',
+    size: 300,
     cell: TrackNameColumn,
-  },
-  {
-    accessorKey: 'artists',
+  }),
+  columnHelper.accessor('artists', {
     header: 'Artist(s)',
     cell: ArtistColumn,
-  },
-  {
-    accessorKey: 'album',
+  }),
+  columnHelper.accessor('album', {
     header: 'Album',
     cell: AlbumColumn,
-  },
-  {
-    accessorKey: 'duration_ms',
+  }),
+  columnHelper.accessor('duration_ms', {
     header: 'Duration',
     cell: DurationColumn,
-  },
+  }),
+  columnHelper.accessor('isLiked', {
+    header: '',
+    size: 40,
+    cell: SaveColumn,
+  }),
+  columnHelper.accessor('isIgnored', {
+    header: '',
+    size: 40,
+    cell: IgnoreColumn,
+  }),
+  columnHelper.accessor('uri', {
+    id: 'open',
+    header: '',
+    size: 40,
+    cell: SpotifyLinkColumn,
+  }),
 ];
 
 export function ArtistTopTracks() {
-  const token = useRecoilValue(tokenState);
   const params = useParams();
 
   const { data, isFetching } = useQuery(
     ['artist-top-tracks', params.id],
-    async function artistTopTracksQuery() {
-      const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/artist/${params.id}/top-tracks`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
-      const body = await res.json();
+    async function artistTopTracksQuery({ queryKey, signal }) {
+      const tracks = await trpc.artist.topTracks.query(queryKey[1], { signal });
 
-      return body.tracks;
+      return tracks;
     },
   );
 
   return (
     <div style={{ height: 800 }}>
-      <VirtualTable columns={columns} rows={data || []} isLoading={isFetching} />
+      <VirtualTable
+        columns={columns}
+        data={data || []}
+        isLoading={isFetching}
+      />
     </div>
   );
 }
