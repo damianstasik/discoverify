@@ -63,7 +63,7 @@ export const playTrack: Mutation<
   'track.play',
   { trackIds: string[]; offset: string; deviceId: string }
 > = async ({ trackIds, offset, deviceId }) => {
-  await trpc.track.play.query({
+  await trpc.track.play.mutate({
     trackIds,
     offset,
     deviceId,
