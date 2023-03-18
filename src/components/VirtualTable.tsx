@@ -25,7 +25,7 @@ const TableHeader = memo(({ table }: TableHeaderProps) => {
               <div
                 key={header.id}
                 style={{ width: header.getSize() }}
-                className="flex-shrink-0 items-center flex font-semibold text-white"
+                className="flex-shrink-0 px-3 py-2 items-center flex font-semibold text-white"
               >
                 {header.isPlaceholder
                   ? null
@@ -45,7 +45,7 @@ const TableHeader = memo(({ table }: TableHeaderProps) => {
 const TableCell = ({ cell }) => {
   return (
     <div
-      className="flex items-center flex-shrink-0"
+      className="flex items-center flex-shrink-0 px-3 py-1"
       style={{
         width: cell.column.getSize(),
       }}

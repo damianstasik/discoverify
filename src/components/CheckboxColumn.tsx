@@ -10,7 +10,7 @@ export const CheckboxColumn = ({ onChange, checked, indeterminate }) => {
   }, [indeterminate]);
 
   return (
-    <label className="p-2 cursor-pointer">
+    <label className="cursor-pointer">
       <input
         checked={checked}
         onChange={onChange}
