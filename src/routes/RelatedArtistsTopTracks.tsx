@@ -13,6 +13,7 @@ import { DurationColumn } from '../components/DurationColumn';
 import { SaveColumn } from '../components/SaveColumn';
 import { IgnoreColumn } from '../components/IgnoreColumn';
 import { SpotifyLinkColumn } from '../components/SpotifyLinkColumn';
+import { usePlayPauseTrackHook } from '../hooks/usePlayPauseTrackHook';
 
 type TrackType =
   RouterOutput['artist']['relatedArtistsTopTracks']['data'][number];
@@ -112,6 +113,10 @@ export function RelatedArtistsTopTracks() {
     () => data?.pages?.flatMap((page) => page.data) ?? [],
     [data],
   );
+
+  const ids = useMemo(() => rows.map((t) => t.uri), [rows]);
+
+  usePlayPauseTrackHook(ids);
 
   return (
     <>

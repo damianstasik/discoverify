@@ -12,6 +12,8 @@ import { SaveColumn } from '../components/SaveColumn';
 import { IgnoreColumn } from '../components/IgnoreColumn';
 import { SpotifyLinkColumn } from '../components/SpotifyLinkColumn';
 import { CheckboxColumn } from '../components/CheckboxColumn';
+import { useMemo } from 'react';
+import { usePlayPauseTrackHook } from '../hooks/usePlayPauseTrackHook';
 
 type TrackType = RouterOutput['artist']['topTracks'][number];
 
@@ -93,6 +95,10 @@ export function ArtistTopTracks() {
     },
     { suspense: true },
   );
+
+  const ids = useMemo(() => (data || []).map((t) => t.uri), [data]);
+
+  usePlayPauseTrackHook(ids);
 
   return (
     <div style={{ height: 800 }}>
