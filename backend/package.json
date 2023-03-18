@@ -1,9 +1,9 @@
 {
   "name": "backend",
   "private": true,
-  "types": "./trpc/router.ts",
+  "types": "./src/router.ts",
   "scripts": {
-    "dev": "tsx watch --experimental-fetch trpc/server.ts"
+    "dev": "tsx watch --experimental-fetch src/server.ts"
   },
   "dependencies": {
     "@fastify/cookie": "^8.3.0",
