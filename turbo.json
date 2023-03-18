@@ -1,6 +1,9 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
-    "dev": {}
+    "dev": {},
+    "build": {
+      "outputs": ["frontend/dist", "landing/.next/**", "!landing/.next/cache/**"]
+    }
   }
 }
