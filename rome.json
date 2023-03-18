@@ -1,0 +1,23 @@
+{
+  "$schema": "./node_modules/rome/configuration_schema.json",
+  "linter": {
+    "rules": {
+      "recommended": true,
+      "style": {
+        "useBlockStatements": "off",
+        "noImplicitBoolean": "off",
+        "useShorthandArrayType": "off"
+      }
+    }
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space"
+  },
+  "javascript": {
+    "formatter": {
+      "trailingComma": "all",
+      "quoteStyle": "single"
+    }
+  }
+}
