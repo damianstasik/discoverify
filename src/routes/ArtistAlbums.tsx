@@ -1,46 +1,42 @@
-import { useRecoilValue } from 'recoil';
 import { useQuery } from '@tanstack/react-query';
-import { useParams, Link as RouterLink } from 'react-router-dom';
-import Link from '@mui/material/Link';
+import { useParams, Link } from 'react-router-dom';
 import { ArtistColumn } from '../components/ArtistColumn';
-import { tokenState } from '../store';
 import { VirtualTable } from '../components/VirtualTable';
+import { RouterOutput, trpc } from '../trpc';
+import { createColumnHelper } from '@tanstack/react-table';
+
+type AlbumType = RouterOutput['artist']['albums'][number];
+
+const columnHelper = createColumnHelper<AlbumType>();
 
 const columns = [
-  {
-    accessorKey: 'name',
+  columnHelper.accessor('name', {
     header: 'Name',
+    size: 300,
     cell: (params) => (
-      <Link component={RouterLink} to={`/album/${params.row.original.id}`}>
-        {params.getValue()}
-      </Link>
+      <Link to={`/album/${params.row.original.id}`}>{params.getValue()}</Link>
     ),
-  },
-  {
-    accessorKey: 'artists',
+  }),
+  columnHelper.accessor('artists', {
     header: 'Artist(s)',
     cell: ArtistColumn,
-  },
+  }),
 ];
 
 export function ArtistAlbums() {
-  const token = useRecoilValue(tokenState);
   const params = useParams();
 
   const { data, isFetching } = useQuery(
     ['artist-albums', params.id],
-    async function artistAlbumsQuery() {
-      const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/artist/${params.id}/albums?type=album`,
+    async function artistAlbumsQuery({ signal, queryKey }) {
+      const albums = await trpc.artist.albums.query(
+        { id: queryKey[1], type: 'album' },
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          signal,
         },
       );
-      const body = await res.json();
 
-      return body.albums;
+      return albums;
     },
     { suspense: true },
   );
@@ -49,7 +45,7 @@ export function ArtistAlbums() {
     <div style={{ height: 800 }}>
       <VirtualTable
         columns={columns}
-        rows={data || []}
+        data={data || []}
         isLoading={isFetching}
       />
     </div>
