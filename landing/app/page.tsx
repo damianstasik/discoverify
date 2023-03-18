@@ -23,7 +23,10 @@ export default function Home() {
             </span>
             <span className="text-2xl">Discoverify</span>
           </a>
-          <button className="text-slate-900 inline-flex items-center bg-emerald-500 border-0 py-2 px-5 rounded text-base">
+          <a
+            href="https://go.discoverify.app"
+            className="text-slate-900 inline-flex items-center bg-emerald-500 border-0 py-2 px-5 rounded text-base"
+          >
             Login
             <svg
               fill="none"
@@ -36,7 +39,7 @@ export default function Home() {
             >
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>
-          </button>
+          </a>
         </div>
       </header>
       <section className="max-w-5xl mx-auto text-center mt-40">
