@@ -1,6 +1,5 @@
-import Button from '@mui/material/Button';
 import {
-  Link as RouterLink,
+  Link,
   Outlet,
   useLocation,
   useParams,
@@ -11,9 +10,17 @@ import { useQuery } from '@tanstack/react-query';
 import { Skeleton } from '@mui/material';
 import { Suspense, useRef } from 'react';
 import { tokenState } from '../store';
-import { PageTitle } from '../components/PageTitle';
 import { trpc } from '../trpc';
 import { twMerge } from 'tailwind-merge';
+import { Icon } from '../components/Icon';
+import {
+  mdiAccountMusic,
+  mdiFolderPlay,
+  mdiMusicBox,
+  mdiMusicBoxMultiple,
+  mdiPlayBoxMultipleOutline,
+  mdiTrendingUp,
+} from '@mdi/js';
 
 function Img({ src }) {
   const imgRef = useRef<HTMLImageElement>(null);
@@ -25,7 +32,7 @@ function Img({ src }) {
         imgRef.current?.complete && 'opacity-25',
       )}
     >
-      <span className="absolute inset-0 bg-gradient-to-b from-transparent to-neutral-900" />
+      <span className="absolute inset-0 z-0 bg-gradient-to-b from-transparent to-neutral-900" />
       <img
         src={src}
         alt="Artist's picture"
@@ -39,19 +46,31 @@ function Img({ src }) {
 function TabLink({ tab }) {
   const match = useResolvedPath(tab.to);
   const { pathname } = useLocation();
+  const isCurrent = match.pathname === pathname;
 
   return (
-    <Button
-      component={RouterLink}
+    <Link
       to={tab.to}
-      variant={match.pathname === pathname ? 'outlined' : 'text'}
-      sx={{
-        padding: match.pathname === pathname ? '6px 9px' : '6px 10px',
-        marginRight: '4px',
-      }}
+      className={twMerge(
+        isCurrent
+          ? 'border-green-500 text-green-600'
+          : 'border-transparent text-neutral-400 hover:text-neutral-300 hover:border-neutral-500',
+        'group inline-flex items-center py-2 px-1 border-b-2 text-sm',
+      )}
+      aria-current={isCurrent ? 'page' : undefined}
     >
-      {tab.label}
-    </Button>
+      <Icon
+        path={tab.icon}
+        className={twMerge(
+          isCurrent
+            ? 'text-green-500'
+            : 'text-neutral-500 group-hover:text-neutral-400',
+          'mr-2 s-4',
+        )}
+        aria-hidden="true"
+      />
+      <span>{tab.label}</span>
+    </Link>
   );
 }
 
@@ -75,22 +94,32 @@ export function Artist() {
     {
       to: '',
       label: 'Popular tracks',
+      icon: mdiTrendingUp,
     },
     {
       to: 'albums',
       label: 'Albums',
+      icon: mdiMusicBoxMultiple,
     },
     {
       to: 'singles',
       label: 'Singles and EPs',
+      icon: mdiMusicBox,
     },
     {
       to: 'appears-on',
       label: 'Appears on',
+      icon: mdiPlayBoxMultipleOutline,
     },
     {
       to: 'compilations',
       label: 'Compilations',
+      icon: mdiFolderPlay,
+    },
+    {
+      to: 'related-artists-tracks',
+      label: "Related artists' top tracks",
+      icon: mdiAccountMusic,
     },
   ];
 
@@ -98,26 +127,23 @@ export function Artist() {
     <>
       <Img src={data?.images?.[0].url} />
 
-      <PageTitle>
-        {data?.name || <Skeleton animation="wave" variant="text" width="20%" />}
-      </PageTitle>
-
-      <div>
-        {tabs.map((tab) => (
-          <TabLink key={tab.label} tab={tab} />
-        ))}
+      <div className="p-3 relative">
+        <h2 className="text-xl text-white font-bold">
+          {data?.name || (
+            <Skeleton animation="wave" variant="text" width="20%" />
+          )}
+        </h2>
       </div>
 
-      <Suspense fallback={<div>loading</div>}>
-        <Outlet />
-      </Suspense>
+      <div className="border-b border-neutral-700 relative">
+        <nav className="-mb-px flex gap-4 mx-3" aria-label="Tabs">
+          {tabs.map((tab) => (
+            <TabLink key={tab.label} tab={tab} />
+          ))}
+        </nav>
+      </div>
 
-      <Button
-        component={RouterLink}
-        to={`/related-artists/top-tracks/${data?.id}`}
-      >
-        Related artists' top tracks
-      </Button>
+      <Suspense fallback={<div>loading</div>}>{/* <Outlet /> */}</Suspense>
     </>
   );
 }
