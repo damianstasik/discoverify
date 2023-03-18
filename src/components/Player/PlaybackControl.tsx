@@ -21,7 +21,7 @@ export const PlaybackControl = memo(
   ({ state, onPlayPauseClick, onNextClick, onPreviousClick }: Props) => {
     return (
       <div className="gap-2 flex items-center text-white">
-        <IconButton icon={mdiShuffle} className="text-xs" />
+        <IconButton icon={mdiShuffle} />
 
         <IconButton icon={mdiSkipPrevious} onClick={onPreviousClick} />
 
@@ -30,12 +30,12 @@ export const PlaybackControl = memo(
             state === PlaybackState.PLAYING ? mdiPauseCircle : mdiPlayCircle
           }
           onClick={onPlayPauseClick}
-          className="text-xl"
+          className="s-10"
         />
 
         <IconButton icon={mdiSkipNext} onClick={onNextClick} />
 
-        <IconButton icon={mdiRepeat} className="text-xs" />
+        <IconButton icon={mdiRepeat} />
       </div>
     );
   },
