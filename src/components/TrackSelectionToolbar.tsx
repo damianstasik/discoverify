@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 import { Button } from './Button';
+import { Row } from '@tanstack/react-table';
 
 function extractId(value: string) {
   if (value.includes('::')) {
@@ -10,7 +11,13 @@ function extractId(value: string) {
   return value;
 }
 
-export const TrackSelectionToolbar = ({ rows }) => {
+interface Props<T extends { spotifyId: string } = any> {
+  rows: Row<T>[];
+}
+
+export const TrackSelectionToolbar = <T extends { spotifyId: string }>({
+  rows,
+}: Props<T>) => {
   return (
     <div
       className={twMerge(
@@ -25,7 +32,10 @@ export const TrackSelectionToolbar = ({ rows }) => {
           to={{
             pathname: '/recommendations',
             search: `?${rows
-              .map((selectedRow) => `trackId=${extractId(selectedRow.id)}`)
+              .map(
+                (selectedRow) =>
+                  `trackId=${extractId(selectedRow.original.spotifyId)}`,
+              )
               .join('&')}`,
           }}
         >
@@ -39,7 +49,10 @@ export const TrackSelectionToolbar = ({ rows }) => {
         to={{
           pathname: '/playlist/create',
           search: `?${rows
-            .map((selectedRow) => `trackId=${extractId(selectedRow.id)}`)
+            .map(
+              (selectedRow) =>
+                `trackId=${extractId(selectedRow.original.spotifyId)}`,
+            )
             .join('&')}`,
         }}
       >

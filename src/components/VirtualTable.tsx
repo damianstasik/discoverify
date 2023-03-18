@@ -1,15 +1,16 @@
 import {
+  Cell,
   ColumnDef,
   flexRender,
   getCoreRowModel,
+  Row,
   Table,
   useReactTable,
 } from '@tanstack/react-table';
-import { useVirtualizer } from '@tanstack/react-virtual';
+import { useVirtualizer, VirtualItem } from '@tanstack/react-virtual';
 import { forwardRef, memo, useRef } from 'react';
 import { useInfiniteLoading } from '../hooks/useInfiniteLoading';
 import { TrackSelectionToolbar } from './TrackSelectionToolbar';
-import { twMerge } from 'tailwind-merge';
 
 interface TableHeaderProps {
   table: Table<any>;
@@ -42,7 +43,11 @@ const TableHeader = memo(({ table }: TableHeaderProps) => {
   );
 });
 
-const TableCell = ({ cell }) => {
+interface TableCellProps {
+  cell: Cell<unknown, unknown>;
+}
+
+const TableCell = ({ cell }: TableCellProps) => {
   return (
     <div
       className="flex items-center flex-shrink-0 px-3 py-1"
@@ -55,36 +60,44 @@ const TableCell = ({ cell }) => {
   );
 };
 
-const TableVirtualRow = forwardRef(({ row, virtualItem }, ref) => {
-  return (
-    <div
-      data-index={virtualItem.index}
-      ref={ref}
-      className={twMerge(
-        'absolute top-0 left-0 w-full flex',
-        row.original.isIgnored ? 'bg-red-500/5' : '',
-      )}
-      style={{
-        transform: `translate3d(0, ${virtualItem.start}px, 0)`,
-      }}
-    >
-      {row.getVisibleCells().map((cell) => {
-        return <TableCell key={cell.id} cell={cell} />;
-      })}
-    </div>
-  );
-});
+interface TableVirtualRowProps {
+  row: Row<unknown>;
+  virtualItem: VirtualItem;
+}
+
+const TableVirtualRow = forwardRef<HTMLDivElement, TableVirtualRowProps>(
+  ({ row, virtualItem }, ref) => {
+    return (
+      <div
+        data-index={virtualItem.index}
+        ref={ref}
+        className={'absolute top-0 left-0 w-full flex'}
+        style={{
+          transform: `translate3d(0, ${virtualItem.start}px, 0)`,
+        }}
+      >
+        {row.getVisibleCells().map((cell) => {
+          return <TableCell key={cell.id} cell={cell} />;
+        })}
+      </div>
+    );
+  },
+);
 
 interface Props<Data extends { spotifyId: string }> {
   columns: ColumnDef<Data, any>[];
+  data: Data[];
+  isLoading: boolean;
+  hasNextPage?: boolean;
+  fetchNextPage?: () => void;
 }
 
 export const VirtualTable = <Data extends { spotifyId: string }>({
   columns,
   data,
   isLoading,
-  hasNextPage,
-  fetchNextPage,
+  hasNextPage = false,
+  fetchNextPage = () => {},
 }: Props<Data>) => {
   const table = useReactTable<Data>({
     data,
