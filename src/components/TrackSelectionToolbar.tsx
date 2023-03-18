@@ -1,8 +1,6 @@
-import { Divider } from '@mui/material';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Collapse from '@mui/material/Collapse';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { twMerge } from 'tailwind-merge';
+import { Button } from './Button';
 
 function extractId(value: string) {
   if (value.includes('::')) {
@@ -14,35 +12,34 @@ function extractId(value: string) {
 
 export const TrackSelectionToolbar = ({ rows }) => {
   return (
-    <Collapse in={rows.length > 0}>
-      <Box sx={{ p: 1 }}>
-        {rows.length <= 5 && (
-          <Button
-            component={RouterLink}
-            to={{
-              pathname: '/recommendations',
-              search: `?${rows
-                .map((selectedRow) => `trackId=${extractId(selectedRow.id)}`)
-                .join('&')}`,
-            }}
-          >
-            Generate recommendations
-          </Button>
-        )}
-
+    <div className={twMerge('p-3 gap-3', rows.length > 0 ? 'flex' : 'hidden')}>
+      {rows.length <= 5 && (
         <Button
-          component={RouterLink}
+          variant='outlined'
+          component={Link}
           to={{
-            pathname: '/playlist/create',
+            pathname: '/recommendations',
             search: `?${rows
               .map((selectedRow) => `trackId=${extractId(selectedRow.id)}`)
               .join('&')}`,
           }}
         >
-          Create a new playlist
+          Generate recommendations
         </Button>
-      </Box>
-      <Divider />
-    </Collapse>
+      )}
+
+      <Button
+        variant='outlined'
+        component={Link}
+        to={{
+          pathname: '/playlist/create',
+          search: `?${rows
+            .map((selectedRow) => `trackId=${extractId(selectedRow.id)}`)
+            .join('&')}`,
+        }}
+      >
+        Create a new playlist
+      </Button>
+    </div>
   );
 };
