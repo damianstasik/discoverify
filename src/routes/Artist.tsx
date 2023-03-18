@@ -9,64 +9,30 @@ import {
 import { useRecoilValue } from 'recoil';
 import { useQuery } from '@tanstack/react-query';
 import { Skeleton } from '@mui/material';
-import styled from '@emotion/styled';
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useRef } from 'react';
 import { tokenState } from '../store';
 import { PageTitle } from '../components/PageTitle';
 import { trpc } from '../trpc';
-
-const Bg = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 500px;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  z-index: 0;
-  opacity: 0;
-  transition: opacity 0.3s;
-
-  &.loaded {
-    opacity: 0.25;
-  }
-
-  &:before {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    top: 0;
-    background: linear-gradient(#0000 0%, #161616b5 50%, #161616 100%);
-  }
-`;
+import { twMerge } from 'tailwind-merge';
 
 function Img({ src }) {
-  const [isLoaded, setLoaded] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
 
-  useEffect(() => {
-    if (src) {
-      const preloaderImg = document.createElement('img');
-      preloaderImg.src = src;
-
-      const handleLoad = () => {
-        setLoaded(true);
-      };
-
-      preloaderImg.addEventListener('load', handleLoad);
-
-      return () => {
-        preloaderImg.removeEventListener('load', handleLoad);
-      };
-    }
-  }, [src]);
   return (
-    <Bg
-      style={{ backgroundImage: isLoaded ? `url("${src}")` : '' }}
-      className={isLoaded ? 'loaded' : ''}
-    />
+    <div
+      className={twMerge(
+        'absolute top-0 inset-x-0 z-0 h-[500px] opacity-0 transition-opacity duration-500',
+        imgRef.current?.complete && 'opacity-25',
+      )}
+    >
+      <span className="absolute inset-0 bg-gradient-to-b from-transparent to-neutral-900" />
+      <img
+        src={src}
+        alt="Artist's picture"
+        className="object-cover w-full h-full"
+        ref={imgRef}
+      />
+    </div>
   );
 }
 
