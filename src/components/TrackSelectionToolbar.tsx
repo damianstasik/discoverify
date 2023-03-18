@@ -12,7 +12,12 @@ function extractId(value: string) {
 
 export const TrackSelectionToolbar = ({ rows }) => {
   return (
-    <div className={twMerge('p-3 gap-3', rows.length > 0 ? 'flex' : 'hidden')}>
+    <div
+      className={twMerge(
+        'p-3 gap-3 border-b border-white/20',
+        rows.length > 0 ? 'flex' : 'hidden',
+      )}
+    >
       {rows.length <= 5 && (
         <Button
           variant='outlined'
