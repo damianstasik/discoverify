@@ -10,7 +10,7 @@ import { Artist } from './routes/Artist';
 // import { userState } from './store';
 import { Liked } from './routes/Liked';
 import { Recommendations } from './routes/Recommendations';
-// import { RelatedArtistsTopTracks } from './routes/RelatedArtistsTopTracks';
+import { RelatedArtistsTopTracks } from './routes/RelatedArtistsTopTracks';
 // import { TopTracks } from './routes/TopTracks';
 // import { Playlists } from './routes/Playlists';
 // import { RecentlyPlayed } from './routes/RecentlyPlayed';
@@ -70,10 +70,6 @@ const routes: RouteObject[] = [
       //   element: <FollowedArtistsTopTracks />,
       // },
       // {
-      //   path: 'related-artists/top-tracks/:id',
-      //   element: <RelatedArtistsTopTracks />,
-      // },
-      // {
       //   path: 'related-artists/top-tracks',
       //   element: <RelatedArtistsTopTracks />,
       // },
@@ -100,6 +96,10 @@ const routes: RouteObject[] = [
           {
             path: 'albums',
             element: <ArtistAlbums />,
+          },
+          {
+            path: 'related-artists-top-tracks',
+            element: <RelatedArtistsTopTracks />,
           },
         ],
       },

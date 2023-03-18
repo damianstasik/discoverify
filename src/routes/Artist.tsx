@@ -114,7 +114,7 @@ export function Artist() {
       icon: mdiFolderPlay,
     },
     {
-      to: 'related-artists-tracks',
+      to: 'related-artists-top-tracks',
       label: "Related artists' top tracks",
       icon: mdiAccountMusic,
     },
@@ -140,7 +140,9 @@ export function Artist() {
           </nav>
         </div>
 
-        <Suspense fallback={<div>loading</div>}>
+        <Suspense
+          fallback={<div className="text-white text-lg p-3">Loading...</div>}
+        >
           <Outlet />
         </Suspense>
       </div>

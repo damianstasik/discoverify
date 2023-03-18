@@ -91,6 +91,7 @@ export function ArtistTopTracks() {
 
       return tracks;
     },
+    { suspense: true },
   );
 
   return (
