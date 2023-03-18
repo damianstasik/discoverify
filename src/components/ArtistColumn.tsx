@@ -15,6 +15,7 @@ export const ArtistColumn = <Data extends { artists: Artist[] }>(
       {artists.map((artist) => (
         <Link
           to={`/artist/${artist.id}`}
+          state={artist}
           key={artist.id}
           className="text-white underline decoration-neutral-600"
         >

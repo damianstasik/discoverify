@@ -6,7 +6,6 @@ import {
   useResolvedPath,
 } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { Skeleton } from '@mui/material';
 import { Suspense, useRef } from 'react';
 import { trpc } from '../trpc';
 import { twMerge } from 'tailwind-merge';
@@ -74,6 +73,7 @@ function TabLink({ tab }) {
 
 export function Artist() {
   const params = useParams();
+  const { state } = useLocation();
 
   const { data } = useQuery(
     ['artist', params.id],
@@ -84,7 +84,7 @@ export function Artist() {
 
       return artist;
     },
-    { refetchOnMount: true },
+    { refetchOnMount: true, placeholderData: state },
   );
 
   const tabs = [
