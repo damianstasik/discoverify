@@ -184,7 +184,7 @@ export function Player() {
         </div>
 
         <div className="w-4/12 justify-center flex flex-col">
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center gap-1">
             <PlaybackControl
               state={playerState}
               onPlayPauseClick={handlePlayPause}

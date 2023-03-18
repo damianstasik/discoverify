@@ -42,7 +42,7 @@ export const SeekControl = memo(
           <Slider.Thumb className="block w-5 h-5 bg-green-500 rounded-full hover:bg-violet3 focus:outline-none" />
         </Slider.Root>
 
-        <div className="flex items-center justify-between w-full text-neutral-400 text-sm pointer-events-none tabular-nums">
+        <div className="flex items-center justify-between w-full text-neutral-400 text-sm pointer-events-none tabular-nums leading-none">
           <span>{formatTime(position)}</span>
           <span>-{formatTime(duration - position)}</span>
         </div>
