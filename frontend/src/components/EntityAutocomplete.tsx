@@ -69,7 +69,7 @@ export function EntityAutocomplete({
   isLoading,
   query,
   onQueryChange,
-  onTrackSelection,
+  onSelection,
   className,
 }) {
   const items = tracks.reduce((acc, item) => {
@@ -83,7 +83,7 @@ export function EntityAutocomplete({
   }, {});
 
   return (
-    <Combobox onChange={onTrackSelection}>
+    <Combobox onChange={onSelection}>
       <div className={twMerge('relative z-10', className)}>
         <div className="relative w-full  overflow-hidden rounded-lg border border-neutral-750 bg-neutral-950 text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
           <Combobox.Input

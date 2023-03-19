@@ -30,12 +30,13 @@ export const saveTrack: Mutation<'track.save', string> = async (id) => {
 
 export const getRecommendedTracks: Query<
   'track.recommended',
-  [key: string, trackIds: string[], values: any]
+  [key: string, trackIds: string[], artistIds: string[], values: any]
 > = async ({ queryKey, signal }) => {
   const tracks = await trpc.track.recommended.query(
     {
       trackIds: queryKey[1],
-      attributes: queryKey[2],
+      artistIds: queryKey[2],
+      attributes: queryKey[3],
     },
     { signal },
   );
@@ -52,7 +53,7 @@ export const getTracks: Query<
   return tracks;
 };
 
-export const search: Query<'seed.search', [key: string, query: string]> =
+export const seedSearch: Query<'seed.search', [key: string, query: string]> =
   async ({ queryKey, signal }) => {
     const results = await trpc.seed.search.query(queryKey[1], { signal });
 

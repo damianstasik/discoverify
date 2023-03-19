@@ -1,3 +1,5 @@
+import { trpc } from '../trpc';
+
 export async function getFollowedArtistsTopTracks(
   token: string,
   genre: string | null,
@@ -34,3 +36,12 @@ export async function getRelatedArtistsTopTracks(
 
   return body;
 }
+
+export const getArtists: Query<
+  'artist.byIds',
+  [key: string, artistIds: string[]]
+> = async ({ queryKey, signal }) => {
+  const artists = await trpc.artist.byIds.query(queryKey[1], { signal });
+
+  return artists;
+};

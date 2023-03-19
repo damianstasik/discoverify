@@ -42,7 +42,7 @@ export const seedRouter = router({
       ).map((genre) => ({
         type: 'genre',
         label: genre,
-        id: `genre-${genre}`,
+        id: `${genre}`,
       }));
 
       const results = await getSpotifyApi(req.ctx.token.accessToken).search(
@@ -54,7 +54,7 @@ export const seedRouter = router({
         results.body.artists?.items.map((artist) => ({
           type: 'artist',
           label: artist.name,
-          id: `artist-${artist.id}`,
+          id: `${artist.id}`,
           img: artist.images?.[0]?.url,
         })) ?? [];
 

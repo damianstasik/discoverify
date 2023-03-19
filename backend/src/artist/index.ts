@@ -50,6 +50,13 @@ export const artistRouter = router({
 
     return artist.body;
   }),
+  byIds: procedureWithAuthToken.input(z.string().array()).query(async (req) => {
+    const res = await getSpotifyApi(req.ctx.token.accessToken).getArtists(
+      req.input,
+    );
+
+    return res.body.artists;
+  }),
   topTracks: procedureWithAuthToken.input(z.string()).query(async (req) => {
     const spotifyApi = getSpotifyApi(req.ctx.token.accessToken);
 

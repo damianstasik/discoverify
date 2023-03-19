@@ -95,7 +95,8 @@ export const trackRouter = router({
           keyTarget: z.coerce.number().min(0).max(11).optional(),
         }),
 
-        trackIds: z.string().array(),
+        trackIds: z.string().array().optional(),
+        artistIds: z.string().array().optional(),
       }),
     )
     .query(async (req) => {
@@ -162,6 +163,7 @@ export const trackRouter = router({
         target_key: attributes.keyTarget,
 
         seed_tracks: req.input.trackIds,
+        seed_artists: req.input.artistIds,
       });
 
       const ids = songs.body.tracks.map((tr) => tr.id);

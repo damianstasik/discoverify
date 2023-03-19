@@ -1,12 +1,10 @@
 import { useState, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useRecoilValue } from 'recoil';
+import { useQueries } from '@tanstack/react-query';
 import { useDebounce } from 'use-debounce';
-import { tokenState } from '../store';
 import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
 import { TrackNameColumn } from '../components/TrackNameColumn';
-import { getRecommendedTracks, getTracks, search } from '../api';
+import { getRecommendedTracks, getTracks, seedSearch } from '../api';
 import { TrackChip } from '../components/TrackChip';
 import { EntityAutocomplete } from '../components/EntityAutocomplete';
 import { TrackChipSkeleton } from '../components/TrackChipSkeleton';
@@ -23,6 +21,9 @@ import { IgnoreColumn } from '../components/IgnoreColumn';
 import { SaveColumn } from '../components/SaveColumn';
 import { RecommendationAttribute } from '../components/RecommendationAttribute';
 import { ArtistColumn } from '../components/ArtistColumn';
+import { getArtists } from '../api/artist';
+import { ArtistChip } from '../components/ArtistChip';
+import { ArtistChipSkeleton } from '../components/ArtistChipSkeleton';
 
 type TrackType = RouterOutput['track']['recommended'][number];
 
@@ -94,43 +95,44 @@ const columns = [
 
 export function Recommendations() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [selectedSongs, setSelectedSongs] = useState([]);
-
   const [query, setQuery] = useState('');
   const [debouncedQuery] = useDebounce(query, 500);
 
   const { attributes, values } = useAttributes(attributesConfig);
 
-  const token = useRecoilValue(tokenState);
-  const queryClient = useQueryClient();
-
   const trackIds = searchParams.getAll('trackId');
+  const artistIds = searchParams.getAll('artistId');
+  const genreIds = searchParams.getAll('genres');
 
-  const { data, isFetching, isInitialLoading } = useQuery(
-    ['recommended', trackIds, values],
-    getRecommendedTracks,
-    {
-      enabled: trackIds.length > 0,
-    },
-  );
-
-  const { data: songs, isLoading: isLoadingTracks } = useQuery(
-    ['songs', trackIds],
-    getTracks,
-    {
-      enabled: trackIds.length > 0,
-    },
-  );
-
-  const {
-    data: autosongs,
-    isLoading: isLoadingAutocomplete,
-    isFetching: isFetchingAutocomplete,
-  } = useQuery(['search', debouncedQuery], search, {
-    enabled: !!debouncedQuery,
+  const [recommended, tracks, artists, search] = useQueries({
+    queries: [
+      {
+        queryKey: ['recommendedTracks', trackIds, artistIds, values],
+        queryFn: getRecommendedTracks,
+        enabled: trackIds.length > 0 || artistIds.length > 0,
+      },
+      {
+        queryKey: ['tracks', trackIds],
+        queryFn: getTracks,
+        enabled: trackIds.length > 0,
+      },
+      {
+        queryKey: ['artists', artistIds],
+        queryFn: getArtists,
+        enabled: artistIds.length > 0,
+      },
+      {
+        queryKey: ['seedSearch', debouncedQuery],
+        queryFn: seedSearch,
+        enabled: !!debouncedQuery,
+      },
+    ],
   });
 
-  const ids = useMemo(() => (data || []).map((t) => t.uri), [data]);
+  const ids = useMemo(
+    () => (recommended.data || []).map((t) => t.uri),
+    [recommended.data],
+  );
 
   usePlayPauseTrackHook(ids);
 
@@ -138,35 +140,50 @@ export function Recommendations() {
 
   // useSaveTrackHook();
 
+  const seeds = [
+    ...trackIds.map((id) => ({ type: 'track', id })),
+    ...artistIds.map((id) => ({ type: 'artist', id })),
+    ...genreIds.map((id) => ({ type: 'genre', id })),
+  ];
+
   return (
     <>
       <div className="p-3 bg-neutral-875 border-b border-neutral-800">
         <EntityAutocomplete
-          tracks={autosongs || []}
+          tracks={search.data || []}
           isDisabled={trackIds.length > 5}
-          isLoading={isFetchingAutocomplete}
+          isLoading={search.isFetching}
           query={query}
           onQueryChange={setQuery}
-          onTrackSelection={(b) => {
-            console.log;
+          onSelection={(b) => {
             const q = new URLSearchParams(searchParams);
-            q.append('trackId', b.id);
+            switch (b.type) {
+              case 'track':
+                q.append('trackId', b.id);
+                break;
+              case 'artist':
+                q.append('artistId', b.id);
+                break;
+              case 'genre':
+                q.append('genreId', b.id);
+                break;
+            }
             setSearchParams(q);
           }}
         />
 
         <div className="flex mt-3">
           <div className="w-1/2">
-            {trackIds.length > 0 && (
+            {seeds.length > 0 && (
               <div>
                 <h5 className="uppercase text-neutral-400 text-xs font-semibold pb-3 tracking-wide">
-                  Selected tracks
+                  Selected seeds
                 </h5>
                 <div className="flex flex-wrap gap-2">
-                  {!songs &&
+                  {!tracks.data &&
                     trackIds.length > 0 &&
                     trackIds.map((id) => <TrackChipSkeleton key={id} />)}
-                  {(songs || []).map((track) => (
+                  {(tracks.data || []).map((track) => (
                     <TrackChip
                       key={track.id}
                       id={track.id}
@@ -182,6 +199,17 @@ export function Recommendations() {
                         });
                         setSearchParams(q);
                       }}
+                    />
+                  ))}
+                  {!artists.data &&
+                    artistIds.length > 0 &&
+                    artistIds.map((id) => <ArtistChipSkeleton key={id} />)}
+                  {(artists.data || []).map((artist) => (
+                    <ArtistChip
+                      key={artist.id}
+                      id={artist.id}
+                      name={artist.name}
+                      imageUrl={artist.images[0].url}
                     />
                   ))}
                 </div>
@@ -202,11 +230,11 @@ export function Recommendations() {
       </div>
 
       <div style={{ height: 800 }}>
-        {trackIds.length > 0 && (
+        {seeds.length > 0 && (
           <VirtualTable
-            data={data || []}
+            data={recommended.data || []}
             columns={columns}
-            isLoading={isFetching}
+            isLoading={recommended.isFetching}
             hasNextPage={false}
             fetchNextPage={null}
             isInitialLoading={true}
