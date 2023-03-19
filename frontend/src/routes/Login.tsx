@@ -25,7 +25,7 @@ export function Login() {
     <div className="w-screen h-screen flex items-center justify-center">
       <div className="w-96 px-4 py-3 bg-neutral-800 rounded-lg">
         <h2 className="font-bold text-lg text-white">Login</h2>
-        <p className="my-3 text-sm">
+        <p className="my-3 text-neutral-300 text-sm">
           You can login with Spotify by clicking the button below.
         </p>
         <Button onClick={handleClick} loading={isLoading}>
