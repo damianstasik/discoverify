@@ -17,7 +17,7 @@ const Option = ({ item }: { item: Item }) => {
         <Combobox.Option
           className={({ active }) =>
             twMerge(
-              'text-white px-3 py-2 flex items-center gap-3',
+              'text-white px-3 py-2 flex items-center gap-3 cursor-pointer',
               active && 'bg-neutral-750',
             )
           }
@@ -37,7 +37,7 @@ const Option = ({ item }: { item: Item }) => {
         <Combobox.Option
           className={({ active }) =>
             twMerge(
-              'text-white px-3 py-2 flex items-center gap-3',
+              'text-white px-3 py-2 flex items-center gap-3 cursor-pointer',
               active && 'bg-neutral-750',
             )
           }
@@ -51,7 +51,7 @@ const Option = ({ item }: { item: Item }) => {
         <Combobox.Option
           className={({ active }) =>
             twMerge(
-              'text-white px-3 py-2 flex items-center gap-3',
+              'text-white px-3 py-2 flex items-center gap-3 cursor-pointer',
               active && 'bg-neutral-750',
             )
           }
