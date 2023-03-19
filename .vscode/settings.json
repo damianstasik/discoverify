@@ -3,5 +3,5 @@
   "[javascript]": {
     "editor.defaultFormatter": "rome.rome"
   },
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "frontend/node_modules/typescript/lib"
 }
