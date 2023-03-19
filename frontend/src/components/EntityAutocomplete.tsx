@@ -3,7 +3,14 @@ import { Icon } from './Icon';
 import { mdiMenuDown } from '@mdi/js';
 import { twMerge } from 'tailwind-merge';
 
-const Option = ({ item }) => {
+interface Item {
+  type: 'artist' | 'track' | 'genre';
+  id: string;
+  label: string;
+  [key: string]: any;
+}
+
+const Option = ({ item }: { item: Item }) => {
   switch (item.type) {
     case 'track':
       return (
@@ -61,22 +68,32 @@ const groups = {
   genre: 'Genres',
   track: 'Tracks',
   artist: 'Artists',
-};
+} as const;
+
+interface Props {
+  seeds: Item[];
+  isDisabled?: boolean;
+  isLoading?: boolean;
+  query: string;
+  onQueryChange: (query: string) => void;
+  onSelection: (item: Item) => void;
+  className?: string;
+}
 
 export function EntityAutocomplete({
-  tracks,
+  seeds,
   isDisabled,
   isLoading,
   query,
   onQueryChange,
   onSelection,
   className,
-}) {
-  const items = tracks.reduce((acc, item) => {
-    if (acc[item.type]) {
-      acc[item.type].push(item);
+}: Props) {
+  const groupedSeeds = seeds.reduce((acc, seed) => {
+    if (acc[seed.type]) {
+      acc[seed.type].push(seed);
     } else {
-      acc[item.type] = [item];
+      acc[seed.type] = [seed];
     }
 
     return acc;
@@ -101,18 +118,18 @@ export function EntityAutocomplete({
           </Combobox.Button>
         </div>
         <Combobox.Options className="absolute mt-1 max-h-96 w-full overflow-auto rounded-md bg-neutral-800 py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-          {tracks.length === 0 && query !== '' ? (
+          {seeds.length === 0 && query !== '' ? (
             <div className="relative  select-none py-2 px-4 text-white">
               Nothing found.
             </div>
           ) : (
-            Object.entries(items).map(([type, trs]) => (
+            Object.entries(groupedSeeds).map(([type, seeds]) => (
               <div key={type} className="">
                 <h5 className="text-white uppercase text-xs font-semibold px-3 py-2">
                   {groups[type]}
                 </h5>
                 <div className="flex flex-col">
-                  {trs.map((track) => (
+                  {seeds.map((track) => (
                     <Option key={track.id} item={track} />
                   ))}
                 </div>

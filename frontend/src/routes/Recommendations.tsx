@@ -167,7 +167,7 @@ export function Recommendations() {
     <>
       <div className="p-3 bg-neutral-875 border-b border-neutral-800">
         <EntityAutocomplete
-          tracks={search.data || []}
+          seeds={search.data || []}
           isDisabled={trackIds.length > 5}
           isLoading={search.isFetching}
           query={query}
