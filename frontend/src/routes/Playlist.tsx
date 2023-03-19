@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
-import { useMemo, useRef } from 'react';
+import { HTMLProps, useEffect, useMemo, useRef } from 'react';
 import { AlbumColumn } from '../components/AlbumColumn';
 import { ArtistColumn } from '../components/ArtistColumn';
 import { TrackNameColumn } from '../components/TrackNameColumn';
@@ -28,8 +28,24 @@ const columns = [
   columnHelper.display({
     size: 50,
     id: 'select',
-    header: ({ table }) => <CheckboxColumn table={table} />,
-    cell: ({ row }) => <CheckboxColumn row={row} isRow />,
+    header: ({ table }) => (
+      <CheckboxColumn
+        {...{
+          checked: table.getIsAllRowsSelected(),
+          indeterminate: table.getIsSomeRowsSelected(),
+          onChange: table.getToggleAllRowsSelectedHandler(),
+        }}
+      />
+    ),
+    cell: ({ row }) => (
+      <CheckboxColumn
+        {...{
+          checked: row.getIsSelected(),
+          indeterminate: row.getIsSomeSelected(),
+          onChange: row.getToggleSelectedHandler(),
+        }}
+      />
+    ),
   }),
   columnHelper.accessor('uri', {
     header: '',

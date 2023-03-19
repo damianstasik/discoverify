@@ -1,17 +1,18 @@
 import { useEffect, useRef } from 'react';
 
 export const CheckboxColumn = ({ onChange, checked, indeterminate }) => {
-  const checkboxRef = useRef<HTMLInputElement>();
+  const checkboxRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (checkboxRef.current) {
-      checkboxRef.current.checked = indeterminate;
+    if (typeof indeterminate === 'boolean' && checkboxRef.current) {
+      checkboxRef.current.indeterminate = !checked && indeterminate;
     }
-  }, [indeterminate]);
+  }, [checkboxRef, indeterminate]);
 
   return (
     <label className="cursor-pointer">
       <input
+        ref={checkboxRef}
         checked={checked}
         onChange={onChange}
         type="checkbox"

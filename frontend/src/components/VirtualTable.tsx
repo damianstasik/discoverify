@@ -16,7 +16,7 @@ interface TableHeaderProps {
   table: Table<any>;
 }
 
-const TableHeader = memo(({ table }: TableHeaderProps) => {
+const TableHeader = ({ table }: TableHeaderProps) => {
   return (
     <div className="bg-black/50 backdrop-blur-lg">
       {table.getHeaderGroups().map((headerGroup) => (
@@ -41,7 +41,7 @@ const TableHeader = memo(({ table }: TableHeaderProps) => {
       ))}
     </div>
   );
-});
+};
 
 interface TableCellProps {
   cell: Cell<unknown, unknown>;
