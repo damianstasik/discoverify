@@ -124,15 +124,13 @@ export function Artist() {
     <>
       <Img src={data?.images?.[0].url} />
       <div className="relative">
-        <div className="p-3">
-          <h2 className="text-xl text-white font-bold leading-none">
+        <div className="border-b border-white/20 backdrop-blur-lg">
+          <h2 className="p-3 text-xl text-white font-bold leading-none">
             {data?.name || (
               <div className="animate-pulse h-em w-48 bg-neutral-700 rounded-md" />
             )}
           </h2>
-        </div>
 
-        <div className="border-b border-white/20">
           <nav className="-mb-px flex gap-4 mx-3" aria-label="Tabs">
             {tabs.map((tab) => (
               <TabLink key={tab.label} tab={tab} />

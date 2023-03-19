@@ -1,12 +1,10 @@
-import { createBrowserRouter, createPath, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
 import { AlbumColumn } from '../components/AlbumColumn';
 import { ArtistColumn } from '../components/ArtistColumn';
 import { TrackNameColumn } from '../components/TrackNameColumn';
 import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
-import { PageTitle } from '../components/PageTitle';
-import { Skeleton } from '@mui/material';
 import { VirtualTable } from '../components/VirtualTable';
 import { CheckboxColumn } from '../components/CheckboxColumn';
 import { usePlayPauseTrackHook } from '../hooks/usePlayPauseTrackHook';
@@ -20,9 +18,9 @@ import { DurationColumn } from '../components/DurationColumn';
 import { SaveColumn } from '../components/SaveColumn';
 import { IgnoreColumn } from '../components/IgnoreColumn';
 import { SpotifyLinkColumn } from '../components/SpotifyLinkColumn';
-import { Router } from '@remix-run/router';
+import { twMerge } from 'tailwind-merge';
 
-type PlaylistType = RouterOutput['playlist']['byId']['tracks'][number];
+type PlaylistType = RouterOutput['playlist']['tracks']['tracks'][number];
 
 const columnHelper = createColumnHelper<PlaylistType>();
 
@@ -52,7 +50,7 @@ const columns = [
     header: 'Album',
     cell: AlbumColumn,
   }),
-  columnHelper.accessor('addedAt', {
+  columnHelper.accessor('added_at', {
     header: 'Added At',
     cell: AddedAtColumn,
   }),
@@ -78,30 +76,46 @@ const columns = [
   }),
 ];
 
+function Img({ src }) {
+  const imgRef = useRef<HTMLImageElement>(null);
+
+  return (
+    <div
+      className={twMerge(
+        'absolute top-0 inset-x-0 z-0 h-[500px] opacity-0 transition-opacity duration-500',
+        imgRef.current?.complete && 'opacity-10',
+      )}
+    >
+      <span className="absolute inset-0 z-0 bg-gradient-to-b from-transparent via-neutral-900/90 to-neutral-900" />
+      <img
+        src={src}
+        alt="Artist's picture"
+        className="object-cover w-full h-full"
+        ref={imgRef}
+      />
+    </div>
+  );
+}
+
 export function Playlist() {
   const params = useParams<'id'>();
 
   const { data, isFetching } = useQuery(['playlist', params.id!], getPlaylist);
 
-  const { data: tracks } = useInfiniteQuery(
-    ['playlistTracks', params.id!],
-    getPlaylistTracks,
-    {
-      initialData: {
-        pages: data?.tracks
-          ? data?.meta.total === data?.meta.limit
-            ? [
-                data.tracks.slice(0, data?.meta.limit / 2),
-                data.tracks.slice(data?.meta.limit / 2),
-              ]
-            : [data.tracks]
-          : [],
-        pageParams: [],
-      },
-    },
+  const {
+    data: tracks,
+    fetchNextPage,
+    hasNextPage,
+  } = useInfiniteQuery(['playlistTracks', params.id!], getPlaylistTracks, {
+    getNextPageParam: (lastPage) => lastPage.nextPage,
+  });
+
+  const flatData = useMemo(
+    () => tracks?.pages?.flatMap((page) => page.tracks) ?? [],
+    [tracks],
   );
 
-  const ids = useMemo(() => (tracks || []).map((t) => t.uri), [data]);
+  const ids = useMemo(() => flatData.map((t) => t.uri), [flatData]);
 
   usePlayPauseTrackHook(ids);
 
@@ -111,20 +125,27 @@ export function Playlist() {
 
   return (
     <>
-      <PageTitle>
-        Playlist:{' '}
-        {data ? (
-          data.name
-        ) : (
-          <Skeleton variant="rounded" width={210} sx={{ ml: 1 }} />
+      <Img src={data?.images?.[0]?.url} />
+
+      <div className="p-3 border-b border-white/20 backdrop-blur-lg">
+        <h2 className="text-xl text-white font-bold leading-none">
+          {data?.name || (
+            <div className="animate-pulse h-em w-48 bg-neutral-700 rounded-md" />
+          )}
+        </h2>
+
+        {data?.description && (
+          <p className='text-gray-400 text-sm mt-3'>{data?.description}</p>
         )}
-      </PageTitle>
+      </div>
 
       <div style={{ height: 800 }}>
         <VirtualTable
           columns={columns}
-          data={tracks || []}
+          data={flatData}
           isLoading={isFetching}
+          hasNextPage={hasNextPage}
+          fetchNextPage={fetchNextPage}
         />
       </div>
     </>

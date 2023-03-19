@@ -83,10 +83,16 @@ export const getPlaylist: Query<'playlist.byId', [key: string, id: string]> =
 export const getPlaylistTracks: Query<
   'playlist.tracks',
   [key: string, id: string]
-> = async ({ queryKey, signal }) => {
-  const tracks = await trpc.playlist.tracks.query(queryKey[1], {
-    signal,
-  });
+> = async ({ pageParam = 1, queryKey, signal }) => {
+  const tracks = await trpc.playlist.tracks.query(
+    {
+      id: queryKey[1],
+      page: pageParam,
+    },
+    {
+      signal,
+    },
+  );
 
   return tracks;
 };

@@ -14,9 +14,20 @@ export const playlistRouter = router({
     )
     .query(async (req) => {
       const spotifyApi = getSpotifyApi(req.ctx.token.accessToken);
-      const tracks = spotifyApi.getPlaylistTracks(req.input.id, {
-        offset: req.input.page * 100,
+      const tracks = await spotifyApi.getPlaylistTracks(req.input.id, {
+        limit: 50,
+        offset: req.input.page === 1 ? 0 : req.input.page * 50,
       });
+      return {
+        tracks: tracks.body.items.map((item) => ({
+          ...item.track,
+          added_at: item.added_at,
+          isLiked: true,
+          spotifyId: item.track?.id,
+        })),
+        nextPage: tracks.body.next ? req.input.page + 1 : null,
+        total: tracks.body.total,
+      };
     }),
   byId: procedureWithAuthToken.input(z.string()).query(async (req) => {
     const spotifyApi = getSpotifyApi(req.ctx.token.accessToken);
