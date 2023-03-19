@@ -4,6 +4,7 @@ import { ArtistColumn } from '../components/ArtistColumn';
 import { VirtualTable } from '../components/VirtualTable';
 import { RouterOutput, trpc } from '../trpc';
 import { createColumnHelper } from '@tanstack/react-table';
+import { SpotifyLinkColumn } from '../components/SpotifyLinkColumn';
 
 type AlbumType = RouterOutput['artist']['albums'][number];
 
@@ -20,6 +21,12 @@ const columns = [
   columnHelper.accessor('artists', {
     header: 'Artist(s)',
     cell: ArtistColumn,
+  }),
+  columnHelper.accessor('uri', {
+    id: 'open',
+    header: '',
+    size: 40,
+    cell: SpotifyLinkColumn,
   }),
 ];
 
