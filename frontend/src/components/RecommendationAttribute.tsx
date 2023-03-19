@@ -154,6 +154,7 @@ export function RecommendationAttribute({ attr }: Props) {
                 max: useMax ? maxValue : null,
                 target: useTarget ? target : null,
               });
+              setOpen(false);
             }}
             className="mt-3"
           >
