@@ -3,7 +3,7 @@
   "pipeline": {
     "dev": {},
     "build": {
-      "outputs": ["frontend/dist", "landing/.next/**", "!landing/.next/cache/**"]
+      "outputs": ["frontend/dist", "landing/.next/**", "!landing/.next/cache/**", "backend/dist"]
     }
   }
 }

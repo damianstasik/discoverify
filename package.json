@@ -6,7 +6,8 @@
     "landing"
   ],
   "scripts": {
-    "dev": "turbo run dev"
+    "dev": "turbo run dev",
+    "build:backend": "turbo build --filter=backend"
   },
   "dependencies": {
     "turbo": "^1.8.3"

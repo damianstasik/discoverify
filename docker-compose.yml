@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: ./backend/Dockerfile
+    restart: always
+    ports:
+      - 8888:3000

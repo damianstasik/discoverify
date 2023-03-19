@@ -4,6 +4,8 @@ import cors from '@fastify/cors';
 import { createContext } from './context';
 import { appRouter } from './router';
 
+const port = process.env.PORT || 3000;
+
 const server = fastify({
   maxParamLength: 5000,
 });
@@ -20,7 +22,7 @@ server.register(fastifyTRPCPlugin, {
   });
 
   try {
-    await server.listen({ port: 3000 });
+    await server.listen({ host: '0.0.0.0', port });
   } catch (err) {
     server.log.error(err);
     process.exit(1);
