@@ -1,9 +1,9 @@
 import SpotifyWebApi from 'spotify-web-api-node';
 
 export const spotifyApi = new SpotifyWebApi({
-  redirectUri: 'http://localhost:5173/authorize',
-  clientId: '',
-  clientSecret: '',
+  redirectUri: process.env.SPOTIFY_REDIRECT_URI,
+  clientId: process.env.SPOTIFY_CLIENT_ID,
+  clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
 });
 
 export const getSpotifyApi = (accessToken?: string): SpotifyWebApi => {
