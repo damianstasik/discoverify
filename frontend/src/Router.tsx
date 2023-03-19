@@ -12,7 +12,7 @@ import { Liked } from './routes/Liked';
 import { Recommendations } from './routes/Recommendations';
 import { RelatedArtistsTopTracks } from './routes/RelatedArtistsTopTracks';
 // import { TopTracks } from './routes/TopTracks';
-// import { Playlists } from './routes/Playlists';
+import { Playlists } from './routes/Playlists';
 // import { RecentlyPlayed } from './routes/RecentlyPlayed';
 import { Playlist } from './routes/Playlist';
 import { Layout } from './components/Layout';
@@ -45,10 +45,10 @@ const routes: RouteObject[] = [
         path: 'recommendations',
         element: <Recommendations />,
       },
-      // {
-      //   path: 'playlists',
-      //   element: <Playlists />,
-      // },
+      {
+        path: 'playlists',
+        element: <Playlists />,
+      },
       {
         path: 'playlist/:id',
         element: <Playlist />,

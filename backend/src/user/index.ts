@@ -8,22 +8,26 @@ export const userRouter = router({
     .input(
       z
         .object({
-          limit: z.number().min(1).max(50).optional(),
-          offset: z.number().min(0).optional(),
+          page: z.number().min(1).default(1),
+          perPage: z.number().min(1).max(50).default(50),
         })
-        .optional(),
+        .optional()
+        .default({
+          page: 1,
+          perPage: 50,
+        }),
     )
     .query(async (req) => {
       const playlists = await getSpotifyApi(
         req.ctx.token.accessToken,
       ).getUserPlaylists({
-        limit: req.input?.limit,
-        offset: req.input?.offset,
+        limit: req.input.perPage,
+        offset: req.input.page === 1 ? 0 : req.input.page * 50,
       });
 
       return {
         playlists: playlists.body.items,
-        hasNextPage: !!playlists.body.next,
+        nextPage: !!playlists.body.next,
       };
     }),
 });

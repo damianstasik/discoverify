@@ -1,9 +1,13 @@
-export async function getPlaylists(token: string, page: number): any {
-  const res = await fetch(
-    `${import.meta.env.VITE_API_URL}/playlists?tokenId=${token}&page=${page}`,
+import { trpc } from '../trpc';
+
+export const getPlaylists: Query<'user.playlists', [key: string]> = async ({
+  pageParam = 1,
+  signal,
+}) => {
+  const artists = await trpc.user.playlists.query(
+    { page: pageParam },
+    { signal },
   );
 
-  const body = await res.json();
-
-  return body;
-}
+  return artists;
+};

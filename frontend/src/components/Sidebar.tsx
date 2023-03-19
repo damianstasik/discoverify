@@ -1,20 +1,7 @@
 import { useMatch, Link as RouterLink } from 'react-router-dom';
 import { memo } from 'react';
-import {
-  mdiAccountHeart,
-  mdiAccountMultipleOutline,
-  mdiTagText,
-  mdiAccountMusic,
-  mdiAccountMusicOutline,
-  mdiAccountStar,
-  mdiMusicNotePlus,
-  mdiPlaylistMusic,
-  mdiHeart,
-  mdiHistory,
-} from '@mdi/js';
-import { useRecoilValue } from 'recoil';
+import { mdiPlaylistMusic, mdiHeart } from '@mdi/js';
 import { useQuery } from '@tanstack/react-query';
-import { tokenState } from '../store';
 import { Navbar } from './Navbar';
 import { trpc } from '../trpc';
 import { recommendIconPath } from '../icons/recommend';
@@ -84,10 +71,8 @@ function RouterListItem({ to, label, icon }: any) {
 }
 
 export const Sidebar = memo(() => {
-  const token = useRecoilValue(tokenState);
-
   const { data, isLoading } = useQuery(
-    ['playlists'],
+    ['sidebarPlaylists'],
     async function playlistsQuery() {
       const playlists = await trpc.user.playlists.query();
 

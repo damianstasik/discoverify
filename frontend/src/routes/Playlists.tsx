@@ -1,85 +1,59 @@
-import { useEffect, useMemo } from 'react';
-import {
-  Link as RouterLink,
-  useParams,
-  useSearchParams,
-} from 'react-router-dom';
-import Typography from '@mui/material/Typography';
-import { useRecoilValue } from 'recoil';
-import { IconButton, Link } from '@mui/material';
-import {
-  useInfiniteQuery,
-  useMutation,
-  useQueryClient,
-} from '@tanstack/react-query';
-import { mdiSpotify } from '@mdi/js';
-import Icon from '@mdi/react';
-import { tokenState } from '../store';
-import * as trackApi from '../api/track';
+import { useMemo } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import * as playlistApi from '../api/playlist';
 import { VirtualTable } from '../components/VirtualTable';
+import { RouterOutput } from '../trpc';
+import { createColumnHelper } from '@tanstack/react-table';
+import { SpotifyLinkColumn } from '../components/SpotifyLinkColumn';
+
+type PlaylistType = RouterOutput['user']['playlists']['playlists'][number];
+
+const columnHelper = createColumnHelper<PlaylistType>();
 
 const columns = [
-  {
-    accessorKey: 'name',
+  columnHelper.accessor('name', {
     header: 'Name',
-  },
-  {
-    accessorKey: 'owner',
+    size: 300,
+  }),
+  columnHelper.accessor('owner', {
     header: 'Owner',
+    size: 300,
     cell: (params) => (
-      <Link component={RouterLink} to={`/artist/${params.row.original.id}`}>
+      <RouterLink to={`/artist/${params.row.original.id}`}>
         {params.getValue().display_name}
-      </Link>
+      </RouterLink>
     ),
-  },
-  {
-    id: 'actions',
-    header: 'Actions',
-    cell: (params) => (
-      <IconButton
-        size="small"
-        aria-label="Open in Spotify"
-        href={params.row.original.uri}
-        target="_blank"
-      >
-        <Icon path={mdiSpotify} size={1} />
-      </IconButton>
-    ),
-  },
+  }),
+  columnHelper.accessor('uri', {
+    id: 'open',
+    header: '',
+    size: 40,
+    cell: SpotifyLinkColumn,
+  }),
 ];
 
 export function Playlists() {
-  const token = useRecoilValue(tokenState);
-  const { id } = useParams<{ id: string }>();
-
   const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery(
-    ['playlists', id],
-    async function playlistsQuery({ pageParam = 0 }) {
-      return playlistApi.getPlaylists(token, pageParam);
-    },
+    ['playlists'],
+    playlistApi.getPlaylists,
     {
-      getNextPageParam: (lastPage, pages) =>
-        lastPage.hasNextPage ? pages.length : false,
+      getNextPageParam: (lastPage) => lastPage.nextPage,
     },
   );
-
-  const rows = useMemo(
-    () => (data?.pages || []).map((page) => page.playlists).flat(),
+  console.log('d', data);
+  const flatData = useMemo(
+    () => data?.pages?.flatMap((page) => page.playlists) ?? [],
     [data],
   );
 
   return (
     <>
-      <Typography variant="h5" sx={{ mb: 2 }}>
-        Playlists
-      </Typography>
-
       <div style={{ height: 800 }}>
         <VirtualTable
           hasNextPage={hasNextPage}
           fetchNextPage={fetchNextPage}
-          data={rows}
+          data={flatData}
           columns={columns}
           isLoading={isFetching}
         />
