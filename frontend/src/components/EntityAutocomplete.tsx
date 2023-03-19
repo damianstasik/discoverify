@@ -102,7 +102,7 @@ export function EntityAutocomplete({
   return (
     <Combobox onChange={onSelection}>
       <div className={twMerge('relative z-10', className)}>
-        <div className="relative w-full  overflow-hidden rounded-lg border border-neutral-750 bg-neutral-950 text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
+        <div className="relative w-full overflow-hidden rounded-lg border border-neutral-750 bg-neutral-950 text-left focus:outline-none">
           <Combobox.Input
             className="w-full border-none bg-transparent py-2 pl-3 pr-10 text-sm leading-5 placeholder-neutral-500 text-white focus:ring-0"
             displayValue={(person) => ''}
@@ -117,7 +117,7 @@ export function EntityAutocomplete({
             />
           </Combobox.Button>
         </div>
-        <Combobox.Options className="absolute mt-1 max-h-96 w-full overflow-auto rounded-md bg-neutral-800 py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+        <Combobox.Options className="absolute mt-1 max-h-96 w-full overflow-auto rounded-md bg-neutral-800 text-sm focus:outline-none">
           {seeds.length === 0 && query !== '' ? (
             <div className="relative  select-none py-2 px-4 text-white">
               Nothing found.

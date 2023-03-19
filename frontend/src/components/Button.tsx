@@ -27,13 +27,13 @@ export function Button({
     <Component
       type={component ? undefined : 'button'}
       className={twMerge(
-        'inline-flex items-center rounded-md border border-transparent px-3 py-1 text-sm font-medium text-white focus:outline-none focus:ring-2',
+        'inline-flex items-center rounded-md border border-transparent px-3 py-1 text-sm font-medium text-white focus:outline-none focus:ring-1',
 
         color === 'primary' && [
           variant === 'contained' &&
-            'bg-green-700 hover:bg-green-800 focus:ring-green-600',
+            'bg-green-700 hover:bg-green-800 focus:ring-green-600 active:bg-green-900',
           variant === 'outlined' &&
-            'border-green-700 hover:bg-green-800 focus:ring-green-600',
+            'border-green-700 hover:bg-green-800 focus:ring-green-600 active:bg-green-500/10',
         ],
         (loading || disabled) && 'bg-neutral-600 cursor-default',
         className,

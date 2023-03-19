@@ -41,10 +41,10 @@ export function RecommendationAttribute({ attr }: Props) {
               : undefined
           }
           className={twMerge(
-            'text-sm rounded-xl border flex items-center h-6 px-2',
+            'text-sm rounded-xl border flex items-center h-6 px-2 active:bg-white/10 focus:outline-none focus:ring-2',
             attr.minEnabled || attr.targetEnabled || attr.maxEnabled
-              ? 'border-green-600 text-green-600'
-              : 'border-neutral-600 text-neutral-300',
+              ? 'border-green-600 text-green-600 focus:ring-green-700'
+              : 'border-neutral-600 text-neutral-300 focus:ring-neutral-700',
           )}
           onClick={() => setOpen(true)}
           aria-describedby={attr.name}

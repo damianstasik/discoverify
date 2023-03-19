@@ -21,7 +21,7 @@ export const IconButton = forwardRef<
     <Component
       type={href ? undefined : 'button'}
       className={twMerge(
-        'flex-shrink-0 focus:ring-1 focus:outline-none rounded-lg s-8 p-1 inline-flex text-base items-center justify-center hover:text-white focus:ring-white/50 hover:bg-white/20',
+        'flex-shrink-0 focus:ring-1 active:bg-white/30 focus:outline-none rounded-lg s-8 p-1 inline-flex text-base items-center justify-center hover:text-white focus:ring-white/50 hover:bg-white/20',
         className,
       )}
       onClick={onClick}
