@@ -93,6 +93,23 @@ const columns = [
   }),
 ];
 
+// Taken from https://github.com/teetotum/url-search-params-delete/blob/4f6380665e20aa77f402e300c5cfad74f4d866aa/index.js#L5-L17 and modified
+// to work with useSearchParams hook
+const deleteWithKeyAndValue = function (key: string, value: string) {
+  return (q: URLSearchParams) => {
+    const entriesIterator = q.entries();
+    const entries = [...entriesIterator];
+    const toBeRestored = entries.filter(
+      ([k, v]) => !(k === key && v === value),
+    );
+    const keysIterator = q.keys();
+    const keys = [...keysIterator];
+    keys.forEach((k) => q.delete(k));
+    toBeRestored.forEach(([k, v]) => q.append(k, v));
+    return q;
+  };
+};
+
 export function Recommendations() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [query, setQuery] = useState('');
@@ -156,19 +173,20 @@ export function Recommendations() {
           query={query}
           onQueryChange={setQuery}
           onSelection={(b) => {
-            const q = new URLSearchParams(searchParams);
-            switch (b.type) {
-              case 'track':
-                q.append('trackId', b.id);
-                break;
-              case 'artist':
-                q.append('artistId', b.id);
-                break;
-              case 'genre':
-                q.append('genreId', b.id);
-                break;
-            }
-            setSearchParams(q);
+            setSearchParams((q) => {
+              switch (b.type) {
+                case 'track':
+                  q.append('trackId', b.id);
+                  break;
+                case 'artist':
+                  q.append('artistId', b.id);
+                  break;
+                case 'genre':
+                  q.append('genreId', b.id);
+                  break;
+              }
+              return q;
+            });
           }}
         />
 
@@ -191,13 +209,9 @@ export function Recommendations() {
                       artists={track.artists}
                       imageUrl={track.album.images[0].url}
                       onRemove={() => {
-                        const q = new URLSearchParams();
-                        trackIds.forEach((trackId) => {
-                          if (trackId !== track.id) {
-                            q.append('trackId', trackId);
-                          }
-                        });
-                        setSearchParams(q);
+                        setSearchParams(
+                          deleteWithKeyAndValue('trackId', track.id),
+                        );
                       }}
                     />
                   ))}
@@ -210,6 +224,11 @@ export function Recommendations() {
                       id={artist.id}
                       name={artist.name}
                       imageUrl={artist.images[0].url}
+                      onRemove={() => {
+                        setSearchParams(
+                          deleteWithKeyAndValue('artistId', artist.id),
+                        );
+                      }}
                     />
                   ))}
                 </div>

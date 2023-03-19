@@ -2,7 +2,14 @@ import { Link } from 'react-router-dom';
 import { IconButton } from './IconButton';
 import { mdiClose } from '@mdi/js';
 
-export const ArtistChip = ({ id, name, imageUrl }) => {
+interface Props {
+  id: string;
+  name: string;
+  imageUrl: string;
+  onRemove: () => void;
+}
+
+export const ArtistChip = ({ id, name, imageUrl, onRemove }: Props) => {
   return (
     <div className="h-12 pl-2 pr-1 bg-neutral-750 rounded-md flex-shrink-0 flex items-center gap-2">
       <div>
@@ -18,6 +25,7 @@ export const ArtistChip = ({ id, name, imageUrl }) => {
           icon={mdiClose}
           label="Remove"
           className="text-neutral-400"
+          onClick={onRemove}
         />
       </div>
     </div>
