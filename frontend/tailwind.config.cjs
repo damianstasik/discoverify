@@ -7,6 +7,9 @@ module.exports = {
   theme: {
     colors: lerpColors(),
     extend: {
+      boxShadow: {
+        inner: 'inset 0 1px 0 0 rgba(255, 255, 255, 0.1)',
+      },
       spacing: {
         em: '1em',
         rem: '1rem',
