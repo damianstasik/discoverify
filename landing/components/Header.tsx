@@ -18,7 +18,7 @@ export function Header() {
           </a>
           <a
             href="https://go.discoverify.app"
-            className="text-slate-900 inline-flex items-center bg-emerald-500 border-0 py-2 px-5 rounded text-base"
+            className="text-slate-900 inline-flex items-center bg-emerald-500 hover:bg-emerald-700 border-0 py-2 px-5 rounded text-base"
           >
             Login
             <svg
