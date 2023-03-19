@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { fastifyTRPCPlugin } from '@trpc/server/adapters/fastify';
 import fastify from 'fastify';
 import cors from '@fastify/cors';
