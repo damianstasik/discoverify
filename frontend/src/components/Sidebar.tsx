@@ -62,8 +62,9 @@ function RouterListItem({ to, label, icon }: any) {
         isActive
           ? 'bg-neutral-900 text-white'
           : 'text-neutral-450 hover:bg-neutral-800 hover:text-white',
-        'group flex items-center h-8 px-2 text-sm rounded-md',
+        'group flex items-center h-8 px-2 text-sm rounded-md ',
       )}
+      title={label}
     >
       {icon && (
         <Icon
@@ -77,7 +78,7 @@ function RouterListItem({ to, label, icon }: any) {
           aria-hidden="true"
         />
       )}
-      {label}
+      <span className="truncate">{label}</span>
     </RouterLink>
   );
 }
