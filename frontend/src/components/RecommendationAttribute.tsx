@@ -55,7 +55,7 @@ export function RecommendationAttribute({ attr }: Props) {
       </Popover.Trigger>
       <Popover.Portal>
         <Popover.Content
-          className="rounded-md p-3 w-96 bg-neutral-700"
+          className="rounded-md p-3 w-96 bg-neutral-600/50 backdrop-blur-lg"
           sideOffset={5}
           collisionPadding={10}
         >
@@ -84,7 +84,7 @@ export function RecommendationAttribute({ attr }: Props) {
                 disabled={!useMin}
                 onValueChange={(v) => setMin(v[0])}
               >
-                <Slider.Track className="bg-neutral-500 relative grow rounded-full h-1">
+                <Slider.Track className="bg-white/25 relative grow rounded-full h-1">
                   <Slider.Range className="absolute bg-green-700 rounded-full h-full" />
                 </Slider.Track>
                 <Slider.Thumb className="block w-5 h-5 bg-green-500 rounded-full hover:bg-violet3 focus:outline-none" />
@@ -113,7 +113,7 @@ export function RecommendationAttribute({ attr }: Props) {
                 disabled={!useTarget}
                 onValueChange={(v) => setTarget(v[0])}
               >
-                <Slider.Track className="bg-neutral-500 relative grow rounded-full h-1">
+                <Slider.Track className="bg-white/25 relative grow rounded-full h-1">
                   <Slider.Range className="absolute bg-green-700 rounded-full h-full" />
                 </Slider.Track>
                 <Slider.Thumb className="block w-5 h-5 bg-green-500 rounded-full hover:bg-violet3 focus:outline-none" />
@@ -139,7 +139,7 @@ export function RecommendationAttribute({ attr }: Props) {
                 disabled={!useMax}
                 onValueChange={(v) => setMax(v[0])}
               >
-                <Slider.Track className="bg-neutral-500 relative grow rounded-full h-1">
+                <Slider.Track className="bg-white/25 relative grow rounded-full h-1">
                   <Slider.Range className="absolute bg-green-700 rounded-full h-full" />
                 </Slider.Track>
                 <Slider.Thumb className="block w-5 h-5 bg-green-500 rounded-full hover:bg-violet3 focus:outline-none" />
@@ -166,7 +166,7 @@ export function RecommendationAttribute({ attr }: Props) {
           >
             <Icon path={mdiClose} />
           </Popover.Close>
-          <Popover.Arrow className="fill-neutral-700" />
+          <Popover.Arrow className="fill-neutral-600/50 backdrop-blur-lg" />
         </Popover.Content>
       </Popover.Portal>
     </Popover.Root>
