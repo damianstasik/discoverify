@@ -18,7 +18,7 @@
     "@types/lodash": "^4.14.191",
     "@types/node": "^18.15.3",
     "@types/pg": "^8.6.6",
-    "@types/spotify-api": "^0.0.20",
+    "@types/spotify-api": "^0.0.21",
     "@types/spotify-web-api-node": "^5.0.7",
     "@types/spotify-web-playback-sdk": "^0.1.15",
     "async": "^3.2.4",
