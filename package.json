@@ -10,6 +10,6 @@
     "build:backend": "turbo build --filter=backend"
   },
   "dependencies": {
-    "turbo": "^1.8.4"
+    "turbo": "^1.8.5"
   }
 }
