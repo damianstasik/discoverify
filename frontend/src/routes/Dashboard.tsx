@@ -1,41 +1,26 @@
-import Button from '@mui/material/Button';
-import Card from '@mui/material/Card';
-import Grid from '@mui/material/Grid';
-import Skeleton from '@mui/material/Skeleton';
-import Typography from '@mui/material/Typography';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { QueryFunction, useQuery } from '@tanstack/react-query';
-import { Link as RouterLink } from 'react-router-dom';
-import Breadcrumbs from '@mui/material/Breadcrumbs';
-import Link from '@mui/material/Link';
+import { useQuery } from '@tanstack/react-query';
+import { Link } from 'react-router-dom';
 import { mdiPauseCircle, mdiPlayCircle } from '@mdi/js';
-import {
-  Avatar,
-  IconButton,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemButton,
-  ListItemText,
-} from '@mui/material';
-import Icon from '@mdi/react';
-import { loadingTrackPreview, tokenState, trackPreviewState } from '../store';
+import { loadingTrackPreview, trackPreviewState } from '../store';
+import { trpc } from '../trpc';
+import { twMerge } from 'tailwind-merge';
+import { Button } from '../components/Button';
+import { IconButton } from '../components/IconButton';
 
 function CardWithLink({ title, children, linkTo, isLoading, linkLabel }) {
   return (
-    <Card sx={{ p: 2, pb: 1.5 }}>
-      <Typography variant="h5" sx={{ mb: 1.5, color: '#fff' }}>
-        {title}
-      </Typography>
+    <Card>
+      <h5 className="text-base font-semibold text-white">{title}</h5>
 
       {children}
 
       <Button
-        size="small"
-        component={RouterLink}
+        component={Link}
+        variant="outlined"
         to={linkTo}
         disabled={isLoading}
-        sx={{ mt: 2, px: 1, py: 0.5, ml: -1 }}
+        className="mt-2"
       >
         {linkLabel}
       </Button>
@@ -63,52 +48,27 @@ function Track({ track }) {
     });
 
   return (
-    <ListItem disableGutters>
-      <ListItemAvatar>
+    <div className="flex gap-2 items-center">
+      <div>
         <IconButton
-          aria-label="Play"
+          label="Play"
           disabled={isLoadingTrackPreview}
           onClick={() => playPreview(track)}
-          color={isCurrentlyPlaying(track) ? 'primary' : 'default'}
-        >
-          <Icon
-            path={isCurrentlyPlaying(track) ? mdiPauseCircle : mdiPlayCircle}
-            size={1}
-          />
-        </IconButton>
-      </ListItemAvatar>
-      <ListItemText
-        primary={
-          <Link
-            component={RouterLink}
-            to={`/track/${track.id}`}
-            sx={{ fontSize: '1rem' }}
-            color="#fff"
-            underline="hover"
-          >
-            {track.name}
-          </Link>
-        }
-        secondaryTypographyProps={{
-          component: 'div',
-        }}
-        secondary={
-          <Breadcrumbs sx={{ fontSize: 'inherit' }}>
-            {track.artists.map((artist) => (
-              <Link
-                component={RouterLink}
-                to={`/artist/${artist.id}`}
-                key={artist.id}
-                color="rgba(255, 255, 255, 0.7)"
-                underline="hover"
-              >
-                {artist.name}
-              </Link>
-            ))}
-          </Breadcrumbs>
-        }
-      />
-    </ListItem>
+          icon={isCurrentlyPlaying(track) ? mdiPauseCircle : mdiPlayCircle}
+          className='text-white'
+        />
+      </div>
+      <div className="flex gap-1 w-full flex-col">
+        <Link to={`/track/${track.id}`}>{track.name}</Link>
+        <div>
+          {track.artists.map((artist) => (
+            <Link to={`/artist/${artist.id}`} key={artist.id}>
+              {artist.name}
+            </Link>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -116,23 +76,13 @@ function ArtistSkeleton() {
   const width = getRandomArbitrary(10, 40);
 
   return (
-    <ListItem disableGutters>
-      <ListItemButton disableGutters>
-        <ListItemAvatar>
-          <Skeleton
-            animation="wave"
-            width={40}
-            height={40}
-            variant="circular"
-          />
-        </ListItemAvatar>
-        <ListItemText
-          primary={
-            <Skeleton animation="wave" variant="text" width={`${width}%`} />
-          }
-        />
-      </ListItemButton>
-    </ListItem>
+    <div className="flex gap-2 items-center">
+      <div className="animate-pulse w-10 h-10 bg-neutral-700 rounded-md" />
+      <div
+        className="animate-pulse bg-neutral-700 rounded-md skeleton"
+        style={{ width: `${width}%` }}
+      />
+    </div>
   );
 }
 
@@ -141,37 +91,22 @@ function TrackSkeleton() {
   const width2 = getRandomArbitrary(20, 60);
 
   return (
-    <ListItem disableGutters>
-      <ListItemAvatar sx={{ alignItems: 'center' }}>
-        <IconButton disabled aria-label="Play">
-          <Skeleton
-            animation="wave"
-            width={24}
-            height={24}
-            variant="circular"
-          />
-        </IconButton>
-      </ListItemAvatar>
-      <ListItemText
-        primary={
-          <Skeleton animation="wave" variant="text" width={`${width1}%`} />
-        }
-        secondary={
-          <Skeleton animation="wave" variant="text" width={`${width2}%`} />
-        }
-      />
-    </ListItem>
+    <div className="flex gap-2 items-center">
+      <div>
+        <div className="animate-pulse s-8 bg-neutral-700 rounded-md" />
+      </div>
+      <div className="flex gap-1 w-full flex-col">
+        <div
+          className="animate-pulse  bg-neutral-700 rounded-md skeleton"
+          style={{ width: `${width1}%` }}
+        />
+        <div
+          className="animate-pulse  bg-neutral-700 rounded-md skeleton"
+          style={{ width: `${width2}%` }}
+        />
+      </div>
+    </div>
   );
-}
-
-interface StatsResponse {
-  likedTracksSpotify: number;
-  likedTracks: number;
-  followedArtistsSpotify: number;
-  followedArtists: number;
-  topTracks: any[];
-  recentlyPlayedTrack: any;
-  topArtists: any[];
 }
 
 function findImageUrlByMinWidth(images: any[], width: number) {
@@ -187,189 +122,156 @@ function findImageUrlByMinWidth(images: any[], width: number) {
   return images[0].url;
 }
 
-const statsQuery: QueryFunction<StatsResponse, [key: string, token: string]> =
-  async ({ queryKey, signal }) => {
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/user/stats`, {
-      signal,
-      headers: {
-        Authorization: `Bearer ${queryKey[1]}`,
-      },
-    });
+function Card({ children, className }) {
+  return (
+    <div className={twMerge('px-3 py-2 bg-neutral-800 rounded-md', className)}>
+      {children}
+    </div>
+  );
+}
 
-    const body = await res.json();
+const statsQuery: Query<'user.stats', [key: string]> = async ({ signal }) => {
+  const stats = await trpc.user.stats.query(undefined, {
+    signal,
+  });
 
-    return body;
-  };
+  return stats;
+};
 
 export default function Dashboard() {
-  const token = useRecoilValue(tokenState);
-
-  const { data, isLoading } = useQuery(['stats', token], statsQuery);
+  const { data, isLoading } = useQuery(['stats'], statsQuery);
 
   return (
-    <Grid container spacing={4}>
-      <Grid item xs={4}>
-        <Card sx={{ p: 2, pb: 1.5 }}>
-          <Typography variant="h5" sx={{ mb: 1.5, color: '#fff' }}>
-            Liked tracks
-          </Typography>
-          <Typography variant="h6" color="#fff">
-            {isLoading ? (
-              <Skeleton animation="wave" width="15%" />
-            ) : (
-              data?.likedTracksSpotify ?? 'N/A'
-            )}
-          </Typography>
-          <Typography sx={{ mb: 1.5 }} color="text.secondary">
-            on Spotify
-          </Typography>
-          <Typography variant="h6" color="#fff">
-            {isLoading ? (
-              <Skeleton animation="wave" width="15%" />
-            ) : (
-              data?.likedTracks ?? 'N/A'
-            )}
-          </Typography>
-          <Typography color="text.secondary">through Discoverify</Typography>
+    <div className="p-3 grid gap-4 grid-cols-3">
+      <Card>
+        <h5 className="text-base font-semibold text-white mb-2">
+          Liked tracks
+        </h5>
+        <h6 className="text-lg text-white leading-none oldstyle-nums">
+          {isLoading ? (
+            <div className="animate-pulse h-em w-16 bg-neutral-700 rounded-md" />
+          ) : (
+            data?.likedTracksSpotify ?? 'N/A'
+          )}
+        </h6>
+        <p className="text-neutral-300 text-base">on Spotify</p>
 
-          <Button
-            size="small"
-            component={RouterLink}
-            to="/liked"
-            disabled={isLoading}
-            sx={{ mt: 2, px: 1, py: 0.5, ml: -1 }}
-          >
-            All liked tracks
-          </Button>
-        </Card>
-      </Grid>
-      <Grid item xs={4}>
-        <Card sx={{ p: 2, pb: 1.5 }}>
-          <Typography variant="h5" sx={{ mb: 1.5, color: '#fff' }}>
-            Followed artists
-          </Typography>
-          <Typography variant="h6" color="#fff">
-            {isLoading ? (
-              <Skeleton animation="wave" width="15%" />
-            ) : (
-              data?.followedArtistsSpotify ?? 'N/A'
-            )}
-          </Typography>
-          <Typography sx={{ mb: 1.5 }} color="text.secondary">
-            on Spotify
-          </Typography>
-          <Typography variant="h6">
-            {isLoading ? (
-              <Skeleton animation="wave" width="15%" />
-            ) : (
-              data?.followedArtists ?? 'N/A'
-            )}
-          </Typography>
-          <Typography color="text.secondary">through Discoverify</Typography>
-
-          <Button
-            size="small"
-            component={RouterLink}
-            to="/artists"
-            disabled={isLoading}
-            sx={{ mt: 2, px: 1, py: 0.5, ml: -1 }}
-          >
-            All followed artists
-          </Button>
-        </Card>
-      </Grid>
-      <Grid item xs={4}>
-        <Card sx={{ p: 2, pb: 1.5 }}>
-          <Typography
-            variant="h5"
-            component="div"
-            sx={{ color: '#fff', mb: 1.5 }}
-          >
-            Recently played track
-          </Typography>
-          <List dense disablePadding>
-            {isLoading && <TrackSkeleton />}
-            {!isLoading && <Track track={data?.recentlyPlayedTrack?.track} />}
-          </List>
-
-          <Button
-            size="small"
-            component={RouterLink}
-            to="/recently-played"
-            disabled={isLoading}
-            sx={{ mt: 2, px: 1, py: 0.5, ml: -1 }}
-          >
-            More recently played tracks
-          </Button>
-        </Card>
-      </Grid>
-      <Grid item xs={4}>
-        <CardWithLink
-          title="Top 5 artists"
-          linkTo="/top-artists"
-          linkLabel="All top artists"
-          isLoading={isLoading}
+        <Button
+          variant="outlined"
+          component={Link}
+          to="/liked"
+          disabled={isLoading}
+          className="mt-2"
         >
-          <Typography sx={{ mb: 1.5 }} color="text.secondary">
-            based on listening history
-          </Typography>
-          <List dense disablePadding>
-            {isLoading && (
-              <>
-                <ArtistSkeleton />
-                <ArtistSkeleton />
-                <ArtistSkeleton />
-                <ArtistSkeleton />
-                <ArtistSkeleton />
-              </>
-            )}
-            {data?.topArtists.map((artist) => (
-              <ListItem disableGutters key={artist.id}>
-                <ListItemButton
-                  disableGutters
-                  component={RouterLink}
-                  to={`/artist/${artist.id}`}
-                  sx={{ px: 1, borderRadius: 1, mx: -1 }}
-                >
-                  <ListItemAvatar>
-                    <Avatar
-                      alt={artist.name}
-                      src={findImageUrlByMinWidth(artist.images, 40)}
-                    />
-                  </ListItemAvatar>
-                  <ListItemText primary={artist.name} sx={{ color: '#fff' }} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
-        </CardWithLink>
-      </Grid>
-      <Grid item xs={4}>
-        <CardWithLink
-          title="Top 5 tracks"
-          linkTo="/top-tracks"
-          linkLabel="All top tracks"
-          isLoading={isLoading}
+          All liked tracks
+        </Button>
+      </Card>
+
+      <Card>
+        <h5 className="text-base font-semibold text-white mb-2">
+          Followed artists
+        </h5>
+        <h6 className="text-lg text-white leading-none oldstyle-nums">
+          {isLoading ? (
+            <div className="animate-pulse h-em w-16 bg-neutral-700 rounded-md" />
+          ) : (
+            data?.followedArtistsSpotify ?? 'N/A'
+          )}
+        </h6>
+        <p className="text-neutral-300 text-base">on Spotify</p>
+
+        <Button
+          variant="outlined"
+          component={Link}
+          to="/artists"
+          disabled={isLoading}
+          className="mt-2"
         >
-          <Typography sx={{ mb: 1.5 }} color="text.secondary">
-            based on listening history
-          </Typography>
-          <List dense disablePadding>
-            {isLoading && (
-              <>
-                <TrackSkeleton />
-                <TrackSkeleton />
-                <TrackSkeleton />
-                <TrackSkeleton />
-                <TrackSkeleton />
-              </>
-            )}
-            {data?.topTracks.map((track) => (
-              <Track track={track} key={track.id} />
-            ))}
-          </List>
-        </CardWithLink>
-      </Grid>
-    </Grid>
+          All followed artists
+        </Button>
+      </Card>
+
+      <Card>
+        <h5 className="text-base font-semibold text-white mb-2">
+          Recently played track
+        </h5>
+        <div className="">
+          {isLoading && <TrackSkeleton />}
+          {!isLoading && <Track track={data?.recentlyPlayedTrack?.track} />}
+        </div>
+
+        <Button
+          variant="outlined"
+          component={Link}
+          to="/recently-played"
+          disabled={isLoading}
+          className="mt-2"
+        >
+          More recently played tracks
+        </Button>
+      </Card>
+
+      <CardWithLink
+        title="Top 5 artists"
+        linkTo="/top-artists"
+        linkLabel="All top artists"
+        isLoading={isLoading}
+      >
+        <h5 className="text-neutral-300 text-base mb-2">
+          based on listening history
+        </h5>
+        <div className="flex flex-col gap-2">
+          {isLoading && (
+            <>
+              <ArtistSkeleton />
+              <ArtistSkeleton />
+              <ArtistSkeleton />
+              <ArtistSkeleton />
+              <ArtistSkeleton />
+            </>
+          )}
+          {data?.topArtists.map((artist) => (
+            <Link
+              to={`/artist/${artist.id}`}
+              className="flex gap-2 items-center"
+              key={artist.id}
+            >
+              <img
+                alt={artist.name}
+                src={findImageUrlByMinWidth(artist.images, 40)}
+                className="w-10 h-10 rounded-md"
+              />
+
+              <span>{artist.name}</span>
+            </Link>
+          ))}
+        </div>
+      </CardWithLink>
+
+      <CardWithLink
+        title="Top 5 tracks"
+        linkTo="/top-tracks"
+        linkLabel="All top tracks"
+        isLoading={isLoading}
+      >
+        <h5 className="text-neutral-300 text-base mb-2">
+          based on listening history
+        </h5>
+        <div className="flex flex-col gap-2">
+          {isLoading && (
+            <>
+              <TrackSkeleton />
+              <TrackSkeleton />
+              <TrackSkeleton />
+              <TrackSkeleton />
+              <TrackSkeleton />
+            </>
+          )}
+          {data?.topTracks.map((track) => (
+            <Track track={track} key={track.id} />
+          ))}
+        </div>
+      </CardWithLink>
+    </div>
   );
 }

@@ -2,6 +2,7 @@ import { router } from '..';
 import { getSpotifyApi } from '../spotify';
 import { procedureWithAuthToken } from '../auth/middleware';
 import { z } from 'zod';
+import { countBy } from 'lodash';
 
 export const userRouter = router({
   playlists: procedureWithAuthToken
@@ -30,4 +31,52 @@ export const userRouter = router({
         nextPage: !!playlists.body.next,
       };
     }),
+  stats: procedureWithAuthToken.query(async (req) => {
+    const spotifyApi = getSpotifyApi(req.ctx.token.accessToken);
+
+    const [
+      recentlyPlayedTrack,
+      topArtists,
+      topTracks,
+      likedTracksSpotify,
+      followedArtistsSpotify,
+    ] = await Promise.allSettled([
+      spotifyApi.getMyRecentlyPlayedTracks({
+        limit: 1,
+      }),
+      spotifyApi.getMyTopArtists({
+        time_range: 'long_term',
+        limit: 5,
+      }),
+      spotifyApi.getMyTopTracks({
+        time_range: 'long_term',
+        limit: 5,
+      }),
+      spotifyApi.getMySavedTracks({
+        limit: 1,
+      }),
+      spotifyApi.getFollowedArtists({
+        limit: 1,
+      }),
+    ]);
+
+    return {
+      recentlyPlayedTrack:
+        recentlyPlayedTrack.status === 'fulfilled'
+          ? recentlyPlayedTrack.value.body.items[0]
+          : null,
+      topArtists:
+        topArtists.status === 'fulfilled' ? topArtists.value.body.items : [],
+      topTracks:
+        topTracks.status === 'fulfilled' ? topTracks.value.body.items : [],
+      likedTracksSpotify:
+        likedTracksSpotify.status === 'fulfilled'
+          ? likedTracksSpotify.value.body.total
+          : 0,
+      followedArtistsSpotify:
+        followedArtistsSpotify.status === 'fulfilled'
+          ? followedArtistsSpotify.value.body.artists.total
+          : 0,
+    };
+  }),
 });

@@ -20,7 +20,7 @@ import { CircularProgress } from './components/CircularProgress';
 import { ArtistTopTracks } from './routes/ArtistTopTracks';
 import { ArtistAlbums } from './routes/ArtistAlbums';
 
-// import Dashboard from './routes/Dashboard';
+import Dashboard from './routes/Dashboard';
 // import { Test } from './routes/Test';
 // import { Track } from './routes/Track';
 
@@ -33,10 +33,10 @@ const routes: RouteObject[] = [
         index: true,
         element: <Navigate to="/recommendations" replace />,
       },
-      // {
-      //   path: 'dashboard',
-      //   element: <Dashboard />,
-      // },
+      {
+        path: 'dashboard',
+        element: <Dashboard />,
+      },
       {
         path: 'liked',
         element: <Liked />,

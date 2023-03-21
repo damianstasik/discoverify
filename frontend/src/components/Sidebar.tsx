@@ -1,6 +1,6 @@
 import { useMatch, Link as RouterLink } from 'react-router-dom';
 import { memo } from 'react';
-import { mdiPlaylistMusic, mdiHeart } from '@mdi/js';
+import { mdiPlaylistMusic, mdiHeart, mdiViewDashboard } from '@mdi/js';
 import { useQuery } from '@tanstack/react-query';
 import { Navbar } from './Navbar';
 import { trpc } from '../trpc';
@@ -95,6 +95,11 @@ export const Sidebar = memo(() => {
           label="Recommendations"
           to="/recommendations"
           icon={recommendIconPath}
+        />
+        <RouterListItem
+          label="Dashboard"
+          to="/dashboard"
+          icon={mdiViewDashboard}
         />
       </nav>
 

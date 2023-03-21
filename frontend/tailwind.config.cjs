@@ -18,7 +18,14 @@ module.exports = {
   },
   plugins: [
     require('@tailwindcss/forms'),
-    plugin(({ matchUtilities, theme }) => {
+    plugin(({ matchUtilities, addUtilities, theme }) => {
+      addUtilities({
+        '.skeleton': {
+          '&:before': {
+            content: '" "',
+          },
+        },
+      });
       matchUtilities(
         {
           s: (value) => ({
