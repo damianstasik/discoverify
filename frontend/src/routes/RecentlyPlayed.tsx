@@ -1,30 +1,23 @@
-import { memo, useEffect, useMemo, useState } from 'react';
+import { memo, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import Typography from '@mui/material/Typography';
 import { useRecoilValue } from 'recoil';
-import { IconButton } from '@mui/material';
-import { useInfiniteQuery, useMutation } from '@tanstack/react-query';
-import { mdiCardsHeartOutline, mdiSpotify } from '@mdi/js';
-import Icon from '@mdi/react';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { formatRelative } from 'date-fns';
 import { tokenState } from '../store';
-import * as trackApi from '../api/track';
-import { TrackSelectionToolbar } from '../components/TrackSelectionToolbar';
 import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
 import { ArtistColumn } from '../components/ArtistColumn';
 import { TrackNameColumn } from '../components/TrackNameColumn';
 import { VirtualTable } from '../components/VirtualTable';
+import { IconButton } from '../components/IconButton';
 
 const OpenInSpotify = memo(({ row }) => {
   return (
     <IconButton
-      size="small"
-      aria-label="Open in Spotify"
+      label="Open in Spotify"
       href={row.uri}
       target="_blank"
-    >
-      <Icon path={mdiSpotify} size={1} />
-    </IconButton>
+      icon={mdiSpotify}
+    />
   );
 });
 
@@ -41,7 +34,7 @@ const columns = [
     cell: TrackNameColumn,
   },
   {
-    accessorFn: row => row.track.artists,
+    accessorFn: (row) => row.track.artists,
     header: 'Artist(s)',
     cell: ArtistColumn,
   },
@@ -93,13 +86,13 @@ export function RecentlyPlayed() {
 
   return (
     <>
-      <Typography variant="h5" sx={{ mb: 1 }}>
+      <div variant="h5" sx={{ mb: 1 }}>
         Recently played tracks
-      </Typography>
+      </div>
 
-      <Typography variant="subtitle1" sx={{ mb: 2 }}>
+      <div variant="subtitle1" sx={{ mb: 2 }}>
         Here are tracks that you recently played.
-      </Typography>
+      </div>
 
       <div style={{ height: 800 }}>
         <VirtualTable

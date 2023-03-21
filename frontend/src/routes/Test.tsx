@@ -1,33 +1,19 @@
-import { useRef, useEffect, useMemo, useState, useDeferredValue } from 'react';
+import { useState, useDeferredValue } from 'react';
 import { QueryFunction, useQuery } from '@tanstack/react-query';
-import {
-  Link as RouterLink,
-  useParams,
-  useSearchParams,
-} from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
-
-import Typography from '@mui/material/Typography';
-import { IconButton, Link } from '@mui/material';
 import { mdiSpotify } from '@mdi/js';
-import Icon from '@mdi/react';
 import { tokenState } from '../store';
-import * as trackApi from '../api/track';
-import * as playlistApi from '../api/playlist';
 import { PageTitle } from '../components/PageTitle';
-import { TrackAutocomplete } from '../components/TrackAutocomplete';
 import { VirtualTable } from '../components/VirtualTable';
+import { IconButton } from '../components/IconButton';
 
 const columns = [
   {
     accessorKey: 'name',
     header: 'Name',
     cell: (params) => (
-      <Link
-        component={RouterLink}
-        to={`/playlist/${params.row.original.id}`}
-        color="#fff"
-      >
+      <Link to={`/playlist/${params.row.original.id}`}>
         {params.getValue()}
       </Link>
     ),
@@ -36,11 +22,7 @@ const columns = [
     accessorKey: 'owner',
     header: 'Owner',
     cell: (params) => (
-      <Link
-        component={RouterLink}
-        to={`/artist/${params.getValue().id}`}
-        color="#fff"
-      >
+      <Link to={`/artist/${params.getValue().id}`}>
         {params.getValue().display_name}
       </Link>
     ),
@@ -50,13 +32,11 @@ const columns = [
     header: 'Actions',
     cell: (params) => (
       <IconButton
-        size="small"
-        aria-label="Open in Spotify"
+        label="Open in Spotify"
         href={params.row.original.uri}
         target="_blank"
-      >
-        <Icon path={mdiSpotify} size={1} />
-      </IconButton>
+        icon={mdiSpotify}
+      />
     ),
   },
 ];
@@ -115,7 +95,7 @@ export function Test() {
     <>
       <PageTitle>Playlists</PageTitle>
 
-      <TrackAutocomplete
+      {/* <TrackAutocomplete
         // isDisabled={(songs || []).length === 5}
         isLoading={isLoadingAutocomplete}
         query={query}
@@ -131,7 +111,7 @@ export function Test() {
           qa.append('q', b.id);
           setSearchParams(qa);
         }}
-      />
+      /> */}
 
       <div style={{ height: 800 }}>
         <VirtualTable

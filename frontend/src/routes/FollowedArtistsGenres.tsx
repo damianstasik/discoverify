@@ -1,10 +1,9 @@
-import Button from '@mui/material/Button';
-import { Link as RouterLink } from 'react-router-dom';
-import Typography from '@mui/material/Typography';
+import { Link } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { useQuery } from '@tanstack/react-query';
 import { tokenState } from '../store';
 import { VirtualTable } from '../components/VirtualTable';
+import { Button } from '../components/Button';
 
 const columns = [
   {
@@ -20,7 +19,7 @@ const columns = [
     header: 'Top tracks from genre',
     cell: (params) => (
       <Button
-        component={RouterLink}
+        component={Link}
         to={`/followed-artists/top-tracks?genre=${encodeURIComponent(
           params.row.original.name,
         )}`}
@@ -53,20 +52,16 @@ export function FollowedArtistsGenres() {
 
   return (
     <>
-      <Typography variant="h5" sx={{ mb: 1 }}>
+      <div variant="h5" sx={{ mb: 1 }}>
         Genres from followed artists
-      </Typography>
+      </div>
 
-      <Typography variant="subtitle1" sx={{ mb: 2 }}>
+      <div variant="subtitle1" sx={{ mb: 2 }}>
         Here are genres
-      </Typography>
+      </div>
 
       <div style={{ height: 800 }}>
-        <VirtualTable
-          isLoading={isLoading}
-          rows={data}
-          columns={columns}
-        />
+        <VirtualTable isLoading={isLoading} rows={data} columns={columns} />
       </div>
     </>
   );

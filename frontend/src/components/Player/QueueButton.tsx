@@ -1,8 +1,8 @@
 import * as Popover from '@radix-ui/react-popover';
 import { IconButton } from '../IconButton';
 import { mdiClose, mdiPlaylistMusicOutline } from '@mdi/js';
-import Icon from '@mdi/react';
 import { Link } from 'react-router-dom';
+import { Icon } from '../Icon'
 
 function ArtistLink({ id, name }) {
   return (

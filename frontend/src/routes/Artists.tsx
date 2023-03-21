@@ -1,42 +1,25 @@
 import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import Typography from '@mui/material/Typography';
-import Grid from '@mui/material/Grid';
-import Card from '@mui/material/Card';
-import CardMedia from '@mui/material/CardMedia';
-import CardContent from '@mui/material/CardContent';
-import CardActions from '@mui/material/CardActions';
-import PersonAddTwoToneIcon from '@mui/icons-material/PersonAddTwoTone';
-import IconButton from '@mui/material/IconButton';
-import LoadingButton from '@mui/lab/LoadingButton';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
-import PlayCircleFilledTwoToneIcon from '@mui/icons-material/PlayCircleFilledTwoTone';
-import StopCircleTwoToneIcon from '@mui/icons-material/StopCircleTwoTone';
-import Skeleton from '@mui/material/Skeleton';
-import CardActionArea from '@mui/material/CardActionArea';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { tokenState, trackPreviewState } from '../store';
 
 function ArtistCardSkeleton() {
   return (
-    <Card>
-      <Skeleton variant="rectangular" height={300} animation="wave" />
-      <CardContent>
-        <Typography variant="h6">
-          <Skeleton animation="wave" />
-        </Typography>
-      </CardContent>
-      <CardActions disableSpacing>
-        <Skeleton variant="rectangular" animation="wave">
-          <LoadingButton startIcon={<PersonAddTwoToneIcon />}>
+    <div>
+      <div variant="rectangular" height={300} animation="wave" />
+      <div>
+        <div variant="h6">
+          <div animation="wave" />
+        </div>
+      </div>
+      <div disableSpacing>
+        <div variant="rectangular" animation="wave">
+          {/* <div startIcon={<PersonAddTwoToneIcon />}>
             Follow
-          </LoadingButton>
-        </Skeleton>
-      </CardActions>
-    </Card>
+          </div> */}
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -61,9 +44,9 @@ function ArtistCard({ artist }: { artist: any }) {
       });
   };
   return (
-    <Card>
-      <CardActionArea component={RouterLink} to={`/artist/${artist.id}`}>
-        <CardMedia
+    <div>
+      <div component={RouterLink} to={`/artist/${artist.id}`}>
+        <div
           sx={{
             height: 300,
           }}
@@ -72,39 +55,39 @@ function ArtistCard({ artist }: { artist: any }) {
           component="img"
           loading="lazy"
         />
-      </CardActionArea>
-      <CardContent>
-        <Typography variant="h6">{artist.name}</Typography>
+      </div>
+      <div>
+        <div variant="h6">{artist.name}</div>
 
-        <List dense>
+        <div dense>
           {artist.tracks.map((tr: any) => (
-            <ListItem key={tr.id} disableGutters>
-              <ListItemText
+            <div key={tr.id} disableGutters>
+              <div
                 primary={tr.name}
                 secondary={tr.artists.map((a) => a.name).join(', ')}
               />
-              <ListItemSecondaryAction>
-                <IconButton
+              <div>
+                <div
                   edge="end"
                   aria-label="delete"
                   onClick={() =>
                     setTrackPreview({ url: tr.preview_url, context: artist })
                   }
                 >
-                  {tr.preview_url === trackPreview?.url &&
+                  {/* {tr.preview_url === trackPreview?.url &&
                   trackPreview?.context === artist ? (
                     <StopCircleTwoToneIcon />
                   ) : (
                     <PlayCircleFilledTwoToneIcon />
-                  )}
-                </IconButton>
-              </ListItemSecondaryAction>
-            </ListItem>
+                  )} */}
+                </div>
+              </div>
+            </div>
           ))}
-        </List>
-      </CardContent>
-      <CardActions disableSpacing>
-        <LoadingButton
+        </div>
+      </div>
+      <div disableSpacing>
+        {/* <div
           onClick={handleFollow}
           sx={{ color: 'green' }}
           loading={isLoading}
@@ -112,7 +95,7 @@ function ArtistCard({ artist }: { artist: any }) {
           loadingPosition="start"
         >
           {isFollowing ? 'Following' : 'Follow'}
-        </LoadingButton>
+        </div> */}
         {/* <Button
           className="mt-auto"
           icon={isFollowing ? undefined : 'add'}
@@ -123,8 +106,8 @@ function ArtistCard({ artist }: { artist: any }) {
         >
           {isFollowing ? 'Following' : 'Follow'}
         </Button> */}
-      </CardActions>
-    </Card>
+      </div>
+    </div>
   );
 }
 
@@ -144,52 +127,52 @@ export function Artists() {
 
   return (
     <>
-      <Typography variant="h5" gutterBottom>
+      <div variant="h5" gutterBottom>
         Artists from liked tracks
-      </Typography>
+      </div>
 
-      <Grid container spacing={3}>
+      <div container spacing={3}>
         {isLoading ? (
           <>
-            <Grid item xs={3}>
+            <div item xs={3}>
               <ArtistCardSkeleton />
-            </Grid>
-            <Grid item xs={3}>
+            </div>
+            <div item xs={3}>
               <ArtistCardSkeleton />
-            </Grid>
-            <Grid item xs={3}>
+            </div>
+            <div item xs={3}>
               <ArtistCardSkeleton />
-            </Grid>
-            <Grid item xs={3}>
+            </div>
+            <div item xs={3}>
               <ArtistCardSkeleton />
-            </Grid>
-            <Grid item xs={3}>
+            </div>
+            <div item xs={3}>
               <ArtistCardSkeleton />
-            </Grid>
-            <Grid item xs={3}>
+            </div>
+            <div item xs={3}>
               <ArtistCardSkeleton />
-            </Grid>
-            <Grid item xs={3}>
+            </div>
+            <div item xs={3}>
               <ArtistCardSkeleton />
-            </Grid>
-            <Grid item xs={3}>
+            </div>
+            <div item xs={3}>
               <ArtistCardSkeleton />
-            </Grid>
-            <Grid item xs={3}>
+            </div>
+            <div item xs={3}>
               <ArtistCardSkeleton />
-            </Grid>
-            <Grid item xs={3}>
+            </div>
+            <div item xs={3}>
               <ArtistCardSkeleton />
-            </Grid>
+            </div>
           </>
         ) : (
           artists.map((artist: any) => (
-            <Grid item xs={3} key={artist.id}>
+            <div item xs={3} key={artist.id}>
               <ArtistCard artist={artist} />
-            </Grid>
+            </div>
           ))
         )}
-      </Grid>
+      </div>
     </>
   );
 }

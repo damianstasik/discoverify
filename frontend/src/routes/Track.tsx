@@ -1,8 +1,6 @@
-import Button from '@mui/material/Button';
 import { useQuery } from '@tanstack/react-query';
-import { Link as RouterLink, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
-import { PageTitle } from '../components/PageTitle';
 import { tokenState } from '../store';
 
 async function trackQuery({ queryKey, signal }) {
@@ -28,5 +26,5 @@ export function Track() {
     refetchOnMount: true,
   });
 
-  return <PageTitle>{data?.name}</PageTitle>;
+  return <div>{data?.name}</div>;
 }

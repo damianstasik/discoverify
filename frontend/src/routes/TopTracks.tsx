@@ -1,36 +1,24 @@
-import { memo, useEffect, useMemo, useState } from 'react';
-import Typography from '@mui/material/Typography';
+import { memo, useMemo, useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import {
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  IconButton,
-  Radio,
-  RadioGroup,
-} from '@mui/material';
-import { useInfiniteQuery, useMutation } from '@tanstack/react-query';
-import { mdiCardsHeartOutline, mdiSpotify } from '@mdi/js';
-import Icon from '@mdi/react';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { mdiSpotify } from '@mdi/js';
 import { tokenState } from '../store';
 import * as trackApi from '../api/track';
-import { TrackSelectionToolbar } from '../components/TrackSelectionToolbar';
 import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
 import { ArtistColumn } from '../components/ArtistColumn';
 import { TrackNameColumn } from '../components/TrackNameColumn';
 import { VirtualTable } from '../components/VirtualTable';
 import { ColumnDef } from '@tanstack/react-table';
+import { IconButton } from '../components/IconButton';
 
 const OpenInSpotify = memo(({ row }) => {
   return (
     <IconButton
-      size="small"
-      aria-label="Open in Spotify"
+      label="Open in Spotify"
       href={row.uri}
       target="_blank"
-    >
-      <Icon path={mdiSpotify} size={1} />
-    </IconButton>
+      icon={mdiSpotify}
+    />
   );
 });
 
@@ -83,15 +71,15 @@ export function TopTracks() {
 
   return (
     <>
-      <Typography variant="h5" sx={{ mb: 1 }}>
+      <div variant="h5" sx={{ mb: 1 }}>
         Top tracks
-      </Typography>
+      </div>
 
-      <Typography variant="subtitle1" sx={{ mb: 2 }}>
+      <div variant="subtitle1" sx={{ mb: 2 }}>
         Here are tracks based on calculated affinity.
-      </Typography>
+      </div>
 
-      <FormControl component="fieldset" disabled={isFetching} sx={{ mb: 2 }}>
+      {/* <FormControl component="fieldset" disabled={isFetching} sx={{ mb: 2 }}>
         <FormLabel component="legend">Time range</FormLabel>
         <RadioGroup
           row
@@ -115,7 +103,7 @@ export function TopTracks() {
             label="Long term"
           />
         </RadioGroup>
-      </FormControl>
+      </FormControl> */}
 
       <div style={{ height: 750 }}>
         <VirtualTable
