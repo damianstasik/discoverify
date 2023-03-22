@@ -40,10 +40,6 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "format": "rome format --write ."
-  },
-  "devDependencies": {
-    "rome": "^11.0.0"
+    "build": "vite build"
   }
 }
