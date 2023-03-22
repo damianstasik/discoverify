@@ -15,7 +15,7 @@ WORKDIR /app
 COPY .gitignore .gitignore
 COPY --from=builder /app/out/json/ .
 COPY --from=builder /app/out/package-lock.json ./package-lock.json
-RUN npm i
+RUN npm ci
 COPY --from=builder /app/out/full/ .
 COPY turbo.json turbo.json
 RUN npm run build:backend
