@@ -104,3 +104,8 @@ export const playerVolumeAtom = atom<number>({
   default: 0.8,
   effects: [localStorageEffect<number>('playerVolume')],
 });
+
+export const savedTracksAtom = atom<string[]>({
+  key: 'savedTracks',
+  default: [],
+});

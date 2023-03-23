@@ -155,8 +155,6 @@ export function Recommendations() {
 
   // useIgnoreTrackHook();
 
-  // useSaveTrackHook();
-
   const seeds = [
     ...trackIds.map((id) => ({ type: 'track', id })),
     ...artistIds.map((id) => ({ type: 'artist', id })),

@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
-import { HTMLProps, useEffect, useMemo, useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { AlbumColumn } from '../components/AlbumColumn';
 import { ArtistColumn } from '../components/ArtistColumn';
 import { TrackNameColumn } from '../components/TrackNameColumn';
@@ -9,7 +9,6 @@ import { VirtualTable } from '../components/VirtualTable';
 import { CheckboxColumn } from '../components/CheckboxColumn';
 import { usePlayPauseTrackHook } from '../hooks/usePlayPauseTrackHook';
 import { useIgnoreTrackHook } from '../hooks/useIgnoreTrackHook';
-import { useSaveTrackHook } from '../hooks/useSaveTrackHook';
 import { getPlaylist, getPlaylistTracks } from '../api';
 import { createColumnHelper } from '@tanstack/react-table';
 import { AddedAtColumn } from '../components/AddedAtColumn';
@@ -136,8 +135,6 @@ export function Playlist() {
   usePlayPauseTrackHook(ids);
 
   useIgnoreTrackHook();
-
-  useSaveTrackHook();
 
   return (
     <>

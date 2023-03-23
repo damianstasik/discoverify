@@ -1,15 +1,15 @@
 import { useCallback, useState, useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import {
   trackPreviewState,
   loadingTrackPreview,
-  tokenState,
   playerStateAtom,
   playerTrackAtom,
   playerVolumeAtom,
   queueVisibilityAtom,
   userAtom,
+  savedTracksAtom,
 } from '../store';
 import { useSpotifyWebPlaybackSdk } from '../hooks/useSpotifyWebPlaybackSdk';
 import { VolumeControl } from './Player/VolumeControl';
@@ -18,12 +18,12 @@ import { TrackInfo } from './Player/TrackInfo';
 import { PlaybackControl } from './Player/PlaybackControl';
 import { PlaybackState } from '../types.d';
 import { useTimer } from '../hooks/useTimer';
-import { saveTrack } from '../api';
 import { useThrottledCallback } from 'use-debounce';
 import { IconButton } from './IconButton';
-import { mdiDevices, mdiHeartOutline } from '@mdi/js';
+import { mdiDevices, mdiHeart, mdiHeartOutline } from '@mdi/js';
 import { QueueButton } from './Player/QueueButton';
 import { trpc } from '../trpc';
+import { useEventBus } from './EventBus';
 
 export function Player() {
   const [trackPreview, setTrackPreview] = useRecoilState(trackPreviewState);
@@ -170,7 +170,18 @@ export function Player() {
     },
   );
 
-  const { mutate: saveTrackMut } = useMutation(saveTrack);
+  const eventBus = useEventBus();
+  const savedTracks = useRecoilValue(savedTracksAtom);
+  const id = meta?.current_item?.uri?.replace('spotify:track:', '');
+
+  const isSaved = id ? savedTracks.includes(id) : false;
+
+  const handleSave = useCallback(() => {
+    eventBus.emit('saveTrack', {
+      id,
+      isSaved,
+    });
+  }, [isSaved, id]);
 
   return (
     <div className="bg-neutral-800 flex px-3 py-2">
@@ -208,7 +219,10 @@ export function Player() {
           />
         </div>
         <div className="w-2/12 text-white">
-          <IconButton icon={mdiHeartOutline} />
+          <IconButton
+            icon={isSaved ? mdiHeart : mdiHeartOutline}
+            onClick={handleSave}
+          />
           <QueueButton
             queue={queue || []}
             isOpen={isQueueOpen}

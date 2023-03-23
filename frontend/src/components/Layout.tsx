@@ -1,4 +1,4 @@
-import { startTransition } from 'react';
+import { startTransition, useEffect } from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import {
   useRecoilState_TRANSITION_SUPPORT_UNSTABLE as useRecoilState,
@@ -7,13 +7,35 @@ import {
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Sidebar } from './Sidebar';
 import { Player } from './Player';
-import { tokenState, userAtom } from '../store';
+import { savedTracksAtom, userAtom } from '../store';
 import { getCurrentUser, refreshAccessToken } from '../api';
+import { trpc } from '../trpc';
+import { useSaveTrackHook } from '../hooks/useSaveTrackHook';
 
 export function Layout() {
   const location = useLocation();
   const setUser = useSetRecoilState(userAtom);
-  const [token, setToken] = useRecoilState(tokenState);
+  const setSavedTracks = useSetRecoilState(savedTracksAtom);
+
+  useSaveTrackHook();
+
+  useEffect(() => {
+    const sub = trpc.user.onTrackSave.subscribe(undefined, {
+      onData: (track) => {
+        setSavedTracks((ids) => {
+          if (ids.includes(track.id)) {
+            return ids.filter((id) => id !== track.id);
+          }
+
+          return ids.concat(track.id);
+        });
+      },
+    });
+
+    return () => {
+      sub.unsubscribe();
+    };
+  }, []);
 
   const { mutate } = useMutation(refreshAccessToken, {
     // onSuccess(freshToken) {

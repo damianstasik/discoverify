@@ -1,4 +1,4 @@
-import { router } from '..';
+import { ee, router } from '..';
 import { getSpotifyApi } from '../spotify';
 import { procedureWithAuthToken } from '../auth/middleware';
 import { z } from 'zod';
@@ -9,6 +9,15 @@ export const trackRouter = router({
     await getSpotifyApi(req.ctx.token.accessToken).addToMySavedTracks([
       req.input,
     ]);
+
+    ee.emit(`save:${req.ctx.token.userId}`, req.input);
+  }),
+  unsave: procedureWithAuthToken.input(z.string()).mutation(async (req) => {
+    await getSpotifyApi(req.ctx.token.accessToken).removeFromMySavedTracks([
+      req.input,
+    ]);
+
+    ee.emit(`unsave:${req.ctx.token.userId}`, req.input);
   }),
   play: procedureWithAuthToken
     .input(

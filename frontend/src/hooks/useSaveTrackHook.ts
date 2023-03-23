@@ -1,17 +1,26 @@
 import { useMutation } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import { saveTrack } from '../api';
+import { saveTrack, unsaveTrack } from '../api';
 import { useEventBus } from '../components/EventBus';
 
 export function useSaveTrackHook() {
   const eventBus = useEventBus();
-  const { mutate } = useMutation(saveTrack);
+  const { mutate: saveTrackMutation } = useMutation(saveTrack);
+  const { mutate: unsaveTrackMutation } = useMutation(unsaveTrack);
 
   useEffect(() => {
-    eventBus.on('saveTrack', mutate);
+    const handle = ({ id, isSaved }) => {
+      if (isSaved) {
+        unsaveTrackMutation(id);
+      } else {
+        saveTrackMutation(id);
+      }
+    };
+
+    eventBus.on('saveTrack', handle);
 
     return () => {
-      eventBus.off('saveTrack', mutate);
+      eventBus.off('saveTrack', handle);
     };
   }, []);
 }

@@ -7,7 +7,6 @@ import { TrackNameColumn } from '../components/TrackNameColumn';
 import { createColumnHelper } from '@tanstack/react-table';
 import { usePlayPauseTrackHook } from '../hooks/usePlayPauseTrackHook';
 import { useIgnoreTrackHook } from '../hooks/useIgnoreTrackHook';
-import { useSaveTrackHook } from '../hooks/useSaveTrackHook';
 import { VirtualTable } from '../components/VirtualTable';
 import { CheckboxColumn } from '../components/CheckboxColumn';
 import { AddedAtColumn } from '../components/AddedAtColumn';
@@ -114,8 +113,6 @@ export function Liked() {
   usePlayPauseTrackHook(ids);
 
   useIgnoreTrackHook();
-
-  useSaveTrackHook();
 
   return (
     <>

@@ -1,10 +1,36 @@
-import { router } from '..';
+import { ee, router } from '..';
 import { getSpotifyApi } from '../spotify';
 import { procedureWithAuthToken } from '../auth/middleware';
 import { z } from 'zod';
-import { countBy } from 'lodash';
+import { observable } from '@trpc/server/observable';
+
+type TrackSaveChange = {
+  type: 'save' | 'unsave';
+  id: string;
+};
 
 export const userRouter = router({
+  onTrackSave: procedureWithAuthToken.subscription(async (req) => {
+    return observable<TrackSaveChange>((emit) => {
+      const onSave = (id: string) => {
+        emit.next({ type: 'save', id });
+      };
+
+      const onUnsave = (id: string) => {
+        emit.next({ type: 'unsave', id });
+      };
+
+      const { userId } = req.ctx.token;
+
+      ee.on(`save:${userId}`, onSave);
+      ee.on(`unsave:${userId}`, onUnsave);
+
+      return () => {
+        ee.off(`save:${userId}`, onSave);
+        ee.off(`unsave:${userId}`, onUnsave);
+      };
+    });
+  }),
   playlists: procedureWithAuthToken
     .input(
       z

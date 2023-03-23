@@ -5,6 +5,7 @@ import cors from '@fastify/cors';
 import { createContext } from './context';
 import { appRouter } from './router';
 import cookie from '@fastify/cookie';
+import ws from '@fastify/websocket';
 
 const port = process.env.PORT || 3000;
 
@@ -12,10 +13,12 @@ const server = fastify({
   maxParamLength: 5000,
 });
 
+server.register(ws);
 server.register(cookie);
 
 server.register(fastifyTRPCPlugin, {
   prefix: '/trpc',
+  useWSS: true,
   trpcOptions: { router: appRouter, createContext },
 });
 
