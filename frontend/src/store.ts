@@ -88,10 +88,10 @@ const localStorageEffect =
     });
   };
 
+/** @deprecated */
 export const tokenState = atom({
   key: 'token',
   default: '',
-  effects: [localStorageEffect<string>('token')],
 });
 
 export const userAtom = atom<Output<'auth.me'> | null>({

@@ -59,16 +59,20 @@ export const authRouter = router({
             refreshToken: req.ctx.token.refreshToken,
             userId: req.ctx.token.userId,
           },
-          'temp-secret',
+          process.env.JWT_SECRET,
           {
             expiresIn: res.body.expires_in,
           },
         );
 
-        return newToken;
+        req.ctx.res.cookie('token', newToken, {
+          path: '/',
+          httpOnly: true,
+          expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 31),
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'lax',
+        });
       }
-
-      return req.ctx.rawToken;
     }),
   url: procedure.mutation(() => {
     const url = getSpotifyApi().createAuthorizeURL(scopes, '');
@@ -94,6 +98,7 @@ export const authRouter = router({
       displayName: displayName || null,
       spotifyId: id,
       photoUrl: images?.[0].url || null,
+      accessToken: req.ctx.token.accessToken,
     };
   }),
   authorize: procedure.input(z.string()).query(async ({ ctx, input }) => {
@@ -122,12 +127,18 @@ export const authRouter = router({
         refreshToken: codeGrantResult.body.refresh_token,
         userId: profileResult.body.id,
       },
-      'temp-secret',
+      process.env.JWT_SECRET,
       {
         expiresIn: codeGrantResult.body.expires_in,
       },
     );
 
-    return token;
+    ctx.res.setCookie('token', token, {
+      path: '/',
+      httpOnly: true,
+      expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 31),
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+    });
   }),
 });

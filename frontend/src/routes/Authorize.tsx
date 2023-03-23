@@ -1,20 +1,16 @@
 import { Navigate, useSearchParams } from 'react-router-dom';
-import { useSetRecoilState } from 'recoil';
 import { useQuery } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
-import { tokenState } from '../store';
 import { trpc } from '../trpc';
 
 const authorizeQuery: Query<'auth.authorize', [key: string, code: string]> =
   async ({ queryKey, signal }) => {
-    const token = await trpc.auth.authorize.query(queryKey[1], { signal });
-
-    return token;
+    await trpc.auth.authorize.query(queryKey[1], { signal });
+    return queryKey[1];
   };
 
 export function Authorize() {
   const [searchParams] = useSearchParams();
-  const setToken = useSetRecoilState(tokenState);
   const { enqueueSnackbar } = useSnackbar();
 
   const code = searchParams.get('code');
@@ -23,9 +19,6 @@ export function Authorize() {
     enabled: !!code,
     suspense: true,
     useErrorBoundary: false,
-    onSuccess(token) {
-      setToken(token);
-    },
     onError(e) {
       enqueueSnackbar('Authorization error', {
         variant: 'error',

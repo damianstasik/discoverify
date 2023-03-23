@@ -4,12 +4,15 @@ import fastify from 'fastify';
 import cors from '@fastify/cors';
 import { createContext } from './context';
 import { appRouter } from './router';
+import cookie from '@fastify/cookie';
 
 const port = process.env.PORT || 3000;
 
 const server = fastify({
   maxParamLength: 5000,
 });
+
+server.register(cookie);
 
 server.register(fastifyTRPCPlugin, {
   prefix: '/trpc',
@@ -18,8 +21,8 @@ server.register(fastifyTRPCPlugin, {
 
 (async () => {
   await server.register(cors, {
-    // credentials: true,
-    // origin: 'http://localhost:5173',
+    credentials: true,
+    origin: process.env.CORS_ORIGIN,
   });
 
   try {

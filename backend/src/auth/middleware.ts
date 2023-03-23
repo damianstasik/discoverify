@@ -23,7 +23,7 @@ export const withAuthToken = (options?: MiddlewareOptions) =>
     }
 
     try {
-      const token = jwt.verify(ctx.rawToken, 'temp-secret', {
+      const token = jwt.verify(ctx.rawToken, process.env.JWT_SECRET, {
         ignoreExpiration: options?.ignoreExpiration,
       }) as AuthTokenInterface;
 

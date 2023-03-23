@@ -2,9 +2,7 @@ import { MutationFunction } from '@tanstack/react-query';
 import { trpc } from '../trpc';
 
 export const refreshAccessToken: Mutation<'auth.refresh'> = async () => {
-  const token = await trpc.auth.refresh.mutate();
-
-  return token;
+  await trpc.auth.refresh.mutate();
 };
 
 export const getCurrentUser: Query<'auth.me'> = async ({ signal }) => {
@@ -26,6 +24,10 @@ export const ignoreTrack: MutationFunction<void, string> = async (id) => {
 
 export const saveTrack: Mutation<'track.save', string> = async (id) => {
   await trpc.track.save.mutate(id);
+};
+
+export const unsaveTrack: Mutation<'track.unsave', string> = async (id) => {
+  await trpc.track.unsave.mutate(id);
 };
 
 export const getRecommendedTracks: Query<

@@ -16,18 +16,17 @@ export function Layout() {
   const [token, setToken] = useRecoilState(tokenState);
 
   const { mutate } = useMutation(refreshAccessToken, {
-    onSuccess(freshToken) {
-      startTransition(() => {
-        setToken(freshToken);
-      });
-    },
+    // onSuccess(freshToken) {
+    //   startTransition(() => {
+    //     setToken(freshToken);
+    //   });
+    // },
   });
 
   const { data: user } = useQuery({
     queryFn: getCurrentUser,
     queryKey: ['user'],
     suspense: true,
-    enabled: !!token,
     refetchOnMount: true,
     refetchOnReconnect: true,
     refetchOnWindowFocus: true,
@@ -40,7 +39,7 @@ export function Layout() {
     onError() {
       // check error type, if token is expired run the mutation and update token that will rerun this query
       // need to do this with startTransition to avoid triggering suspense
-      mutate(token);
+      mutate();
     },
   });
 

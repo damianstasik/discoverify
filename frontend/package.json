@@ -21,7 +21,6 @@
     "backend": "*",
     "date-fns": "^2.29.3",
     "immer": "^9.0.19",
-    "jwt-decode": "^3.1.2",
     "mitt": "^3.0.0",
     "notistack": "3.0.1",
     "postcss": "^8.4.21",

@@ -6,26 +6,11 @@ export const trpc = createTRPCProxyClient<AppRouter>({
   links: [
     httpBatchLink({
       url: import.meta.env.VITE_TRPC_URL,
-      // fetch(url, options) {
-      //   return fetch(url, {
-      //     ...options,
-      //     credentials: 'include',
-      //   });
-      // },
-      headers() {
-        try {
-          const token = JSON.parse(localStorage.getItem('token') ?? 'null');
-
-          if (!token) {
-            throw new Error();
-          }
-          return {
-            // TODO: properly pass auth headers, currently limited by TRPC
-            Authorization: `Bearer ${token}`,
-          };
-        } catch {
-          return {};
-        }
+      fetch(url, options) {
+        return fetch(url, {
+          ...options,
+          credentials: 'include',
+        });
       },
     }),
   ],

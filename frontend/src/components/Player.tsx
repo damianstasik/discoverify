@@ -1,6 +1,5 @@
 import { useCallback, useState, useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import jwt_decode from 'jwt-decode';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   trackPreviewState,
@@ -10,6 +9,7 @@ import {
   playerTrackAtom,
   playerVolumeAtom,
   queueVisibilityAtom,
+  userAtom,
 } from '../store';
 import { useSpotifyWebPlaybackSdk } from '../hooks/useSpotifyWebPlaybackSdk';
 import { VolumeControl } from './Player/VolumeControl';
@@ -35,8 +35,9 @@ export function Player() {
   //   playTrackPreviewsState,
   // );
   // const [deviceId, setDeviceId] = useRecoilState(deviceIdState);
-  const token = useRecoilValue(tokenState);
-  const decoded = jwt_decode(token);
+  const user = useRecoilValue(userAtom);
+  console.log('user?.accessToken', user?.accessToken);
+  const decoded = user?.accessToken;
 
   // const { data = [], isLoading } = useQuery(['devices', tokenId], async () => {
   //   const res = await fetch(`/devices?tokenId=${tokenId}`);
@@ -90,7 +91,7 @@ export function Player() {
 
   const { deviceId, player } = useSpotifyWebPlaybackSdk({
     name: 'Discoverify',
-    getOAuthToken: () => decoded?.accessToken,
+    getOAuthToken: () => decoded,
     onPlayerStateChanged: h,
     volume,
   });
@@ -160,13 +161,13 @@ export function Player() {
   const [isQueueOpen, setIsQueueOpen] = useRecoilState(queueVisibilityAtom);
 
   const { data: queue } = useQuery(
-    ['queue', token],
+    ['queue'],
     async ({ signal }) => {
       const queue = await trpc.player.queue.query(undefined, { signal });
       return queue;
     },
     {
-      enabled: !!token && isQueueOpen,
+      enabled: isQueueOpen,
     },
   );
 
