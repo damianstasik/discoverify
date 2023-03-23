@@ -41,7 +41,7 @@ export function Playlists() {
       getNextPageParam: (lastPage) => lastPage.nextPage,
     },
   );
-  console.log('d', data);
+
   const flatData = useMemo(
     () => data?.pages?.flatMap((page) => page.playlists) ?? [],
     [data],

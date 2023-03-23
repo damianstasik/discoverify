@@ -76,7 +76,6 @@ export const authRouter = router({
     }),
   url: procedure.mutation(() => {
     const url = getSpotifyApi().createAuthorizeURL(scopes, '');
-    console.log('url', url);
 
     return url;
   }),

@@ -36,7 +36,7 @@ export function Player() {
   // );
   // const [deviceId, setDeviceId] = useRecoilState(deviceIdState);
   const user = useRecoilValue(userAtom);
-  console.log('user?.accessToken', user?.accessToken);
+
   const decoded = user?.accessToken;
 
   // const { data = [], isLoading } = useQuery(['devices', tokenId], async () => {
@@ -44,7 +44,6 @@ export function Player() {
   //   const body = await res.json();
   //   return body;
   // });
-  console.log('trackPreview', trackPreview);
 
   const { time, start, pause, set, status } = useTimer('player');
   const [duration, setDuration] = useState(0);

@@ -23,7 +23,6 @@ export const SeekControl = memo(
 
     const handleChangeComitted = (value: number[]) => onCommit(value[0]);
 
-    console.log('seek control render', duration);
     return (
       <div className="flex flex-col gap-1 w-full items-center">
         <Slider.Root

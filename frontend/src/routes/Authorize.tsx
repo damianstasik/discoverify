@@ -23,8 +23,6 @@ export function Authorize() {
       enqueueSnackbar('Authorization error', {
         variant: 'error',
       });
-
-      console.log('Authorize error', e);
     },
   });
 

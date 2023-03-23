@@ -11,8 +11,6 @@ export function Login() {
       window.location.href = url;
     },
     onError(error) {
-      console.log('Login error', error);
-
       enqueueSnackbar('Login error', {
         variant: 'error',
       });

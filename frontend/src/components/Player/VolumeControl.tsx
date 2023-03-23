@@ -14,8 +14,6 @@ export const VolumeControl = memo(({ volume, onCommit, onChange }: Props) => {
 
   const handleChangeComitted = (value: number[]) => onCommit(value[0]);
 
-  console.log('volume control render');
-
   return (
     <div className="flex gap-1 items-center">
       <IconButton

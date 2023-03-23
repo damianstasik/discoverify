@@ -43,8 +43,6 @@ export function Layout() {
     },
   });
 
-  console.log('user', user);
-
   if (!user) {
     return <Navigate to="/login" state={location} replace />;
   }
