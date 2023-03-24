@@ -5,6 +5,31 @@ import { z } from 'zod';
 import { chunk } from 'lodash';
 
 export const trackRouter = router({
+  top: procedureWithAuthToken
+    .input(
+      z.object({
+        page: z.number(),
+        timeRange: z.enum(['short_term', 'medium_term', 'long_term']),
+      }),
+    )
+    .query(async (req) => {
+      const spotifyApi = getSpotifyApi(req.ctx.token.accessToken);
+
+      const res = await spotifyApi.getMyTopTracks({
+        limit: 50,
+        offset: req.input.page === 1 ? 0 : req.input.page * 50,
+        time_range: req.input.timeRange,
+      });
+
+      return {
+        tracks: res.body.items.map((item) => ({
+          ...item,
+          spotifyId: item.id,
+        })),
+        nextPage: res.body.next ? req.input.page + 1 : null,
+        total: res.body.total,
+      };
+    }),
   save: procedureWithAuthToken.input(z.string()).mutation(async (req) => {
     await getSpotifyApi(req.ctx.token.accessToken).addToMySavedTracks([
       req.input,

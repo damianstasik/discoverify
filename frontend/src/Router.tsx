@@ -11,7 +11,7 @@ import { Artist } from './routes/Artist';
 import { Liked } from './routes/Liked';
 import { Recommendations } from './routes/Recommendations';
 import { RelatedArtistsTopTracks } from './routes/RelatedArtistsTopTracks';
-// import { TopTracks } from './routes/TopTracks';
+import { TopTracks } from './routes/TopTracks';
 import { Playlists } from './routes/Playlists';
 // import { RecentlyPlayed } from './routes/RecentlyPlayed';
 import { Playlist } from './routes/Playlist';
@@ -57,10 +57,10 @@ const routes: RouteObject[] = [
       //   path: 'artists',
       //   element: <Artists />,
       // },
-      // {
-      //   path: 'top-tracks',
-      //   element: <TopTracks />,
-      // },
+      {
+        path: 'top-tracks',
+        element: <TopTracks />,
+      },
       // {
       //   path: 'recently-played',
       //   element: <RecentlyPlayed />,

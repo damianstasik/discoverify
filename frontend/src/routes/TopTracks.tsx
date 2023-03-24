@@ -1,115 +1,144 @@
-import { memo, useMemo, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useMemo, useState } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { mdiSpotify } from '@mdi/js';
-import { tokenState } from '../store';
-import * as trackApi from '../api/track';
 import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
 import { ArtistColumn } from '../components/ArtistColumn';
 import { TrackNameColumn } from '../components/TrackNameColumn';
 import { VirtualTable } from '../components/VirtualTable';
-import { ColumnDef } from '@tanstack/react-table';
-import { IconButton } from '../components/IconButton';
+import { createColumnHelper } from '@tanstack/react-table';
+import { RouterOutput, trpc } from '../trpc';
+import { usePlayPauseTrackHook } from '../hooks/usePlayPauseTrackHook';
+import { CheckboxColumn } from '../components/CheckboxColumn';
+import { AlbumColumn } from '../components/AlbumColumn';
+import { DurationColumn } from '../components/DurationColumn';
+import { SaveColumn } from '../components/SaveColumn';
+import { SpotifyLinkColumn } from '../components/SpotifyLinkColumn';
+import { RadioGroup } from '@headlessui/react';
+import { mdiCheck } from '@mdi/js';
+import { Icon } from '../components/Icon';
 
-const OpenInSpotify = memo(({ row }) => {
-  return (
-    <IconButton
-      label="Open in Spotify"
-      href={row.uri}
-      target="_blank"
-      icon={mdiSpotify}
-    />
-  );
-});
+type TrackType = RouterOutput['track']['saved']['tracks'][number];
 
-const columns: ColumnDef<any>[] = [
-  {
-    accessorKey: 'uri',
+const columnHelper = createColumnHelper<TrackType>();
+
+const columns = [
+  columnHelper.display({
+    size: 50,
+    id: 'select',
+    header: ({ table }) => (
+      <CheckboxColumn
+        {...{
+          checked: table.getIsAllRowsSelected(),
+          indeterminate: table.getIsSomeRowsSelected(),
+          onChange: table.getToggleAllRowsSelectedHandler(),
+        }}
+      />
+    ),
+    cell: ({ row }) => (
+      <CheckboxColumn
+        {...{
+          checked: row.getIsSelected(),
+          indeterminate: row.getIsSomeSelected(),
+          onChange: row.getToggleSelectedHandler(),
+        }}
+      />
+    ),
+  }),
+  columnHelper.accessor('uri', {
     header: '',
+    id: 'preview',
     size: 50,
     cell: TrackPreviewColumn,
-  },
-  {
-    accessorKey: 'name',
+  }),
+  columnHelper.accessor('name', {
     header: 'Name',
+    size: 300,
     cell: TrackNameColumn,
-  },
-  {
-    accessorKey: 'artists',
+  }),
+  columnHelper.accessor('artists', {
     header: 'Artist(s)',
     cell: ArtistColumn,
-  },
-  {
-    id: 'actions',
-    header: 'Actions',
-    cell: (params) => (
-      <>
-        <OpenInSpotify row={params.row.original} />
-      </>
-    ),
-  },
+  }),
+  columnHelper.accessor('album', {
+    header: 'Album',
+    cell: AlbumColumn,
+  }),
+  columnHelper.accessor('duration_ms', {
+    header: 'Duration',
+    cell: DurationColumn,
+  }),
+  columnHelper.accessor('isLiked', {
+    header: '',
+    size: 40,
+    cell: SaveColumn,
+  }),
+  columnHelper.accessor('uri', {
+    id: 'open',
+    header: '',
+    size: 40,
+    cell: SpotifyLinkColumn,
+  }),
 ];
 
+function TimeRangeOption({ value, label }: { value: string; label: string }) {
+  return (
+    <RadioGroup.Option
+      value={value}
+      className="ui-active:bg-white/5 ui-active:text-white ui-checked:border-green-500 border rounded-md border-slate-500 px-2 py-2 leading-none flex cursor-pointer"
+    >
+      <Icon
+        path={mdiCheck}
+        className="hidden ui-checked:block ui-checked:text-green-500 s-4 mr-2"
+      />
+      {label}
+    </RadioGroup.Option>
+  );
+}
+
 export function TopTracks() {
-  const token = useRecoilValue(tokenState);
   const [timeRange, setTimeRange] = useState('short_term');
 
   const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery(
     ['top-tracks', timeRange],
-    async function topTracksQuery({ pageParam = 0 }) {
-      return trackApi.getTopTracks(token, timeRange, pageParam);
+    async function topTracksQuery({ pageParam = 1 }) {
+      return trpc.track.top.query({
+        timeRange,
+        page: pageParam,
+      });
     },
     {
       getNextPageParam: (lastPage) => lastPage.nextPage,
     },
   );
 
-  const rows = useMemo(
-    () => (data?.pages || []).map((page) => page.tracks).flat(),
+  const flatData = useMemo(
+    () => data?.pages?.flatMap((page) => page.tracks) ?? [],
     [data],
   );
 
+  const ids = useMemo(() => flatData.map((t) => t.uri), [flatData]);
+
+  usePlayPauseTrackHook(ids);
+
   return (
     <>
-      <div variant="h5" sx={{ mb: 1 }}>
-        Top tracks
-      </div>
-
-      <div variant="subtitle1" sx={{ mb: 2 }}>
-        Here are tracks based on calculated affinity.
-      </div>
-
-      {/* <FormControl component="fieldset" disabled={isFetching} sx={{ mb: 2 }}>
-        <FormLabel component="legend">Time range</FormLabel>
-        <RadioGroup
-          row
-          name="timeRange"
-          value={timeRange}
-          onChange={(e) => setTimeRange(e.target.value)}
-        >
-          <FormControlLabel
-            value="short_term"
-            control={<Radio />}
-            label="Short term"
-          />
-          <FormControlLabel
-            value="medium_term"
-            control={<Radio />}
-            label="Medium term"
-          />
-          <FormControlLabel
-            value="long_term"
-            control={<Radio />}
-            label="Long term"
-          />
-        </RadioGroup>
-      </FormControl> */}
+      <RadioGroup
+        value={timeRange}
+        onChange={setTimeRange}
+        className="flex items-center gap-3 border-b border-white/10 p-3"
+      >
+        <RadioGroup.Label className="font-semibold">
+          Time range:
+        </RadioGroup.Label>
+        <TimeRangeOption value="short_term" label="Short term" />
+        <TimeRangeOption value="medium_term" label="Medium term" />
+        <TimeRangeOption value="long_term" label="Long term" />
+      </RadioGroup>
 
       <div style={{ height: 750 }}>
         <VirtualTable
           hasNextPage={hasNextPage}
           fetchNextPage={fetchNextPage}
-          rows={rows}
+          data={flatData}
           columns={columns}
           isLoading={isFetching}
         />

@@ -18,9 +18,9 @@ interface TableHeaderProps {
 
 const TableHeader = ({ table }: TableHeaderProps) => {
   return (
-    <div className="bg-black/50 backdrop-blur-lg">
+    <div className="bg-black/40 backdrop-blur-lg border-b border-white/10">
       {table.getHeaderGroups().map((headerGroup) => (
-        <div key={headerGroup.id} className="flex border-b border-white/20">
+        <div key={headerGroup.id} className="flex">
           {headerGroup.headers.map((header) => {
             return (
               <div

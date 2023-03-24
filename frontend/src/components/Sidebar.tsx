@@ -1,6 +1,11 @@
 import { useMatch, Link as RouterLink } from 'react-router-dom';
 import { memo } from 'react';
-import { mdiPlaylistMusic, mdiHeart, mdiViewDashboard } from '@mdi/js';
+import {
+  mdiPlaylistMusic,
+  mdiHeart,
+  mdiViewDashboard,
+  mdiMusicNotePlus,
+} from '@mdi/js';
 import { useQuery } from '@tanstack/react-query';
 import { Navbar } from './Navbar';
 import { trpc } from '../trpc';
@@ -82,12 +87,6 @@ export const Sidebar = memo(() => {
       <Navbar />
 
       <nav className="space-y-1 mt-3">
-        {/* <RouterListItem
-          label="Dashboard"
-          to="/dashboard"
-          icon={<DashboardTwoTone />}
-        /> */}
-
         <RouterListItem
           label="Recommendations"
           to="/recommendations"
@@ -126,13 +125,13 @@ export const Sidebar = memo(() => {
 
       <nav className="space-y-1">
         <RouterListItem label="Liked tracks" to="/liked" icon={mdiHeart} />
-        {/* 
+
         <RouterListItem
           label="My top tracks"
           to="/top-tracks"
-          icon={<Icon path={mdiMusicNotePlus} size={1} />}
+          icon={mdiMusicNotePlus}
         />
-
+        {/* 
         <RouterListItem
           label="Top from followed artists"
           to="/followed-artists/top-tracks"
