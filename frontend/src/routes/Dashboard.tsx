@@ -77,9 +77,9 @@ function ArtistSkeleton() {
 
   return (
     <div className="flex gap-2 items-center">
-      <div className="animate-pulse w-10 h-10 bg-neutral-700 rounded-md" />
+      <div className="animate-pulse w-10 h-10 bg-slate-500 rounded-md" />
       <div
-        className="animate-pulse bg-neutral-700 rounded-md skeleton"
+        className="animate-pulse bg-slate-500 rounded-md skeleton"
         style={{ width: `${width}%` }}
       />
     </div>
@@ -93,15 +93,15 @@ function TrackSkeleton() {
   return (
     <div className="flex gap-2 items-center">
       <div>
-        <div className="animate-pulse s-8 bg-neutral-700 rounded-md" />
+        <div className="animate-pulse s-8 bg-slate-500 rounded-md" />
       </div>
       <div className="flex gap-1 w-full flex-col">
         <div
-          className="animate-pulse  bg-neutral-700 rounded-md skeleton"
+          className="animate-pulse  bg-slate-500 rounded-md skeleton"
           style={{ width: `${width1}%` }}
         />
         <div
-          className="animate-pulse  bg-neutral-700 rounded-md skeleton"
+          className="animate-pulse  bg-slate-500 rounded-md skeleton"
           style={{ width: `${width2}%` }}
         />
       </div>
@@ -124,7 +124,7 @@ function findImageUrlByMinWidth(images: any[], width: number) {
 
 function Card({ children, className }) {
   return (
-    <div className={twMerge('px-3 py-2 bg-neutral-800 rounded-md', className)}>
+    <div className={twMerge('px-3 py-2 bg-slate-700 rounded-md', className)}>
       {children}
     </div>
   );
@@ -149,7 +149,7 @@ export default function Dashboard() {
         </h5>
         <h6 className="text-lg text-white leading-none oldstyle-nums">
           {isLoading ? (
-            <div className="animate-pulse h-em w-16 bg-neutral-700 rounded-md" />
+            <div className="animate-pulse h-em w-16 bg-slate-500 rounded-md" />
           ) : (
             data?.likedTracksSpotify ?? 'N/A'
           )}
@@ -173,12 +173,12 @@ export default function Dashboard() {
         </h5>
         <h6 className="text-lg text-white leading-none oldstyle-nums">
           {isLoading ? (
-            <div className="animate-pulse h-em w-16 bg-neutral-700 rounded-md" />
+            <div className="animate-pulse h-em w-16 bg-slate-500 rounded-md" />
           ) : (
             data?.followedArtistsSpotify ?? 'N/A'
           )}
         </h6>
-        <p className="text-neutral-300 text-base">on Spotify</p>
+        <p className="text-slate-300 text-base">on Spotify</p>
 
         <Button
           variant="outlined"
@@ -217,7 +217,7 @@ export default function Dashboard() {
         linkLabel="All top artists"
         isLoading={isLoading}
       >
-        <h5 className="text-neutral-300 text-base mb-2">
+        <h5 className="text-slate-300 text-base mb-2">
           based on listening history
         </h5>
         <div className="flex flex-col gap-2">
@@ -254,7 +254,7 @@ export default function Dashboard() {
         linkLabel="All top tracks"
         isLoading={isLoading}
       >
-        <h5 className="text-neutral-300 text-base mb-2">
+        <h5 className="text-slate-300 text-base mb-2">
           based on listening history
         </h5>
         <div className="flex flex-col gap-2">

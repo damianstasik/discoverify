@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Attribute } from '../types';
 import * as Popover from '@radix-ui/react-popover';
 import * as Slider from '@radix-ui/react-slider';
-import { mdiClose } from '@mdi/js';
+import { mdiChevronDown, mdiClose } from '@mdi/js';
 import { Icon } from './Icon';
 import { Button } from './Button';
 import { Switch } from './Switch';
@@ -44,24 +44,24 @@ export function RecommendationAttribute({ attr }: Props) {
             'text-sm rounded-xl border flex items-center h-6 px-2 active:bg-white/10 focus:outline-none focus:ring-2',
             attr.minEnabled || attr.targetEnabled || attr.maxEnabled
               ? 'border-green-600 text-green-600 focus:ring-green-700'
-              : 'border-neutral-600 text-neutral-300 focus:ring-neutral-700',
+              : 'border-slate-500 text-slate-300 focus:ring-slate-700',
           )}
           onClick={() => setOpen(true)}
           aria-describedby={attr.name}
         >
-          <div className="rounded-full s-2 mr-2 bg-current opacity-50" />
           {attr.label}
+          <Icon path={mdiChevronDown} className="s-4 ml-2 text-slate-450" />
         </button>
       </Popover.Trigger>
       <Popover.Portal>
         <Popover.Content
-          className="rounded-md p-3 w-96 bg-neutral-600/50 backdrop-blur-lg"
+          className="rounded-md p-3 w-96 bg-slate-500/50 backdrop-blur-lg"
           sideOffset={5}
           collisionPadding={10}
         >
           <h5 className="text-white font-medium">{attr.label}</h5>
 
-          <p className="py-3 text-neutral-300 text-sm leading-relaxed">
+          <p className="py-3 text-slate-300 text-sm leading-relaxed">
             {attr.description}
           </p>
 
@@ -161,12 +161,12 @@ export function RecommendationAttribute({ attr }: Props) {
             Save
           </Button>
           <Popover.Close
-            className="rounded-full h-8 w-8 p-1 inline-flex items-center justify-center text-neutral-500 hover:text-neutral-200 absolute top-2 right-2 hover:bg-white/10 outline-none"
+            className="rounded-full h-8 w-8 p-1 inline-flex items-center justify-center text-slate-450 hover:text-slate-200 absolute top-2 right-2 hover:bg-white/10 outline-none"
             aria-label="Close"
           >
             <Icon path={mdiClose} />
           </Popover.Close>
-          <Popover.Arrow className="fill-neutral-600/50 backdrop-blur-lg" />
+          <Popover.Arrow className="fill-slate-500/50 backdrop-blur-lg" />
         </Popover.Content>
       </Popover.Portal>
     </Popover.Root>

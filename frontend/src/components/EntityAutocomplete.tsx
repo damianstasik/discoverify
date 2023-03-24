@@ -18,7 +18,7 @@ const Option = ({ item }: { item: Item }) => {
           className={({ active }) =>
             twMerge(
               'text-white px-3 py-2 flex items-center gap-3 cursor-pointer',
-              active && 'bg-neutral-750',
+              active && 'bg-slate-500/50',
             )
           }
           value={item}
@@ -26,7 +26,7 @@ const Option = ({ item }: { item: Item }) => {
           <img src={item.img} className="s-8 rounded" alt={item.name} />
           <div className="flex flex-col">
             <p>{item.name}</p>
-            <p className="text-xs text-neutral-300">
+            <p className="text-xs text-slate-300">
               {item.artists.map((artist: any) => artist.name).join(', ')}
             </p>
           </div>
@@ -38,7 +38,7 @@ const Option = ({ item }: { item: Item }) => {
           className={({ active }) =>
             twMerge(
               'text-white px-3 py-2 flex items-center gap-3 cursor-pointer',
-              active && 'bg-neutral-750',
+              active && 'bg-slate-500/50',
             )
           }
           value={item}
@@ -52,7 +52,7 @@ const Option = ({ item }: { item: Item }) => {
           className={({ active }) =>
             twMerge(
               'text-white px-3 py-2 flex items-center gap-3 cursor-pointer',
-              active && 'bg-neutral-750',
+              active && 'bg-slate-500/50',
             )
           }
           value={item}
@@ -102,9 +102,9 @@ export function EntityAutocomplete({
   return (
     <Combobox onChange={onSelection}>
       <div className={twMerge('relative z-10', className)}>
-        <div className="relative w-full overflow-hidden rounded-lg border border-neutral-750 bg-neutral-950 text-left focus:outline-none">
+        <div className="relative w-full overflow-hidden rounded-lg border border-slate-600 bg-slate-950 text-left focus:outline-none">
           <Combobox.Input
-            className="w-full border-none bg-transparent py-2 pl-3 pr-10 text-sm leading-5 placeholder-neutral-500 text-white focus:ring-0"
+            className="w-full border-none bg-transparent py-2 pl-3 pr-10 text-sm leading-5 placeholder-slate-450 text-white focus:ring-0"
             displayValue={(person) => ''}
             onChange={(event) => onQueryChange(event.target.value)}
             placeholder="Search by tracks, artists or genres..."
@@ -112,12 +112,12 @@ export function EntityAutocomplete({
           <Combobox.Button className="absolute inset-y-0 right-2 flex items-center">
             <Icon
               path={mdiMenuDown}
-              className="s-6 text-neutral-400"
+              className="s-6 text-slate-400"
               aria-hidden="true"
             />
           </Combobox.Button>
         </div>
-        <Combobox.Options className="absolute mt-1 max-h-96 w-full overflow-auto rounded-md bg-neutral-800 text-sm focus:outline-none">
+        <Combobox.Options className="absolute mt-1 max-h-96 w-full overflow-auto rounded-md bg-slate-500/50 backdrop-blur-lg text-sm focus:outline-none">
           {seeds.length === 0 && query !== '' ? (
             <div className="relative  select-none py-2 px-4 text-white">
               Nothing found.

@@ -73,7 +73,7 @@ export function Layout() {
     <div className="flex min-h-screen">
       <Sidebar />
 
-      <main className="grow relative bg-neutral-900">
+      <main className="grow relative bg-slate-900">
         <Outlet />
       </main>
 
