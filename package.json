@@ -10,7 +10,6 @@
     "build:backend": "turbo build --filter=backend"
   },
   "dependencies": {
-    "rome": "^11.0.0",
     "turbo": "^1.8.5"
   }
 }
