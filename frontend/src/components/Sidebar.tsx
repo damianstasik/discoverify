@@ -85,7 +85,7 @@ export const Sidebar = memo(() => {
 
   return (
     <div className="w-80 p-3 flex-shrink-0">
-      <h5 className="text-white text-lg font-black leading-none">
+      <h5 className="text-white inline-flex text-lg font-black leading-none text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-cyan-500">
         Discoverify
       </h5>
 
