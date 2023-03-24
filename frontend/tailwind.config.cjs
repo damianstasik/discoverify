@@ -8,6 +8,7 @@ module.exports = {
     colors: lerpColors(),
     extend: {
       colors: {
+        'slate-1000': '#0B0D11',
         'slate-950': '#0f1117',
         'slate-900': '#13151D',
         'slate-850': '#161922',
