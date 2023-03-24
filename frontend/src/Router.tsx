@@ -13,7 +13,7 @@ import { Recommendations } from './routes/Recommendations';
 import { RelatedArtistsTopTracks } from './routes/RelatedArtistsTopTracks';
 import { TopTracks } from './routes/TopTracks';
 import { Playlists } from './routes/Playlists';
-// import { RecentlyPlayed } from './routes/RecentlyPlayed';
+import { RecentlyPlayed } from './routes/RecentlyPlayed';
 import { Playlist } from './routes/Playlist';
 import { Layout } from './components/Layout';
 import { CircularProgress } from './components/CircularProgress';
@@ -66,10 +66,10 @@ const routes: RouteObject[] = [
         path: 'top-artists',
         element: <TopArtists />,
       },
-      // {
-      //   path: 'recently-played',
-      //   element: <RecentlyPlayed />,
-      // },
+      {
+        path: 'recently-played',
+        element: <RecentlyPlayed />,
+      },
       // {
       //   path: 'followed-artists/top-tracks',
       //   element: <FollowedArtistsTopTracks />,

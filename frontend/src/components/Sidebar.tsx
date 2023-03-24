@@ -6,6 +6,7 @@ import {
   mdiViewDashboard,
   mdiMusicNotePlus,
   mdiAccountStar,
+  mdiHistory,
 } from '@mdi/js';
 import { useQuery } from '@tanstack/react-query';
 import { trpc } from '../trpc';
@@ -134,6 +135,12 @@ export const Sidebar = memo(() => {
           to="/top-tracks"
           icon={mdiMusicNotePlus}
         />
+
+        <RouterListItem
+          label="Recently played"
+          to="/recently-played"
+          icon={mdiHistory}
+        />
         {/* 
         <RouterListItem
           label="Top from followed artists"
@@ -146,12 +153,7 @@ export const Sidebar = memo(() => {
           to="/related-artists/top-tracks"
           icon={<Icon path={mdiAccountMusicOutline} size={1} />}
         />
-
-        <RouterListItem
-          label="Recently played"
-          to="/recently-played"
-          icon={<Icon path={mdiHistory} size={1} />}
-        /> */}
+        */}
       </nav>
       {/* 
       <Heading className="mt-3 mb-2">Genres</Heading>
