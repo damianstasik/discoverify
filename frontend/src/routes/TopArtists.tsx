@@ -7,6 +7,7 @@ import { SpotifyLinkColumn } from '../components/SpotifyLinkColumn';
 import { RadioGroup } from '@headlessui/react';
 import { mdiCheck } from '@mdi/js';
 import { Icon } from '../components/Icon';
+import { ArtistNameColumn } from '../components/ArtistNameColumn';
 
 type ArtistType = RouterOutput['artist']['top']['artists'][number];
 
@@ -16,6 +17,7 @@ const columns = [
   columnHelper.accessor('name', {
     header: 'Name',
     size: 300,
+    cell: ArtistNameColumn,
   }),
   columnHelper.accessor('uri', {
     id: 'open',
