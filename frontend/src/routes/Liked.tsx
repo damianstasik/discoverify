@@ -1,7 +1,7 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
-import { ArtistColumn } from '../components/ArtistColumn';
+import { ArtistsColumn } from '../components/ArtistsColumn';
 import { AlbumColumn } from '../components/AlbumColumn';
 import { TrackNameColumn } from '../components/TrackNameColumn';
 import { createColumnHelper } from '@tanstack/react-table';
@@ -56,7 +56,7 @@ const columns = [
   }),
   columnHelper.accessor('artists', {
     header: 'Artist(s)',
-    cell: ArtistColumn,
+    cell: ArtistsColumn,
   }),
   columnHelper.accessor('album', {
     header: 'Album',

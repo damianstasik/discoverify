@@ -6,7 +6,7 @@ interface Artist {
   name: string;
 }
 
-export const ArtistColumn = <Data extends { artists: Artist[] }>(
+export const ArtistsColumn = <Data extends { artists: Artist[] }>(
   props: CellContext<Data, Artist[]>,
 ) => {
   const artists = props.getValue();

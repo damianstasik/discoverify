@@ -5,7 +5,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { formatRelative } from 'date-fns';
 import { tokenState } from '../store';
 import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
-import { ArtistColumn } from '../components/ArtistColumn';
+import { ArtistsColumn } from '../components/ArtistsColumn';
 import { TrackNameColumn } from '../components/TrackNameColumn';
 import { VirtualTable } from '../components/VirtualTable';
 import { IconButton } from '../components/IconButton';
@@ -36,7 +36,7 @@ const columns = [
   {
     accessorFn: (row) => row.track.artists,
     header: 'Artist(s)',
-    cell: ArtistColumn,
+    cell: ArtistsColumn,
   },
   {
     accessorKey: 'played_at',

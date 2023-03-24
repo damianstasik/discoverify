@@ -7,7 +7,7 @@ import { tokenState } from '../store';
 import * as trackApi from '../api/track';
 import * as artistApi from '../api/artist';
 import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
-import { ArtistColumn } from '../components/ArtistColumn';
+import { ArtistsColumn } from '../components/ArtistsColumn';
 import { TrackNameColumn } from '../components/TrackNameColumn';
 import { VirtualTable } from '../components/VirtualTable';
 import { IconButton } from '../components/IconButton';
@@ -38,7 +38,7 @@ const columns = [
   {
     accessorKey: 'artists',
     header: 'Artist(s)',
-    cell: ArtistColumn,
+    cell: ArtistsColumn,
   },
   {
     id: 'actions',

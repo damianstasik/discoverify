@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useParams, Link } from 'react-router-dom';
-import { ArtistColumn } from '../components/ArtistColumn';
+import { ArtistsColumn } from '../components/ArtistsColumn';
 import { VirtualTable } from '../components/VirtualTable';
 import { RouterOutput, trpc } from '../trpc';
 import { createColumnHelper } from '@tanstack/react-table';
@@ -20,7 +20,7 @@ const columns = [
   }),
   columnHelper.accessor('artists', {
     header: 'Artist(s)',
-    cell: ArtistColumn,
+    cell: ArtistsColumn,
   }),
   columnHelper.accessor('uri', {
     id: 'open',

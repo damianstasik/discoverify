@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { AlbumColumn } from '../components/AlbumColumn';
-import { ArtistColumn } from '../components/ArtistColumn';
+import { ArtistsColumn } from '../components/ArtistsColumn';
 import { TrackNameColumn } from '../components/TrackNameColumn';
 import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
 import { VirtualTable } from '../components/VirtualTable';
@@ -55,7 +55,7 @@ const columns = [
   }),
   columnHelper.accessor('artists', {
     header: 'Artist(s)',
-    cell: ArtistColumn,
+    cell: ArtistsColumn,
   }),
   columnHelper.accessor('album', {
     header: 'Album',

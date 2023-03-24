@@ -20,7 +20,7 @@ import { SpotifyLinkColumn } from '../components/SpotifyLinkColumn';
 import { IgnoreColumn } from '../components/IgnoreColumn';
 import { SaveColumn } from '../components/SaveColumn';
 import { RecommendationAttribute } from '../components/RecommendationAttribute';
-import { ArtistColumn } from '../components/ArtistColumn';
+import { ArtistsColumn } from '../components/ArtistsColumn';
 import { getArtists } from '../api/artist';
 import { ArtistChip } from '../components/ArtistChip';
 import { ArtistChipSkeleton } from '../components/ArtistChipSkeleton';
@@ -65,7 +65,7 @@ const columns = [
   }),
   columnHelper.accessor('artist', {
     header: 'Artist(s)',
-    cell: ArtistColumn,
+    cell: ArtistsColumn,
   }),
   // columnHelper.accessor('album', {
   //   header: 'Album',
