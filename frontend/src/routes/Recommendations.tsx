@@ -163,7 +163,7 @@ export function Recommendations() {
 
   return (
     <>
-      <div className="p-3 bg-neutral-875 border-b border-neutral-800">
+      <div className="p-3 bg-slate-850 border-b border-slate-700">
         <EntityAutocomplete
           seeds={search.data || []}
           isDisabled={trackIds.length > 5}
@@ -192,7 +192,7 @@ export function Recommendations() {
           <div className="w-1/2">
             {seeds.length > 0 && (
               <div>
-                <h5 className="uppercase text-neutral-400 text-xs font-semibold pb-3 tracking-wide">
+                <h5 className="uppercase text-slate-400 text-xs font-semibold pb-3 tracking-wide">
                   Selected seeds
                 </h5>
                 <div className="flex flex-wrap gap-2">
@@ -234,7 +234,7 @@ export function Recommendations() {
             )}
           </div>
           <div className="w-1/2">
-            <h5 className="uppercase text-neutral-400 text-xs font-semibold pb-3 tracking-wide">
+            <h5 className="uppercase text-slate-400 text-xs font-semibold pb-3 tracking-wide">
               Attributes
             </h5>
             <div className="flex flex-wrap gap-1">

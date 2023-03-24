@@ -8,7 +8,7 @@ export function Switch({ checked, onChange, label, className }) {
       onChange={onChange}
       className={twMerge(
         'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-green-500',
-        checked ? 'bg-green-700' : 'bg-neutral-500',
+        checked ? 'bg-green-700' : 'bg-white/20',
         className,
       )}
     >
