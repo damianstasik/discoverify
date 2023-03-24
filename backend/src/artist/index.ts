@@ -42,6 +42,31 @@ async function getOffsetPaginatedEndpoint<T>(
 }
 
 export const artistRouter = router({
+  top: procedureWithAuthToken
+    .input(
+      z.object({
+        page: z.number(),
+        timeRange: z.enum(['short_term', 'medium_term', 'long_term']),
+      }),
+    )
+    .query(async (req) => {
+      const spotifyApi = getSpotifyApi(req.ctx.token.accessToken);
+
+      const res = await spotifyApi.getMyTopArtists({
+        limit: 50,
+        offset: req.input.page === 1 ? 0 : req.input.page * 50,
+        time_range: req.input.timeRange,
+      });
+
+      return {
+        artists: res.body.items.map((item) => ({
+          ...item,
+          spotifyId: item.id,
+        })),
+        nextPage: res.body.next ? req.input.page + 1 : null,
+        total: res.body.total,
+      };
+    }),
   byId: procedureWithAuthToken.input(z.string())
 
   .query(async (req) => {

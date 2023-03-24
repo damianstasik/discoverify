@@ -5,9 +5,9 @@ import {
   mdiHeart,
   mdiViewDashboard,
   mdiMusicNotePlus,
+  mdiAccountStar,
 } from '@mdi/js';
 import { useQuery } from '@tanstack/react-query';
-import { Navbar } from './Navbar';
 import { trpc } from '../trpc';
 import { recommendIconPath } from '../icons/recommend';
 import { Icon } from './Icon';
@@ -83,8 +83,10 @@ export const Sidebar = memo(() => {
   );
 
   return (
-    <div className="w-80 p-3  flex-shrink-0">
-      <Navbar />
+    <div className="w-80 p-3 flex-shrink-0">
+      <h5 className="text-white text-lg font-black leading-none">
+        Discoverify
+      </h5>
 
       <nav className="space-y-1 mt-3">
         <RouterListItem
@@ -99,15 +101,15 @@ export const Sidebar = memo(() => {
         />
       </nav>
 
-      {/* <Heading sx={{ mt: 3, mb: 2 }}>Artists</Heading>
+      <Heading className="mt-6 mb-3">Artists</Heading>
 
       <nav className="space-y-1">
         <RouterListItem
           label="My top artists"
           to="/top-artists"
-          icon={<Icon path={mdiAccountStar} size={1} />}
+          icon={mdiAccountStar}
         />
-
+        {/*
         <RouterListItem
           label="From liked tracks"
           to="/artists"
@@ -119,9 +121,10 @@ export const Sidebar = memo(() => {
           to="/similar"
           icon={<Icon path={mdiAccountMultipleOutline} size={1} />}
         />
-      </nav> */}
+        */}
+      </nav>
 
-      <Heading className="mt-3 mb-2">Tracks</Heading>
+      <Heading className="mt-6 mb-3">Tracks</Heading>
 
       <nav className="space-y-1">
         <RouterListItem label="Liked tracks" to="/liked" icon={mdiHeart} />
@@ -161,7 +164,7 @@ export const Sidebar = memo(() => {
         />
       </nav>
 */}
-      <Heading className="mt-3 mb-2">Playlists</Heading>
+      <Heading className="mt-6 mb-3">Playlists</Heading>
 
       <nav className="space-y-1">
         {isLoading && (

@@ -1,75 +1,21 @@
 import { useMemo, useState } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
-import { ArtistColumn } from '../components/ArtistColumn';
-import { TrackNameColumn } from '../components/TrackNameColumn';
 import { VirtualTable } from '../components/VirtualTable';
 import { createColumnHelper } from '@tanstack/react-table';
 import { RouterOutput, trpc } from '../trpc';
-import { usePlayPauseTrackHook } from '../hooks/usePlayPauseTrackHook';
-import { CheckboxColumn } from '../components/CheckboxColumn';
-import { AlbumColumn } from '../components/AlbumColumn';
-import { DurationColumn } from '../components/DurationColumn';
-import { SaveColumn } from '../components/SaveColumn';
 import { SpotifyLinkColumn } from '../components/SpotifyLinkColumn';
 import { RadioGroup } from '@headlessui/react';
 import { mdiCheck } from '@mdi/js';
 import { Icon } from '../components/Icon';
 
-type TrackType = RouterOutput['track']['top']['tracks'][number];
+type ArtistType = RouterOutput['artist']['top']['artists'][number];
 
-const columnHelper = createColumnHelper<TrackType>();
+const columnHelper = createColumnHelper<ArtistType>();
 
 const columns = [
-  columnHelper.display({
-    size: 50,
-    id: 'select',
-    header: ({ table }) => (
-      <CheckboxColumn
-        {...{
-          checked: table.getIsAllRowsSelected(),
-          indeterminate: table.getIsSomeRowsSelected(),
-          onChange: table.getToggleAllRowsSelectedHandler(),
-        }}
-      />
-    ),
-    cell: ({ row }) => (
-      <CheckboxColumn
-        {...{
-          checked: row.getIsSelected(),
-          indeterminate: row.getIsSomeSelected(),
-          onChange: row.getToggleSelectedHandler(),
-        }}
-      />
-    ),
-  }),
-  columnHelper.accessor('uri', {
-    header: '',
-    id: 'preview',
-    size: 50,
-    cell: TrackPreviewColumn,
-  }),
   columnHelper.accessor('name', {
     header: 'Name',
     size: 300,
-    cell: TrackNameColumn,
-  }),
-  columnHelper.accessor('artists', {
-    header: 'Artist(s)',
-    cell: ArtistColumn,
-  }),
-  columnHelper.accessor('album', {
-    header: 'Album',
-    cell: AlbumColumn,
-  }),
-  columnHelper.accessor('duration_ms', {
-    header: 'Duration',
-    cell: DurationColumn,
-  }),
-  columnHelper.accessor('isLiked', {
-    header: '',
-    size: 40,
-    cell: SaveColumn,
   }),
   columnHelper.accessor('uri', {
     id: 'open',
@@ -94,13 +40,13 @@ function TimeRangeOption({ value, label }: { value: string; label: string }) {
   );
 }
 
-export function TopTracks() {
+export function TopArtists() {
   const [timeRange, setTimeRange] = useState('short_term');
 
   const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery(
-    ['top-tracks', timeRange],
+    ['top-artists', timeRange],
     async function topTracksQuery({ pageParam = 1 }) {
-      return trpc.track.top.query({
+      return trpc.artist.top.query({
         timeRange,
         page: pageParam,
       });
@@ -111,13 +57,9 @@ export function TopTracks() {
   );
 
   const flatData = useMemo(
-    () => data?.pages?.flatMap((page) => page.tracks) ?? [],
+    () => data?.pages?.flatMap((page) => page.artists) ?? [],
     [data],
   );
-
-  const ids = useMemo(() => flatData.map((t) => t.uri), [flatData]);
-
-  usePlayPauseTrackHook(ids);
 
   return (
     <>

@@ -21,6 +21,7 @@ import { ArtistTopTracks } from './routes/ArtistTopTracks';
 import { ArtistAlbums } from './routes/ArtistAlbums';
 
 import Dashboard from './routes/Dashboard';
+import { TopArtists } from './routes/TopArtists';
 // import { Test } from './routes/Test';
 // import { Track } from './routes/Track';
 
@@ -60,6 +61,10 @@ const routes: RouteObject[] = [
       {
         path: 'top-tracks',
         element: <TopTracks />,
+      },
+      {
+        path: 'top-artists',
+        element: <TopArtists />,
       },
       // {
       //   path: 'recently-played',
