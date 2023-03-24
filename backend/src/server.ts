@@ -25,7 +25,7 @@ server.register(fastifyTRPCPlugin, {
 (async () => {
   await server.register(cors, {
     credentials: true,
-    origin: process.env.CORS_ORIGIN,
+    origin: new RegExp(process.env.CORS_ORIGIN),
   });
 
   try {
