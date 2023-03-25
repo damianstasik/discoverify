@@ -112,8 +112,11 @@ function Img({ src }) {
 
 export function Playlist() {
   const params = useParams<'id'>();
+  const { state } = useLocation();
 
-  const { data, isFetching } = useQuery(['playlist', params.id!], getPlaylist);
+  const { data, isFetching } = useQuery(['playlist', params.id!], getPlaylist, {
+    placeholderData: state,
+  });
 
   const {
     data: tracks,

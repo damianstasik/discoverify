@@ -54,6 +54,7 @@ function RouterListItem({
   className,
   iconTintColor,
   textTintColor,
+  state,
 }: any) {
   const match = useMatch(to);
   const isActive = match !== null;
@@ -70,6 +71,7 @@ function RouterListItem({
         textTintColor,
       )}
       title={label}
+      state={state}
     >
       {icon && (
         <Icon
@@ -212,6 +214,7 @@ export const Sidebar = memo(() => {
             key={playlist.id}
             label={playlist.name}
             to={`/playlist/${playlist.id}`}
+            state={playlist}
           />
         ))}
 
