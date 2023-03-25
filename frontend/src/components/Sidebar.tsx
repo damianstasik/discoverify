@@ -14,13 +14,19 @@ import { recommendIconPath } from '../icons/recommend';
 import { Icon } from './Icon';
 import { twMerge } from 'tailwind-merge';
 
-function Heading({ children, className }: any) {
+function Heading({ children, className, separatorClassName }: any) {
   return (
     <div className={twMerge('flex items-center px-2', className)}>
       <span className="flex-shrink pr-3 font-semibold text-sm text-white">
         {children}
       </span>
-      <div className="flex-grow border-t border-slate-600" aria-hidden="true" />
+      <div
+        className={twMerge(
+          'flex-grow h-px bg-gradient-to-r to-transparent',
+          separatorClassName,
+        )}
+        aria-hidden="true"
+      />
     </div>
   );
 }
@@ -41,7 +47,14 @@ function ListItemSkeleton() {
   );
 }
 
-function RouterListItem({ to, label, icon }: any) {
+function RouterListItem({
+  to,
+  label,
+  icon,
+  className,
+  iconTintColor,
+  textTintColor,
+}: any) {
   const match = useMatch(to);
   const isActive = match !== null;
 
@@ -51,8 +64,10 @@ function RouterListItem({ to, label, icon }: any) {
       className={twMerge(
         isActive
           ? 'bg-slate-800 text-white'
-          : 'text-slate-450 hover:bg-slate-700 hover:text-white',
+          : 'text-slate-400 hover:bg-slate-700 hover:text-white',
         'group flex items-center h-8 px-2 text-sm rounded-md ',
+        className,
+        textTintColor,
       )}
       title={label}
     >
@@ -62,8 +77,9 @@ function RouterListItem({ to, label, icon }: any) {
           className={twMerge(
             isActive
               ? 'text-slate-300'
-              : 'text-slate-400 group-hover:text-slate-300',
+              : 'text-slate-500 group-hover:text-slate-300',
             'mr-2 flex-shrink-0 h-5 w-5',
+            iconTintColor,
           )}
           aria-hidden="true"
         />
@@ -102,13 +118,17 @@ export const Sidebar = memo(() => {
         />
       </nav>
 
-      <Heading className="mt-6 mb-3">Artists</Heading>
+      <Heading className="mt-6 mb-3" separatorClassName="from-yellow-900">
+        Artists
+      </Heading>
 
       <nav className="space-y-1">
         <RouterListItem
           label="My top artists"
           to="/top-artists"
           icon={mdiAccountStar}
+          // iconTintColor="text-green-700"
+          // textTintColor="text-green-400"
         />
         {/*
         <RouterListItem
@@ -125,7 +145,9 @@ export const Sidebar = memo(() => {
         */}
       </nav>
 
-      <Heading className="mt-6 mb-3">Tracks</Heading>
+      <Heading className="mt-6 mb-3" separatorClassName="from-green-900">
+        Tracks
+      </Heading>
 
       <nav className="space-y-1">
         <RouterListItem label="Liked tracks" to="/liked" icon={mdiHeart} />
@@ -166,7 +188,9 @@ export const Sidebar = memo(() => {
         />
       </nav>
 */}
-      <Heading className="mt-6 mb-3">Playlists</Heading>
+      <Heading className="mt-6 mb-3" separatorClassName="from-blue-900">
+        Playlists
+      </Heading>
 
       <nav className="space-y-1">
         {isLoading && (
