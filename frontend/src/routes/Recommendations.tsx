@@ -24,6 +24,7 @@ import { ArtistsColumn } from '../components/ArtistsColumn';
 import { getArtists } from '../api/artist';
 import { ArtistChip } from '../components/ArtistChip';
 import { ArtistChipSkeleton } from '../components/ArtistChipSkeleton';
+import { AlbumColumn } from '../components/AlbumColumn';
 
 type TrackType = RouterOutput['track']['recommended'][number];
 
@@ -31,7 +32,7 @@ const columnHelper = createColumnHelper<TrackType>();
 
 const columns = [
   columnHelper.display({
-    size: 50,
+    size: 40,
     id: 'select',
     header: ({ table }) => (
       <CheckboxColumn
@@ -66,14 +67,17 @@ const columns = [
   columnHelper.accessor('artist', {
     header: 'Artist(s)',
     cell: ArtistsColumn,
+    size: 250,
   }),
-  // columnHelper.accessor('album', {
-  //   header: 'Album',
-  //   cell: AlbumColumn,
-  // }),
+  columnHelper.accessor('album', {
+    header: 'Album',
+    cell: AlbumColumn,
+    size: 250,
+  }),
   columnHelper.accessor('duration', {
     header: 'Duration',
     cell: DurationColumn,
+    size: 80,
   }),
   columnHelper.accessor('isLiked', {
     header: '',

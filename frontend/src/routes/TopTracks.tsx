@@ -22,7 +22,7 @@ const columnHelper = createColumnHelper<TrackType>();
 
 const columns = [
   columnHelper.display({
-    size: 50,
+    size: 40,
     id: 'select',
     header: ({ table }) => (
       <CheckboxColumn
@@ -57,14 +57,17 @@ const columns = [
   columnHelper.accessor('artists', {
     header: 'Artist(s)',
     cell: ArtistsColumn,
+    size: 200,
   }),
   columnHelper.accessor('album', {
     header: 'Album',
     cell: AlbumColumn,
+    size: 200,
   }),
   columnHelper.accessor('duration_ms', {
     header: 'Duration',
     cell: DurationColumn,
+    size: 80,
   }),
   columnHelper.accessor('isLiked', {
     header: '',
