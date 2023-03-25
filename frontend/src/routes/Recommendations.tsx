@@ -17,7 +17,6 @@ import { RouterOutput } from '../trpc';
 import { DurationColumn } from '../components/DurationColumn';
 import { CheckboxColumn } from '../components/CheckboxColumn';
 import { SpotifyLinkColumn } from '../components/SpotifyLinkColumn';
-import { IgnoreColumn } from '../components/IgnoreColumn';
 import { SaveColumn } from '../components/SaveColumn';
 import { RecommendationAttribute } from '../components/RecommendationAttribute';
 import { ArtistsColumn } from '../components/ArtistsColumn';
@@ -83,11 +82,6 @@ const columns = [
     header: '',
     size: 40,
     cell: SaveColumn,
-  }),
-  columnHelper.accessor('isIgnored', {
-    header: '',
-    size: 40,
-    cell: IgnoreColumn,
   }),
   columnHelper.accessor('uri', {
     id: 'open',

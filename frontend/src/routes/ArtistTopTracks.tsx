@@ -9,7 +9,6 @@ import { DurationColumn } from '../components/DurationColumn';
 import { RouterOutput, trpc } from '../trpc';
 import { createColumnHelper } from '@tanstack/react-table';
 import { SaveColumn } from '../components/SaveColumn';
-import { IgnoreColumn } from '../components/IgnoreColumn';
 import { SpotifyLinkColumn } from '../components/SpotifyLinkColumn';
 import { CheckboxColumn } from '../components/CheckboxColumn';
 import { useMemo } from 'react';
@@ -72,11 +71,6 @@ const columns = [
     header: '',
     size: 40,
     cell: SaveColumn,
-  }),
-  columnHelper.accessor('isIgnored', {
-    header: '',
-    size: 40,
-    cell: IgnoreColumn,
   }),
   columnHelper.accessor('uri', {
     id: 'open',

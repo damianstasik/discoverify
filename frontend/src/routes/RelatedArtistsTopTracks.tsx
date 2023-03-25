@@ -11,7 +11,6 @@ import { CheckboxColumn } from '../components/CheckboxColumn';
 import { AlbumColumn } from '../components/AlbumColumn';
 import { DurationColumn } from '../components/DurationColumn';
 import { SaveColumn } from '../components/SaveColumn';
-import { IgnoreColumn } from '../components/IgnoreColumn';
 import { SpotifyLinkColumn } from '../components/SpotifyLinkColumn';
 import { usePlayPauseTrackHook } from '../hooks/usePlayPauseTrackHook';
 

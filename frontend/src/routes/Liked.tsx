@@ -13,7 +13,6 @@ import { AddedAtColumn } from '../components/AddedAtColumn';
 import { RouterOutput, trpc } from '../trpc';
 import { DurationColumn } from '../components/DurationColumn';
 import { SaveColumn } from '../components/SaveColumn';
-import { IgnoreColumn } from '../components/IgnoreColumn';
 import { SpotifyLinkColumn } from '../components/SpotifyLinkColumn';
 
 type TrackType = RouterOutput['track']['saved']['tracks'][number];
@@ -78,11 +77,6 @@ const columns = [
     header: '',
     size: 40,
     cell: SaveColumn,
-  }),
-  columnHelper.accessor('isIgnored', {
-    header: '',
-    size: 40,
-    cell: IgnoreColumn,
   }),
   columnHelper.accessor('uri', {
     id: 'open',
