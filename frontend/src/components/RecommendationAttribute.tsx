@@ -55,7 +55,7 @@ export function RecommendationAttribute({ attr }: Props) {
       </Popover.Trigger>
       <Popover.Portal>
         <Popover.Content
-          className="rounded-md p-3 w-96 bg-slate-500/50 backdrop-blur-lg"
+          className="rounded-md p-3 w-96 bg-slate-500/70 backdrop-blur-xl"
           sideOffset={5}
           collisionPadding={10}
         >
@@ -166,7 +166,7 @@ export function RecommendationAttribute({ attr }: Props) {
           >
             <Icon path={mdiClose} />
           </Popover.Close>
-          <Popover.Arrow className="fill-slate-500/50 backdrop-blur-lg" />
+          <Popover.Arrow className="fill-slate-500/70 backdrop-blur-xl" />
         </Popover.Content>
       </Popover.Portal>
     </Popover.Root>

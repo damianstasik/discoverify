@@ -18,9 +18,9 @@ interface TableHeaderProps {
 
 const TableHeader = ({ table }: TableHeaderProps) => {
   return (
-    <div className="bg-black/40 backdrop-blur-lg border-b border-white/10">
+    <div className="backdrop-blur-lg border-b border-white/5">
       {table.getHeaderGroups().map((headerGroup) => (
-        <div key={headerGroup.id} className="flex">
+        <div key={headerGroup.id} className="flex bg-black/40 ">
           {headerGroup.headers.map((header) => {
             return (
               <div
@@ -123,7 +123,7 @@ export const VirtualTable = <Data extends { spotifyId: string }>({
   const { flatRows } = table.getSelectedRowModel();
   const { rows } = table.getRowModel();
   return (
-    <div className="text-sm text-neutral-300">
+    <div className="text-sm text-slate-300">
       <TrackSelectionToolbar rows={flatRows} />
       <TableHeader table={table} />
       <div

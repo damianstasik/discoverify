@@ -26,10 +26,10 @@ function Img({ src }) {
     <div
       className={twMerge(
         'absolute top-0 inset-x-0 z-0 h-[500px] opacity-0 transition-opacity duration-500',
-        imgRef.current?.complete && 'opacity-25',
+        imgRef.current?.complete && 'opacity-20',
       )}
     >
-      <span className="absolute inset-0 z-0 bg-gradient-to-b from-transparent to-neutral-900" />
+      <span className="absolute inset-0 z-0 bg-gradient-to-b from-transparent to-slate-900" />
       <img
         src={src}
         alt="Artist's picture"
@@ -51,7 +51,7 @@ function TabLink({ tab }) {
       className={twMerge(
         isCurrent
           ? 'border-green-500 text-green-600'
-          : 'border-transparent text-neutral-400 hover:text-neutral-300 hover:border-neutral-500',
+          : 'border-transparent text-slate-400 hover:text-slate-300 hover:border-slate-400',
         'group inline-flex items-center py-2 px-1 border-b-2 text-sm',
       )}
       aria-current={isCurrent ? 'page' : undefined}
@@ -61,7 +61,7 @@ function TabLink({ tab }) {
         className={twMerge(
           isCurrent
             ? 'text-green-500'
-            : 'text-neutral-500 group-hover:text-neutral-400',
+            : 'text-slate-450 group-hover:text-slate-400',
           'mr-2 s-4',
         )}
         aria-hidden="true"
@@ -127,7 +127,7 @@ export function Artist() {
         <div className="border-b border-white/20 backdrop-blur-lg">
           <h2 className="p-3 text-xl text-white font-bold leading-none">
             {data?.name || (
-              <div className="animate-pulse h-em w-48 bg-neutral-700 rounded-md" />
+              <div className="animate-pulse h-em w-48 bg-slate-600 rounded-md" />
             )}
           </h2>
 

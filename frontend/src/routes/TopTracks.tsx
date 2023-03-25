@@ -127,7 +127,7 @@ export function TopTracks() {
       <RadioGroup
         value={timeRange}
         onChange={setTimeRange}
-        className="flex items-center gap-3 border-b border-white/10 p-3"
+        className="flex items-center gap-3 border-b border-white/5 p-3"
       >
         <RadioGroup.Label className="font-semibold">
           Time range:

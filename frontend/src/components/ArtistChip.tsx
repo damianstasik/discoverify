@@ -11,7 +11,7 @@ interface Props {
 
 export const ArtistChip = ({ id, name, imageUrl, onRemove }: Props) => {
   return (
-    <div className="shadow-inner h-12 pl-2 pr-1 bg-neutral-750 rounded-md flex-shrink-0 flex items-center gap-2 relative overflow-hidden">
+    <div className="shadow-inner h-12 pl-2 pr-1 bg-slate-500 rounded-md flex-shrink-0 flex items-center gap-2 relative overflow-hidden">
       <img
         className="absolute left-0 top-0 w-full h-full object-cover object-center blur opacity-25"
         src={imageUrl}
@@ -29,7 +29,7 @@ export const ArtistChip = ({ id, name, imageUrl, onRemove }: Props) => {
         <IconButton
           icon={mdiClose}
           label="Remove"
-          className="text-neutral-400"
+          className="text-slate-400"
           onClick={onRemove}
         />
       </div>

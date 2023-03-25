@@ -105,7 +105,7 @@ function Img({ src }) {
         imgRef.current?.complete && 'opacity-10',
       )}
     >
-      <span className="absolute inset-0 z-0 bg-gradient-to-b from-transparent via-neutral-900/90 to-neutral-900" />
+      <span className="absolute inset-0 z-0 bg-gradient-to-b from-transparent via-slate-900/90 to-slate-900" />
       <img
         src={src}
         alt="Artist's picture"
@@ -144,7 +144,7 @@ export function Playlist() {
     <>
       <Img src={data?.images?.[0]?.url} />
 
-      <div className="p-3 border-b border-white/20 backdrop-blur-lg">
+      <div className="p-3 border-b border-white/5 backdrop-blur-lg">
         <h2 className="text-xl text-white font-bold leading-none">
           {data?.name || (
             <div className="animate-pulse h-em w-48 bg-neutral-700 rounded-md" />

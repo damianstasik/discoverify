@@ -16,7 +16,7 @@ interface Props {
 
 export const TrackChip = ({ id, name, artists, imageUrl, onRemove }: Props) => {
   return (
-    <div className="shadow-inner h-12 pl-2 pr-1 bg-neutral-750 rounded-md flex-shrink-0 flex items-center gap-2 relative overflow-hidden">
+    <div className="shadow-inner h-12 pl-2 pr-1 bg-slate-500 rounded-md flex-shrink-0 flex items-center gap-2 relative overflow-hidden">
       <img
         className="absolute left-0 top-0 w-full h-full object-cover object-center blur opacity-25"
         src={imageUrl}
@@ -33,11 +33,11 @@ export const TrackChip = ({ id, name, artists, imageUrl, onRemove }: Props) => {
         <div className="text-xs">
           {artists.map((artist, index) => (
             <Fragment key={artist.id}>
-              <Link to={`/artist/${artist.id}`} className="text-neutral-300">
+              <Link to={`/artist/${artist.id}`} className="text-slate-300">
                 {artist.name}
               </Link>
               {index < artists.length - 1 && (
-                <span className="text-neutral-500 px-1">/</span>
+                <span className="text-slate-500 px-1">/</span>
               )}
             </Fragment>
           ))}
@@ -47,7 +47,7 @@ export const TrackChip = ({ id, name, artists, imageUrl, onRemove }: Props) => {
         <IconButton
           icon={mdiClose}
           label="Remove"
-          className="text-neutral-400"
+          className="text-slate-400"
           onClick={onRemove}
         />
       </div>

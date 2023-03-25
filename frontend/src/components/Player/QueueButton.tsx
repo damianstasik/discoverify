@@ -2,7 +2,7 @@ import * as Popover from '@radix-ui/react-popover';
 import { IconButton } from '../IconButton';
 import { mdiClose, mdiPlaylistMusicOutline } from '@mdi/js';
 import { Link } from 'react-router-dom';
-import { Icon } from '../Icon'
+import { Icon } from '../Icon';
 
 function ArtistLink({ id, name }) {
   return (
@@ -26,7 +26,7 @@ export function QueueButton({ queue, isOpen, onVisibilityChange }) {
       </Popover.Trigger>
       <Popover.Portal>
         <Popover.Content
-          className="rounded-md p-5 w-86 bg-neutral-700"
+          className="rounded-md p-5 w-86 bg-slate-500/50 backdrop-blur-2xl"
           sideOffset={5}
           collisionPadding={10}
         >
