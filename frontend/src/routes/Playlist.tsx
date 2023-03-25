@@ -136,7 +136,7 @@ export function Playlist() {
 
   return (
     <>
-      <Img src={data?.images?.[0]?.url} />
+      <Img src={data?.images?.[0]?.url} key={params.id} />
 
       <div className="p-3 border-b border-white/5 backdrop-blur-lg">
         <h2 className="text-xl text-white font-bold leading-none">
