@@ -59,10 +59,19 @@ function Track({ track }) {
         />
       </div>
       <div className="flex gap-1 w-full flex-col">
-        <Link to={`/track/${track.id}`}>{track.name}</Link>
+        <Link
+          to={`/track/${track.id}`}
+          className="underline decoration-green-900 underline-offset-4 hover:decoration-green-500"
+        >
+          {track.name}
+        </Link>
         <div>
           {track.artists.map((artist) => (
-            <Link to={`/artist/${artist.id}`} key={artist.id}>
+            <Link
+              to={`/artist/${artist.id}`}
+              key={artist.id}
+              className="underline decoration-yellow-900 underline-offset-4 hover:decoration-yellow-500"
+            >
               {artist.name}
             </Link>
           ))}
@@ -233,7 +242,7 @@ export default function Dashboard() {
           {data?.topArtists.map((artist) => (
             <Link
               to={`/artist/${artist.id}`}
-              className="flex gap-2 items-center"
+              className="flex gap-2 items-center underline decoration-yellow-900 underline-offset-4 hover:decoration-yellow-500"
               key={artist.id}
             >
               <img

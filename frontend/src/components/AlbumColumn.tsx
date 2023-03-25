@@ -13,7 +13,7 @@ export const AlbumColumn = <Data extends { album: Album }>(
   return (
     <Link
       to={`/album/${album.id}`}
-      className="text-white underline decoration-neutral-600"
+      className="text-white underline decoration-stone-600 underline-offset-4 hover:decoration-stone-400"
     >
       {album.name}
     </Link>

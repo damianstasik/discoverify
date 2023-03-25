@@ -15,15 +15,19 @@ const columns = [
   columnHelper.accessor('name', {
     header: 'Name',
     size: 300,
+    cell: (params) => (
+      <RouterLink
+        to={`/playlist/${params.row.original.id}`}
+        className='text-white underline decoration-blue-900 underline-offset-4 hover:decoration-blue-500'
+      >
+        {params.getValue()}
+      </RouterLink>
+    ),
   }),
   columnHelper.accessor('owner', {
     header: 'Owner',
     size: 300,
-    cell: (params) => (
-      <RouterLink to={`/artist/${params.row.original.id}`}>
-        {params.getValue().display_name}
-      </RouterLink>
-    ),
+    cell: (params) => params.getValue().display_name,
   }),
   columnHelper.accessor('uri', {
     id: 'open',
