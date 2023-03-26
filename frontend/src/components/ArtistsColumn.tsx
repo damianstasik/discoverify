@@ -11,16 +11,18 @@ export const ArtistsColumn = <Data extends { artists: Artist[] }>(
 ) => {
   const artists = props.getValue();
   return (
-    <div className="flex gap-3 flex-wrap">
-      {artists.map((artist) => (
-        <Link
-          to={`/artist/${artist.id}`}
-          state={artist}
-          key={artist.id}
-          className="text-white underline decoration-yellow-900 underline-offset-4 hover:decoration-yellow-500"
-        >
-          {artist.name}
-        </Link>
+    <div className="flex gap-2 flex-wrap">
+      {artists.map((artist, index) => (
+        <div key={artist.id}>
+          <Link
+            to={`/artist/${artist.id}`}
+            state={artist}
+            className="text-white underline decoration-yellow-900 underline-offset-4 hover:decoration-yellow-500"
+          >
+            {artist.name}
+          </Link>
+          {index < artists.length - 1 && <span>,</span>}
+        </div>
       ))}
     </div>
   );
