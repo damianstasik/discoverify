@@ -15,7 +15,12 @@ const columns = [
     header: 'Name',
     size: 300,
     cell: (params) => (
-      <Link to={`/album/${params.row.original.id}`}>{params.getValue()}</Link>
+      <Link
+        to={`/album/${params.row.original.id}`}
+        className="text-white underline decoration-stone-600 underline-offset-4 hover:decoration-stone-400"
+      >
+        {params.getValue()}
+      </Link>
     ),
   }),
   columnHelper.accessor('artists', {
