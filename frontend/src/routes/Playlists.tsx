@@ -53,15 +53,13 @@ export function Playlists() {
 
   return (
     <>
-      <div style={{ height: 800 }}>
-        <VirtualTable
-          hasNextPage={hasNextPage}
-          fetchNextPage={fetchNextPage}
-          data={flatData}
-          columns={columns}
-          isLoading={isFetching}
-        />
-      </div>
+      <VirtualTable
+        hasNextPage={hasNextPage}
+        fetchNextPage={fetchNextPage}
+        data={flatData}
+        columns={columns}
+        isLoading={isFetching}
+      />
     </>
   );
 }

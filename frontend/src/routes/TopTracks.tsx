@@ -137,15 +137,13 @@ export function TopTracks() {
         <TimeRangeOption value="long_term" label="Long term" />
       </RadioGroup>
 
-      <div style={{ height: 750 }}>
-        <VirtualTable
-          hasNextPage={hasNextPage}
-          fetchNextPage={fetchNextPage}
-          data={flatData}
-          columns={columns}
-          isLoading={isFetching}
-        />
-      </div>
+      <VirtualTable
+        hasNextPage={hasNextPage}
+        fetchNextPage={fetchNextPage}
+        data={flatData}
+        columns={columns}
+        isLoading={isFetching}
+      />
     </>
   );
 }

@@ -184,7 +184,7 @@ export function Player() {
   }, [isSaved, id]);
 
   return (
-    <div className="bg-slate-700 flex px-3 py-2">
+    <div className="bg-slate-700 flex px-3 py-2 h-full">
       <div className="flex gap-2 items-center w-full">
         <div className="w-3/12">
           <TrackInfo

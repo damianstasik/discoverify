@@ -91,7 +91,7 @@ function RouterListItem({
   );
 }
 
-export const Sidebar = memo(() => {
+export const Sidebar = memo(({ className }) => {
   const { data, isLoading } = useQuery(
     ['sidebarPlaylists'],
     async function playlistsQuery() {
@@ -102,7 +102,7 @@ export const Sidebar = memo(() => {
   );
 
   return (
-    <div className="w-80 p-3 flex-shrink-0">
+    <div className="p-3 h-full overflow-y-auto">
       <h5 className="text-white inline-flex text-lg font-black leading-none text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-cyan-500">
         Discoverify
       </h5>

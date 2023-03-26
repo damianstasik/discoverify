@@ -114,15 +114,13 @@ export function RecentlyPlayed() {
 
   return (
     <>
-      <div style={{ height: 800 }}>
-        <VirtualTable
-          hasNextPage={hasNextPage}
-          fetchNextPage={fetchNextPage}
-          isLoading={isFetching}
-          data={flatData}
-          columns={columns}
-        />
-      </div>
+      <VirtualTable
+        hasNextPage={hasNextPage}
+        fetchNextPage={fetchNextPage}
+        isLoading={isFetching}
+        data={flatData}
+        columns={columns}
+      />
     </>
   );
 }

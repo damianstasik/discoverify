@@ -70,16 +70,25 @@ export function Layout() {
   }
 
   return (
-    <div className="flex min-h-screen">
-      <Sidebar />
+    <div className="flex h-screen">
+      <aside className="w-80">
+        <Sidebar />
+      </aside>
 
-      <main className="grow relative bg-slate-900">
-        <Outlet />
+      <main className="bg-slate-900 flex flex-col flex-1">
+        <div
+          className='flex flex-col relative overflow-hidden'
+          style={{
+            height: 'calc(100% - 100px)',
+          }}
+        >
+          <Outlet />
+        </div>
+
+        <div style={{ height: '100px' }} className='mt-auto'>
+          <Player />
+        </div>
       </main>
-
-      <div className="left-80 right-0 bottom-0 fixed">
-        <Player />
-      </div>
     </div>
   );
 }

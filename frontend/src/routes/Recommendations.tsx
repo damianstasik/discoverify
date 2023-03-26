@@ -244,18 +244,16 @@ export function Recommendations() {
         </div>
       </div>
 
-      <div style={{ height: 800 }}>
-        {seeds.length > 0 && (
-          <VirtualTable
-            data={recommended.data || []}
-            columns={columns}
-            isLoading={recommended.isFetching}
-            hasNextPage={false}
-            fetchNextPage={null}
-            isInitialLoading={true}
-          />
-        )}
-      </div>
+      {seeds.length > 0 && (
+        <VirtualTable
+          data={recommended.data || []}
+          columns={columns}
+          isLoading={recommended.isFetching}
+          hasNextPage={false}
+          fetchNextPage={null}
+          isInitialLoading={true}
+        />
+      )}
     </>
   );
 }

@@ -114,15 +114,13 @@ export function Liked() {
 
   return (
     <>
-      <div style={{ height: 800 }}>
-        <VirtualTable
-          data={flatData}
-          columns={columns}
-          isLoading={isFetching}
-          hasNextPage={hasNextPage}
-          fetchNextPage={fetchNextPage}
-        />
-      </div>
+      <VirtualTable
+        data={flatData}
+        columns={columns}
+        isLoading={isFetching}
+        hasNextPage={hasNextPage}
+        fetchNextPage={fetchNextPage}
+      />
     </>
   );
 }

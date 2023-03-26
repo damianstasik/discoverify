@@ -129,15 +129,13 @@ export function RelatedArtistsTopTracks() {
         </p>
       </div>
 
-      <div style={{ height: 800 }}>
-        <VirtualTable
-          hasNextPage={hasNextPage}
-          fetchNextPage={fetchNextPage}
-          data={rows}
-          columns={columns}
-          isLoading={isFetching}
-        />
-      </div>
+      <VirtualTable
+        hasNextPage={hasNextPage}
+        fetchNextPage={fetchNextPage}
+        data={rows}
+        columns={columns}
+        isLoading={isFetching}
+      />
     </>
   );
 }

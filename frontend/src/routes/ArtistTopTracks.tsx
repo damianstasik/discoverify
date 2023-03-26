@@ -98,12 +98,12 @@ export function ArtistTopTracks() {
   usePlayPauseTrackHook(ids);
 
   return (
-    <div style={{ height: 800 }}>
+    <>
       <VirtualTable
         columns={columns}
         data={data || []}
         isLoading={isFetching}
       />
-    </div>
+    </>
   );
 }

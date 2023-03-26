@@ -49,12 +49,12 @@ export function ArtistAlbums() {
   );
 
   return (
-    <div style={{ height: 800 }}>
+    <>
       <VirtualTable
         columns={columns}
         data={data || []}
         isLoading={isFetching}
       />
-    </div>
+    </>
   );
 }

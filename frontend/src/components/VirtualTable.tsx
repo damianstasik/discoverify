@@ -123,20 +123,18 @@ export const VirtualTable = <Data extends { spotifyId: string }>({
   const { flatRows } = table.getSelectedRowModel();
   const { rows } = table.getRowModel();
   return (
-    <div className="text-sm text-slate-300">
+    <div className="text-sm text-slate-400 flex flex-col w-full overflow-hidden">
       <TrackSelectionToolbar rows={flatRows} />
       <TableHeader table={table} />
       <div
-        className="overflow-y-auto h-[800px]"
+        className="overflow-y-auto"
         ref={contRef}
         onScroll={handleInfiniteLoadingScroll}
       >
         <div
+          className="relative overflow-hidden"
           style={{
             height: `${rowVirtualizer.getTotalSize()}px`,
-            width: '100%',
-            position: 'relative',
-            overflow: 'hidden',
           }}
         >
           {rowVirtualizer.getVirtualItems().map((virtualItem) => {

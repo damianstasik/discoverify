@@ -137,13 +137,13 @@ export function Artist() {
             ))}
           </nav>
         </div>
-
-        <Suspense
-          fallback={<div className="text-white text-lg p-3">Loading...</div>}
-        >
-          <Outlet />
-        </Suspense>
       </div>
+
+      <Suspense
+        fallback={<div className="text-white text-lg p-3">Loading...</div>}
+      >
+        <Outlet />
+      </Suspense>
     </>
   );
 }
