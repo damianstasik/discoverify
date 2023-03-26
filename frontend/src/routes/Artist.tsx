@@ -6,7 +6,7 @@ import {
   useResolvedPath,
 } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { Suspense, useRef } from 'react';
+import { Suspense, useState } from 'react';
 import { trpc } from '../trpc';
 import { twMerge } from 'tailwind-merge';
 import { Icon } from '../components/Icon';
@@ -20,13 +20,13 @@ import {
 } from '@mdi/js';
 
 function Img({ src }) {
-  const imgRef = useRef<HTMLImageElement>(null);
+  const [loaded, setLoaded] = useState(false);
 
   return (
     <div
       className={twMerge(
         'absolute top-0 inset-x-0 z-0 h-[500px] opacity-0 transition-opacity duration-500',
-        imgRef.current?.complete && 'opacity-20',
+        loaded && 'opacity-20',
       )}
     >
       <span className="absolute inset-0 z-0 bg-gradient-to-b from-transparent to-slate-900" />
@@ -34,7 +34,7 @@ function Img({ src }) {
         src={src}
         alt="Artist's picture"
         className="object-cover w-full h-full"
-        ref={imgRef}
+        onLoad={() => setLoaded(true)}
       />
     </div>
   );

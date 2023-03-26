@@ -1,6 +1,6 @@
 import { useLocation, useParams } from 'react-router-dom';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
-import { useMemo, useRef } from 'react';
+import { useMemo, useState } from 'react';
 import { AlbumColumn } from '../components/AlbumColumn';
 import { ArtistsColumn } from '../components/ArtistsColumn';
 import { TrackNameColumn } from '../components/TrackNameColumn';
@@ -93,13 +93,13 @@ const columns = [
 ];
 
 function Img({ src }) {
-  const imgRef = useRef<HTMLImageElement>(null);
+  const [loaded, setLoaded] = useState(false);
 
   return (
     <div
       className={twMerge(
         'absolute top-0 inset-x-0 z-0 h-[500px] opacity-0 transition-opacity duration-500',
-        imgRef.current?.complete && 'opacity-10',
+        loaded && 'opacity-10',
       )}
     >
       <span className="absolute inset-0 z-0 bg-gradient-to-b from-transparent via-slate-900/90 to-slate-900" />
@@ -107,7 +107,7 @@ function Img({ src }) {
         src={src}
         alt="Artist's picture"
         className="object-cover w-full h-full"
-        ref={imgRef}
+        onLoad={() => setLoaded(true)}
       />
     </div>
   );
