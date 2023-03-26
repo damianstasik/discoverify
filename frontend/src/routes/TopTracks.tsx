@@ -82,9 +82,14 @@ const columns = [
   }),
 ];
 
-function TimeRangeOption({ value, label }: { value: string; label: string }) {
+function TimeRangeOption({
+  value,
+  label,
+  title,
+}: { value: string; label: string; title?: string }) {
   return (
     <RadioGroup.Option
+      title={title}
       value={value}
       className="ui-active:bg-white/5 ui-active:text-white ui-checked:border-green-500 border rounded-md border-slate-500 px-2 py-2 leading-none flex cursor-pointer"
     >
@@ -132,9 +137,13 @@ export function TopTracks() {
         <RadioGroup.Label className="font-semibold">
           Time range:
         </RadioGroup.Label>
-        <TimeRangeOption value="short_term" label="Short term" />
-        <TimeRangeOption value="medium_term" label="Medium term" />
-        <TimeRangeOption value="long_term" label="Long term" />
+        <TimeRangeOption value="short_term" label="Last 4 weeks" />
+        <TimeRangeOption value="medium_term" label="Last 6 months" />
+        <TimeRangeOption
+          value="long_term"
+          label="Last few years"
+          title="Calculated from several years of data and including all new data as it becomes available"
+        />
       </RadioGroup>
 
       <VirtualTable
