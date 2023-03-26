@@ -16,7 +16,7 @@ export const CheckboxColumn = ({ onChange, checked, indeterminate }) => {
         checked={checked}
         onChange={onChange}
         type="checkbox"
-        className="cursor-pointer h-5 w-5 rounded bg-slate-950 border-slate-550 text-green-700 focus:ring-green-500 focus:ring-offset-neutral-900"
+        className="cursor-pointer h-5 w-5 rounded bg-slate-950 border-slate-550 hover:border-slate-450 text-green-700 focus:ring-green-500 focus:ring-offset-neutral-900"
       />
     </label>
   );
