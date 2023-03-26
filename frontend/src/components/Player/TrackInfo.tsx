@@ -21,7 +21,9 @@ function ArtistLink({ id, name }) {
 export const TrackInfo = memo(({ name, artists, imageUrl }: Props) => {
   return (
     <div className="flex gap-4 items-center text-sm">
-      <img src={imageUrl} className="rounded-md w-16 h-16" alt={name} />
+      {imageUrl && (
+        <img src={imageUrl} className="rounded-md w-16 h-16" alt={name} />
+      )}
       <div className="flex flex-col gap-1">
         <p className="text-white">{name}</p>
         <div className="flex gap-1">
