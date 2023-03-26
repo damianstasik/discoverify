@@ -191,6 +191,16 @@ export function Recommendations() {
 
         <div className="flex mt-3">
           <div className="w-1/2">
+            <h5 className="uppercase text-slate-400 text-xs font-semibold pb-3 tracking-wide">
+              Attributes
+            </h5>
+            <div className="flex flex-wrap gap-2">
+              {attributes.map((attr) => (
+                <RecommendationAttribute key={attr.name} attr={attr} />
+              ))}
+            </div>
+          </div>
+          <div className="w-1/2">
             {seeds.length > 0 && (
               <div>
                 <h5 className="uppercase text-slate-400 text-xs font-semibold pb-3 tracking-wide">
@@ -233,16 +243,6 @@ export function Recommendations() {
                 </div>
               </div>
             )}
-          </div>
-          <div className="w-1/2">
-            <h5 className="uppercase text-slate-400 text-xs font-semibold pb-3 tracking-wide">
-              Attributes
-            </h5>
-            <div className="flex flex-wrap gap-1">
-              {attributes.map((attr) => (
-                <RecommendationAttribute key={attr.name} attr={attr} />
-              ))}
-            </div>
           </div>
         </div>
       </div>
