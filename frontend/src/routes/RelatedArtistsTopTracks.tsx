@@ -120,7 +120,7 @@ export function RelatedArtistsTopTracks() {
 
   return (
     <>
-      <div className='p-3 bg-black/50 border-b border-white/20 backdrop-blur-lg'>
+      <div className='p-3 bg-black/40 border-b border-white/5 backdrop-blur-lg'>
         <h5 className=' font-semibold text-white mb-1'>
           Top tracks from artists similar to a given artist
         </h5>

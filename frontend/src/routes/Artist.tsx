@@ -124,7 +124,7 @@ export function Artist() {
     <>
       <Img src={data?.images?.[0].url} key={params.id} />
       <div className="relative">
-        <div className="border-b border-white/20 backdrop-blur-lg">
+        <div className="border-b border-white/5 backdrop-blur-lg">
           <h2 className="p-3 text-xl text-white font-bold leading-none">
             {data?.name || (
               <div className="animate-pulse h-em w-48 bg-slate-600 rounded-md" />
