@@ -50,7 +50,7 @@ interface TableCellProps {
 const TableCell = ({ cell }: TableCellProps) => {
   return (
     <div
-      className="flex items-center flex-shrink-0 px-3 py-1"
+      className="flex items-center flex-shrink-0 px-3 py-2"
       style={{
         width: cell.column.getSize(),
       }}
@@ -71,7 +71,7 @@ const TableVirtualRow = forwardRef<HTMLDivElement, TableVirtualRowProps>(
       <div
         data-index={virtualItem.index}
         ref={ref}
-        className={'absolute top-0 left-0 w-full flex'}
+        className={'absolute top-0 left-0 w-full flex hover:bg-slate-800'}
         style={{
           transform: `translate3d(0, ${virtualItem.start}px, 0)`,
         }}
@@ -117,8 +117,8 @@ export const VirtualTable = <Data extends { spotifyId: string }>({
   const rowVirtualizer = useVirtualizer({
     getScrollElement: () => contRef.current,
     count: data.length,
-    estimateSize: () => 45,
-    overscan: 10,
+    estimateSize: () => 50,
+    overscan: 4,
   });
   const { flatRows } = table.getSelectedRowModel();
   const { rows } = table.getRowModel();
