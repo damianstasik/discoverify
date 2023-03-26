@@ -21,7 +21,7 @@ export const TrackSelectionToolbar = <T extends { spotifyId: string }>({
   return (
     <div
       className={twMerge(
-        'p-3 gap-3 border-b border-white/20 border-white/20 backdrop-blur-lg',
+        'p-3 gap-3 border-b border-white/5 backdrop-blur-lg',
         rows.length > 0 ? 'flex' : 'hidden',
       )}
     >
