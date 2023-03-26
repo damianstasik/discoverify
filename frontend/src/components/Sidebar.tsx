@@ -35,17 +35,17 @@ function getRandomArbitrary(min: number, max: number) {
   return Math.random() * (max - min) + min;
 }
 
-function ListItemSkeleton() {
+const ListItemSkeleton = memo(() => {
   const width = getRandomArbitrary(20, 90);
 
   return (
     <p
-      className="animate-pulse h-8 rounded-md bg-neutral-900"
+      className="animate-pulse h-8 rounded-md bg-slate-800"
       role="status"
       style={{ width: `${width}%` }}
     />
   );
-}
+});
 
 function RouterListItem({
   to,
