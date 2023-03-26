@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { useMemo, useRef } from 'react';
 import { AlbumColumn } from '../components/AlbumColumn';
@@ -144,7 +144,7 @@ export function Playlist() {
       <div className="p-3 border-b border-white/5 backdrop-blur-lg">
         <h2 className="text-xl text-white font-bold leading-none">
           {data?.name || (
-            <div className="animate-pulse h-em w-48 bg-neutral-700 rounded-md" />
+            <div className="animate-pulse h-em w-48 bg-slate-600 rounded-md" />
           )}
         </h2>
 
