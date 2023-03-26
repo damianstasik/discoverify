@@ -1,5 +1,6 @@
 import {
   Cell,
+  Column,
   ColumnDef,
   flexRender,
   getCoreRowModel,
@@ -11,6 +12,7 @@ import { useVirtualizer, VirtualItem } from '@tanstack/react-virtual';
 import { forwardRef, memo, useRef } from 'react';
 import { useInfiniteLoading } from '../hooks/useInfiniteLoading';
 import { TrackSelectionToolbar } from './TrackSelectionToolbar';
+import { useScrollbarWidth } from '../hooks/useScrollbarWidth';
 
 interface TableHeaderProps {
   table: Table<any>;
@@ -20,12 +22,15 @@ const TableHeader = ({ table }: TableHeaderProps) => {
   return (
     <div className="backdrop-blur-lg border-b border-white/5">
       {table.getHeaderGroups().map((headerGroup) => (
-        <div key={headerGroup.id} className="flex bg-black/40 ">
+        <div
+          key={headerGroup.id}
+          className="flex bg-black/40 pr-[var(--scrollbar)]"
+        >
           {headerGroup.headers.map((header) => {
             return (
               <div
                 key={header.id}
-                style={{ width: header.getSize() }}
+                style={getWidthStyles(header.column)}
                 className="flex-shrink-0 px-3 py-2 items-center flex font-semibold text-white"
               >
                 {header.isPlaceholder
@@ -47,13 +52,23 @@ interface TableCellProps {
   cell: Cell<unknown, unknown>;
 }
 
+function getWidthStyles(column: Column<unknown, unknown>) {
+  const width = column.columnDef?.size;
+  return {
+    minWidth: column.columnDef.minSize,
+    width: width
+      ? width <= 1
+        ? `calc((100% - var(--total)) * ${width})`
+        : width
+      : undefined,
+  };
+}
+
 const TableCell = ({ cell }: TableCellProps) => {
   return (
     <div
       className="flex items-center flex-shrink-0 px-3 py-2"
-      style={{
-        width: cell.column.getSize(),
-      }}
+      style={getWidthStyles(cell.column)}
     >
       {flexRender(cell.column.columnDef.cell, cell.getContext())}
     </div>
@@ -102,6 +117,9 @@ export const VirtualTable = <Data extends { spotifyId: string }>({
   const table = useReactTable<Data>({
     data,
     columns,
+    defaultColumn: {
+      minSize: 0,
+    },
     getCoreRowModel: getCoreRowModel(),
   });
 
@@ -120,10 +138,25 @@ export const VirtualTable = <Data extends { spotifyId: string }>({
     estimateSize: () => 50,
     overscan: 4,
   });
+
+  const scrollbarSize = useScrollbarWidth();
+
   const { flatRows } = table.getSelectedRowModel();
   const { rows } = table.getRowModel();
+
+  const staticWidth = table.getAllColumns().reduce((acc, column) => {
+    const width = column.columnDef.size;
+    return acc + (width ? (width <= 1 ? 0 : width) : 0);
+  }, 0);
+
   return (
-    <div className="text-sm text-slate-400 flex flex-col w-full overflow-hidden">
+    <div
+      className="text-sm text-slate-400 flex flex-col w-full overflow-hidden"
+      style={{
+        '--scrollbar': `${scrollbarSize}px`,
+        '--total': `${staticWidth}px`,
+      }}
+    >
       <TrackSelectionToolbar rows={flatRows} />
       <TableHeader table={table} />
       <div

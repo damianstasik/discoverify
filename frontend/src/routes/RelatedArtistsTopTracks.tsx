@@ -50,18 +50,21 @@ const columns = [
   }),
   columnHelper.accessor('name', {
     header: 'Name',
-    size: 300,
+    minSize: 200,
     cell: TrackNameColumn,
+    size: 0.4,
   }),
   columnHelper.accessor('artists', {
     header: 'Artist(s)',
     cell: ArtistsColumn,
-    size: 250,
+    minSize: 200,
+    size: 0.3,
   }),
   columnHelper.accessor('album', {
     header: 'Album',
     cell: AlbumColumn,
-    size: 250,
+    minSize: 200,
+    size: 0.3,
   }),
   columnHelper.accessor('duration_ms', {
     header: 'Duration',
@@ -76,7 +79,7 @@ const columns = [
   columnHelper.accessor('uri', {
     id: 'open',
     header: '',
-    size: 40,
+    size: 50,
     cell: SpotifyLinkColumn,
   }),
 ];
