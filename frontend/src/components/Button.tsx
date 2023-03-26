@@ -35,7 +35,7 @@ export function Button({
           variant === 'outlined' &&
             'border-green-700 hover:bg-green-800 focus:ring-green-600 active:bg-green-500/10',
         ],
-        (loading || disabled) && 'bg-neutral-600 cursor-default',
+        (loading || disabled) && 'bg-slate-500 cursor-default',
         className,
       )}
       onClick={onClick}

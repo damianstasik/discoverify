@@ -8,7 +8,7 @@ function ArtistLink({ id, name }) {
   return (
     <Link
       to={`/artist/${id}`}
-      className="text-neutral-300 underline decoration-neutral-500"
+      className="text-slate-300 underline decoration-yellow-900 underline-offset-4 hover:decoration-yellow-500"
     >
       {name}
     </Link>
@@ -26,7 +26,7 @@ export function QueueButton({ queue, isOpen, onVisibilityChange }) {
       </Popover.Trigger>
       <Popover.Portal>
         <Popover.Content
-          className="rounded-md p-5 w-86 bg-slate-500/50 backdrop-blur-2xl"
+          className="rounded-md p-5 w-86 bg-slate-500/90 backdrop-blur-md"
           sideOffset={5}
           collisionPadding={10}
         >
@@ -54,12 +54,12 @@ export function QueueButton({ queue, isOpen, onVisibilityChange }) {
             ))}
           </ul>
           <Popover.Close
-            className="rounded-full h-8 w-8 p-1 inline-flex items-center justify-center text-neutral-500 hover:text-neutral-200 absolute top-2 right-2 hover:bg-white/10 outline-none"
+            className="rounded-full h-8 w-8 p-1 inline-flex items-center justify-center text-slate-400 hover:text-slate-200 absolute top-2 right-2 hover:bg-white/10 outline-none"
             aria-label="Close"
           >
             <Icon path={mdiClose} />
           </Popover.Close>
-          <Popover.Arrow className="fill-neutral-700" />
+          <Popover.Arrow className="fill-slate-500/90 backdrop-blur-md" />
         </Popover.Content>
       </Popover.Portal>
     </Popover.Root>

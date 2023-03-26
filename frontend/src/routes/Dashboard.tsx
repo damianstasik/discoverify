@@ -163,7 +163,7 @@ export default function Dashboard() {
             data?.likedTracksSpotify ?? 'N/A'
           )}
         </h6>
-        <p className="text-neutral-300 text-base">on Spotify</p>
+        <p className="text-slate-300 text-base">on Spotify</p>
 
         <Button
           variant="outlined"

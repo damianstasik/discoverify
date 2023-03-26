@@ -11,7 +11,7 @@ function ArtistLink({ id, name }) {
   return (
     <Link
       to={`/artist/${id}`}
-      className="text-neutral-300 underline decoration-neutral-600"
+      className="text-slate-300 underline decoration-yellow-900 underline-offset-4 hover:decoration-yellow-500"
     >
       {name}
     </Link>
