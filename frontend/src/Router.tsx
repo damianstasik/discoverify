@@ -22,6 +22,7 @@ import { ArtistAlbums } from './routes/ArtistAlbums';
 
 import Dashboard from './routes/Dashboard';
 import { TopArtists } from './routes/TopArtists';
+import { Album } from './routes/Album';
 // import { Test } from './routes/Test';
 // import { Track } from './routes/Track';
 
@@ -86,6 +87,14 @@ const routes: RouteObject[] = [
       //   path: 'track/:id',
       //   element: <Track />,
       // },
+      {
+        path: 'album/:id',
+        element: (
+          <Suspense fallback={<CircularProgress />}>
+            <Album />
+          </Suspense>
+        ),
+      },
       {
         path: 'artist/:id',
         element: (
