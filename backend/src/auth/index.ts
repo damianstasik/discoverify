@@ -5,6 +5,7 @@ import { getSpotifyApi } from '../spotify';
 import { procedureWithAuthToken, withAuthToken } from './middleware';
 import * as jwt from 'jsonwebtoken';
 import { isPast } from 'date-fns';
+import { mixpanel } from '../mixpanel';
 
 function to<T, U = Error>(
   promise: Promise<T>,
@@ -138,6 +139,14 @@ export const authRouter = router({
       expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 31),
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
+    });
+
+    mixpanel.people.set(profileResult.body.id, {
+      $country_code: profileResult.body.country,
+    });
+
+    mixpanel.track('authorize', {
+      distinct_id: profileResult.body.id,
     });
   }),
 });

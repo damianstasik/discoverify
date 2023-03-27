@@ -3,6 +3,7 @@ import { getSpotifyApi } from '../spotify';
 import { procedureWithAuthToken } from '../auth/middleware';
 import { z } from 'zod';
 import { chunk } from 'lodash';
+import { mixpanel } from '../mixpanel';
 
 export const trackRouter = router({
   byAlbumId: procedureWithAuthToken
@@ -18,6 +19,12 @@ export const trackRouter = router({
       const res = await spotifyApi.getAlbumTracks(req.input.albumId, {
         limit: 50,
         offset: req.input.page === 1 ? 0 : req.input.page * 50,
+      });
+
+      mixpanel.track('get_album_tracks', {
+        distinct_id: req.ctx.token.userId,
+        album_id: req.input.albumId,
+        page: req.input.page,
       });
 
       return {
@@ -41,6 +48,10 @@ export const trackRouter = router({
       const res = await spotifyApi.getMyRecentlyPlayedTracks({
         limit: 50,
         // offset: req.input.page === 1 ? 0 : req.input.page * 50,
+      });
+
+      mixpanel.track('get_recently_played_tracks', {
+        distinct_id: req.ctx.token.userId,
       });
 
       return {
@@ -69,6 +80,12 @@ export const trackRouter = router({
         time_range: req.input.timeRange,
       });
 
+      mixpanel.track('get_top_tracks', {
+        distinct_id: req.ctx.token.userId,
+        time_range: req.input.timeRange,
+        page: req.input.page,
+      });
+
       return {
         tracks: res.body.items.map((item) => ({
           ...item,
@@ -84,6 +101,11 @@ export const trackRouter = router({
     ]);
 
     ee.emit(`save:${req.ctx.token.userId}`, req.input);
+
+    mixpanel.track('save_track', {
+      distinct_id: req.ctx.token.userId,
+      uri: req.input,
+    });
   }),
   unsave: procedureWithAuthToken.input(z.string()).mutation(async (req) => {
     await getSpotifyApi(req.ctx.token.accessToken).removeFromMySavedTracks([
@@ -91,6 +113,21 @@ export const trackRouter = router({
     ]);
 
     ee.emit(`unsave:${req.ctx.token.userId}`, req.input);
+
+    mixpanel.track('unsave_track', {
+      distinct_id: req.ctx.token.userId,
+      uri: req.input,
+    });
+  }),
+  pause: procedureWithAuthToken.input(z.string()).mutation(async (req) => {
+    await getSpotifyApi(req.ctx.token.accessToken).pause({
+      device_id: req.input,
+    });
+
+    mixpanel.track('pause_track', {
+      distinct_id: req.ctx.token.userId,
+      uri: req.input,
+    });
   }),
   play: procedureWithAuthToken
     .input(
@@ -106,6 +143,13 @@ export const trackRouter = router({
         device_id: req.input.deviceId,
         offset: { uri: req.input.offset },
       });
+
+      mixpanel.track('play_track', {
+        distinct_id: req.ctx.token.userId,
+        deviceId: req.input.deviceId,
+        trackIds: req.input.trackIds,
+        uri: req.input.offset,
+      });
     }),
   tracksById: procedureWithAuthToken
     .input(z.string().array())
@@ -113,6 +157,11 @@ export const trackRouter = router({
       const res = await getSpotifyApi(req.ctx.token.accessToken).getTracks(
         req.input,
       );
+
+      mixpanel.track('get_tracks_by_id', {
+        distinct_id: req.ctx.token.userId,
+        track_ids: req.input,
+      });
 
       return res.body.tracks;
     }),
@@ -262,6 +311,13 @@ export const trackRouter = router({
         });
       }
 
+      mixpanel.track('get_recommendations', {
+        distinct_id: req.ctx.token.userId,
+        attributes,
+        trackIds: req.input.trackIds,
+        artistIds: req.input.artistIds,
+      });
+
       return songs.body.tracks.map((item, index) => ({
         index,
         name: item.name,
@@ -289,6 +345,11 @@ export const trackRouter = router({
       const tracks = await spotifyApi.getMySavedTracks({
         limit: 50,
         offset: req.input.page === 1 ? 0 : req.input.page * 50,
+      });
+
+      mixpanel.track('get_saved_tracks', {
+        distinct_id: req.ctx.token.userId,
+        page: req.input.page,
       });
 
       return {

@@ -3,6 +3,7 @@ import { getSpotifyApi } from '../spotify';
 import { procedureWithAuthToken } from '../auth/middleware';
 import { z } from 'zod';
 import { chunk } from 'lodash';
+import { mixpanel } from '../mixpanel';
 
 export const playlistRouter = router({
   tracks: procedureWithAuthToken
@@ -18,6 +19,13 @@ export const playlistRouter = router({
         limit: 50,
         offset: req.input.page === 1 ? 0 : req.input.page * 50,
       });
+
+      mixpanel.track('get_playlist_tracks', {
+        distinct_id: req.ctx.token.userId,
+        playlist_id: req.input.id,
+        page: req.input.page,
+      });
+
       return {
         tracks: tracks.body.items.map((item) => ({
           ...item.track,
@@ -31,42 +39,13 @@ export const playlistRouter = router({
     }),
   byId: procedureWithAuthToken.input(z.string()).query(async (req) => {
     const spotifyApi = getSpotifyApi(req.ctx.token.accessToken);
-    const a = await spotifyApi.getPlaylist(req.input);
+    const playlist = await spotifyApi.getPlaylist(req.input);
 
-    const { tracks: trs, ...playlist } = a.body;
+    mixpanel.track('get_playlist', {
+      distinct_id: req.ctx.token.userId,
+      playlist_id: req.input,
+    });
 
-    const tracks = trs.items
-      .filter((track) => track.track)
-      .map((track) => ({
-        addedBy: track.added_by,
-        addedAt: track.added_at,
-        ...track.track!,
-      }));
-
-    const ids = tracks.map((tr) => tr.id);
-    const idGroups = chunk(ids, 50);
-    const saved = new Set();
-
-    for (const idGroup of idGroups) {
-      const savi = await spotifyApi.containsMySavedTracks(idGroup);
-
-      idGroup.forEach((id, index) => {
-        if (savi.body[index]) {
-          saved.add(id);
-        }
-      });
-    }
-
-    return {
-      ...playlist,
-      tracks: tracks.map((t) => ({
-        ...t,
-        isLiked: saved.has(t.id),
-      })),
-      meta: {
-        total: trs.total,
-        limit: trs.limit,
-      },
-    };
+    return playlist.body;
   }),
 });

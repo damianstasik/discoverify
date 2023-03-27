@@ -4,6 +4,7 @@ import { procedureWithAuthToken } from '../auth/middleware';
 import { getSpotifyApi } from '../spotify';
 import { concatLimit } from 'async';
 import { shuffle } from 'lodash';
+import { mixpanel } from '../mixpanel';
 
 interface Response<T> {
   body: T;
@@ -58,6 +59,12 @@ export const artistRouter = router({
         time_range: req.input.timeRange,
       });
 
+      mixpanel.track('get_top_artists', {
+        distinct_id: req.ctx.token.userId,
+        time_range: req.input.timeRange,
+        page: req.input.page,
+      });
+
       return {
         artists: res.body.items.map((item) => ({
           ...item,
@@ -67,11 +74,14 @@ export const artistRouter = router({
         total: res.body.total,
       };
     }),
-  byId: procedureWithAuthToken.input(z.string())
-
-  .query(async (req) => {
+  byId: procedureWithAuthToken.input(z.string()).query(async (req) => {
     const spotifyApi = getSpotifyApi(req.ctx.token.accessToken);
     const artist = await spotifyApi.getArtist(req.input);
+
+    mixpanel.track('get_artist', {
+      distinct_id: req.ctx.token.userId,
+      artist_id: req.input,
+    });
 
     return artist.body;
   }),
@@ -79,6 +89,11 @@ export const artistRouter = router({
     const res = await getSpotifyApi(req.ctx.token.accessToken).getArtists(
       req.input,
     );
+
+    mixpanel.track('get_artists', {
+      distinct_id: req.ctx.token.userId,
+      artist_ids: req.input,
+    });
 
     return res.body.artists;
   }),
@@ -91,6 +106,11 @@ export const artistRouter = router({
       req.input,
       me.body.country,
     );
+
+    mixpanel.track('get_artist_top_tracks', {
+      distinct_id: req.ctx.token.userId,
+      artist_id: req.input,
+    });
 
     return tracks.body.tracks;
   }),
@@ -107,6 +127,12 @@ export const artistRouter = router({
       const albums = await spotifyApi.getArtistAlbums(req.input.id, {
         limit: 50,
         include_groups: req.input.type,
+      });
+
+      mixpanel.track('get_artist_albums', {
+        distinct_id: req.ctx.token.userId,
+        artist_id: req.input.id,
+        type: req.input.type,
       });
 
       return albums.body.items.map((item) => ({
@@ -149,6 +175,12 @@ export const artistRouter = router({
           data: [],
           hasNextPage: false,
         };
+      } finally {
+        mixpanel.track('get_related_artists_top_tracks', {
+          distinct_id: req.ctx.token.userId,
+          artist_id: req.input.id,
+          page: req.input.page,
+        });
       }
     }),
 });

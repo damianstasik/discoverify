@@ -3,6 +3,7 @@ import { getSpotifyApi } from '../spotify';
 import { procedureWithAuthToken } from '../auth/middleware';
 import { z } from 'zod';
 import { search } from 'fast-fuzzy';
+import { mixpanel } from '../mixpanel';
 
 interface GenreSearchResult {
   type: 'genre';
@@ -69,6 +70,11 @@ export const seedRouter = router({
           id: `${track.id}`,
           img: track.album.images?.[0]?.url,
         })) ?? [];
+
+      mixpanel.track('get_seeds', {
+        distinct_id: req.ctx.token.userId,
+        query: req.input,
+      });
 
       return [...artists, ...tracks, ...genres];
     }),

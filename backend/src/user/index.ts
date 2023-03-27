@@ -3,6 +3,7 @@ import { getSpotifyApi } from '../spotify';
 import { procedureWithAuthToken } from '../auth/middleware';
 import { z } from 'zod';
 import { observable } from '@trpc/server/observable';
+import { mixpanel } from '../mixpanel';
 
 type TrackSaveChange = {
   type: 'save' | 'unsave';
@@ -52,6 +53,12 @@ export const userRouter = router({
         offset: req.input.page === 1 ? 0 : req.input.page * 50,
       });
 
+      mixpanel.track('get_playlists', {
+        distinct_id: req.ctx.token.userId,
+        page: req.input.page,
+        per_page: req.input.perPage,
+      });
+
       return {
         playlists: playlists.body.items,
         nextPage: !!playlists.body.next,
@@ -85,6 +92,10 @@ export const userRouter = router({
         limit: 1,
       }),
     ]);
+
+    mixpanel.track('get_stats', {
+      distinct_id: req.ctx.token.userId,
+    });
 
     return {
       recentlyPlayedTrack:

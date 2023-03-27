@@ -1,5 +1,6 @@
 import { router } from '..';
 import { procedureWithAuthToken } from '../auth/middleware';
+import { mixpanel } from '../mixpanel';
 
 export const playerRouter = router({
   queue: procedureWithAuthToken.query(async (req) => {
@@ -11,6 +12,10 @@ export const playerRouter = router({
     });
 
     const body = await res.json();
+
+    mixpanel.track('get_queue', {
+      distinct_id: req.ctx.token.userId,
+    });
 
     return body?.queue || [];
   }),
