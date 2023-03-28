@@ -104,7 +104,7 @@ export function EntityAutocomplete({
       <div className={twMerge('relative z-10', className)}>
         <div className="relative w-full overflow-hidden rounded-lg border border-slate-600 bg-slate-950 text-left focus:outline-none">
           <Combobox.Input
-            className="w-full border-none bg-transparent py-2 pl-3 pr-10 text-sm leading-5 placeholder-slate-450 text-white focus:ring-0"
+            className="w-full border-none bg-transparent py-2 pl-3 pr-10 text-sm/5 placeholder-slate-450 text-white focus:ring-0"
             displayValue={(person) => ''}
             onChange={(event) => onQueryChange(event.target.value)}
             placeholder="Search by tracks, artists or genres..."

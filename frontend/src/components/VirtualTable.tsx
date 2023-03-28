@@ -24,7 +24,7 @@ const TableHeader = ({ table }: TableHeaderProps) => {
       {table.getHeaderGroups().map((headerGroup) => (
         <div
           key={headerGroup.id}
-          className="flex bg-black/40 pr-[var(--scrollbar)]"
+          className="flex bg-black/40 pr-[--scrollbar]"
         >
           {headerGroup.headers.map((header) => {
             return (

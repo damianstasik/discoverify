@@ -61,7 +61,7 @@ export function RecommendationAttribute({ attr }: Props) {
         >
           <h5 className="text-white font-medium">{attr.label}</h5>
 
-          <p className="py-3 text-slate-300 text-sm leading-relaxed">
+          <p className="py-3 text-slate-300 text-sm/relaxed">
             {attr.description}
           </p>
 

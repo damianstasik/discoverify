@@ -128,7 +128,7 @@ export function Playlist() {
       />
 
       <div className="p-3 border-b border-white/5 backdrop-blur-lg">
-        <h2 className="text-xl text-white font-bold leading-none">
+        <h2 className="text-xl/none text-white font-bold">
           {data?.name || (
             <div className="animate-pulse h-em w-48 bg-slate-600 rounded-md" />
           )}

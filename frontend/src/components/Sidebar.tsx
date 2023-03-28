@@ -103,7 +103,7 @@ export const Sidebar = memo(({ className }) => {
 
   return (
     <div className="p-3 h-full overflow-y-auto">
-      <h5 className="text-white inline-flex text-lg font-black leading-none text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-cyan-500">
+      <h5 className="text-white inline-flex text-lg/none font-black">
         Discoverify
       </h5>
 

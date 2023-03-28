@@ -156,7 +156,7 @@ export default function Dashboard() {
         <h5 className="text-base font-semibold text-white mb-2">
           Liked tracks
         </h5>
-        <h6 className="text-lg text-white leading-none oldstyle-nums">
+        <h6 className="text-lg/none text-white oldstyle-nums">
           {isLoading ? (
             <div className="animate-pulse h-em w-16 bg-slate-500 rounded-md" />
           ) : (
@@ -180,7 +180,7 @@ export default function Dashboard() {
         <h5 className="text-base font-semibold text-white mb-2">
           Followed artists
         </h5>
-        <h6 className="text-lg text-white leading-none oldstyle-nums">
+        <h6 className="text-lg/none text-white oldstyle-nums">
           {isLoading ? (
             <div className="animate-pulse h-em w-16 bg-slate-500 rounded-md" />
           ) : (
