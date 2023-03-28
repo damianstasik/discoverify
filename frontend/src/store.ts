@@ -1,4 +1,4 @@
-import { atom, type AtomEffect, selector } from 'recoil';
+import { atom, type AtomEffect, selector, atomFamily } from 'recoil';
 import { PlaybackState } from './types.d';
 
 // player
@@ -108,4 +108,30 @@ export const playerVolumeAtom = atom<number>({
 export const savedTracksAtom = atom<string[]>({
   key: 'savedTracks',
   default: [],
+});
+
+export const savedTracksSelector = selector({
+  key: 'savedTracksSelector',
+  get: ({ get, getCallback }) => {
+    const savedTracks = get(savedTracksAtom);
+
+    return getCallback(() => (id) => savedTracks.includes(id));
+  },
+  set: ({ get, set }, newValue) => {
+    const savedTracks = get(savedTracksAtom);
+
+    if (savedTracks.includes(newValue)) {
+      set(
+        savedTracksAtom,
+        savedTracks.filter((id) => id !== newValue),
+      );
+    } else {
+      set(savedTracksAtom, [...savedTracks, newValue]);
+    }
+  },
+});
+
+export const trackStateAtom = atomFamily({
+  key: 'trackState',
+  default: { isPlaying: false, isLoading: false },
 });

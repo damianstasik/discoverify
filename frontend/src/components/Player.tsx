@@ -1,5 +1,5 @@
-import { useCallback, useState, useEffect } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useCallback, useState, useEffect, useRef } from 'react';
+import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
 import { useQuery } from '@tanstack/react-query';
 import {
   trackPreviewState,
@@ -10,6 +10,7 @@ import {
   queueVisibilityAtom,
   userAtom,
   savedTracksAtom,
+  trackStateAtom,
 } from '../store';
 import { useSpotifyWebPlaybackSdk } from '../hooks/useSpotifyWebPlaybackSdk';
 import { VolumeControl } from './Player/VolumeControl';
@@ -56,25 +57,43 @@ export function Player() {
     null,
   );
 
-  const h = useCallback<Spotify.PlaybackStateListener>(
-    (state) => {
-      setDuration(state.duration / 1000);
-      setMeta(state.context.metadata);
+  const prevTrackUri = useRef();
 
-      setPlayerState(
-        state.paused ? PlaybackState.PAUSED : PlaybackState.PLAYING,
-      );
+  const h = useRecoilCallback<[Spotify.PlaybackState], void>(
+    ({ set: recoilSet }) =>
+      (state) => {
+        setDuration(state.duration / 1000);
+        setMeta(state.context.metadata);
 
-      set(state.position / 1000);
+        recoilSet(
+          playerStateAtom,
+          state.paused ? PlaybackState.PAUSED : PlaybackState.PLAYING,
+        );
 
-      if (state.paused && status === 'RUNNING') {
-        pause();
-      }
+        if (prevTrackUri.current) {
+          recoilSet(trackStateAtom(prevTrackUri.current), {
+            isPlaying: false,
+            isLoading: false,
+          });
+        }
 
-      if (!state.paused && status !== 'RUNNING') {
-        start();
-      }
-    },
+        recoilSet(trackStateAtom(state.context.metadata?.current_item.uri), {
+          isPlaying: !state.paused,
+          isLoading: false,
+        });
+
+        prevTrackUri.current = state.context.metadata?.current_item.uri;
+
+        set(state.position / 1000);
+
+        if (state.paused && status === 'RUNNING') {
+          pause();
+        }
+
+        if (!state.paused && status !== 'RUNNING') {
+          start();
+        }
+      },
     [status],
   );
 

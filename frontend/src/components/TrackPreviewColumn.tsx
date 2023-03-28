@@ -1,7 +1,6 @@
 import { mdiPauseCircle, mdiPlayCircle } from '@mdi/js';
 import { useRecoilValue } from 'recoil';
-import { playerStateAtom, playerTrackAtom } from '../store';
-import { PlaybackState } from '../types.d';
+import { trackStateAtom } from '../store';
 import { useEventBus } from './EventBus';
 import { CellContext } from '@tanstack/react-table';
 import { IconButton } from './IconButton';
@@ -11,25 +10,21 @@ import { CircularProgress } from './CircularProgress';
 export const TrackPreviewColumn = <Data,>(props: CellContext<Data, string>) => {
   const uri = props.getValue();
   const eventBus = useEventBus();
-  const playerTrack = useRecoilValue(playerTrackAtom);
-  const isPlayingTrack = playerTrack?.uri === uri; // && trackPreview?.context === context
-  const playerState = useRecoilValue(playerStateAtom);
+  const { isLoading, isPlaying } = useRecoilValue(trackStateAtom(uri));
 
-  return isPlayingTrack && playerState === PlaybackState.LOADING ? (
-    <CircularProgress />
-  ) : (
+  console.log('preview', uri);
+  return (
     <IconButton
-      icon={
-        isPlayingTrack && playerState === PlaybackState.PLAYING
-          ? mdiPauseCircle
-          : mdiPlayCircle
-      }
+      icon={isPlaying ? mdiPauseCircle : mdiPlayCircle}
       className={twMerge(
         'p-1',
-        isPlayingTrack ? 'text-green-500' : 'text-white',
+        isPlaying ? 'text-green-500' : 'text-white',
+        isLoading ? 'opacity-50 pointer-events-none' : '',
       )}
-      onClick={() => eventBus.emit('playPauseTrack', uri)}
-      label={isPlayingTrack ? 'Pause' : 'Play'}
+      onClick={() =>
+        eventBus.emit('playPauseTrack', { uri, isLoading, isPlaying })
+      }
+      label={isPlaying ? 'Pause' : 'Play'}
     />
   );
 };
