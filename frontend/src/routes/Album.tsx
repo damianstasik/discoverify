@@ -1,8 +1,7 @@
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import { RouterOutput, trpc } from '../trpc';
 import { useParams } from 'react-router-dom';
-import { useMemo, useState } from 'react';
-import { twMerge } from 'tailwind-merge';
+import { useMemo } from 'react';
 import { VirtualTable } from '../components/VirtualTable';
 import { usePlayPauseTrackHook } from '../hooks/usePlayPauseTrackHook';
 import { createColumnHelper } from '@tanstack/react-table';
@@ -13,6 +12,7 @@ import { ArtistsColumn } from '../components/ArtistsColumn';
 import { DurationColumn } from '../components/DurationColumn';
 import { SaveColumn } from '../components/SaveColumn';
 import { SpotifyLinkColumn } from '../components/SpotifyLinkColumn';
+import { BgImg } from '../components/BgImg';
 
 type TrackType = RouterOutput['track']['byAlbumId']['tracks'][number];
 
@@ -77,27 +77,6 @@ const columns = [
   }),
 ];
 
-function Img({ src }) {
-  const [loaded, setLoaded] = useState(false);
-
-  return (
-    <div
-      className={twMerge(
-        'absolute top-0 inset-x-0 z-0 h-[500px] opacity-0 transition-opacity duration-500',
-        loaded && 'opacity-20',
-      )}
-    >
-      <span className="absolute inset-0 z-0 bg-gradient-to-b from-transparent to-slate-900" />
-      <img
-        src={src}
-        alt="Artist's picture"
-        className="object-cover w-full h-full"
-        onLoad={() => setLoaded(true)}
-      />
-    </div>
-  );
-}
-
 export function Album() {
   const { id } = useParams<{ albumId: string }>();
 
@@ -136,7 +115,7 @@ export function Album() {
 
   return (
     <>
-      <Img src={data?.images?.[0].url} key={id} />
+      <BgImg src={data?.images?.[0].url} key={id} alt="Album cover picture" />
       <div className="relative">
         <div className="border-b border-white/5 backdrop-blur-lg">
           <h2 className="p-3 text-xl text-white font-bold leading-none">

@@ -1,6 +1,6 @@
 import { useLocation, useParams } from 'react-router-dom';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { AlbumColumn } from '../components/AlbumColumn';
 import { ArtistsColumn } from '../components/ArtistsColumn';
 import { TrackNameColumn } from '../components/TrackNameColumn';
@@ -16,7 +16,7 @@ import { RouterOutput } from '../trpc';
 import { DurationColumn } from '../components/DurationColumn';
 import { SaveColumn } from '../components/SaveColumn';
 import { SpotifyLinkColumn } from '../components/SpotifyLinkColumn';
-import { twMerge } from 'tailwind-merge';
+import { BgImg } from '../components/BgImg';
 
 type PlaylistType = RouterOutput['playlist']['tracks']['tracks'][number];
 
@@ -92,27 +92,6 @@ const columns = [
   }),
 ];
 
-function Img({ src }) {
-  const [loaded, setLoaded] = useState(false);
-
-  return (
-    <div
-      className={twMerge(
-        'absolute top-0 inset-x-0 z-0 h-[500px] opacity-0 transition-opacity duration-500',
-        loaded && 'opacity-10',
-      )}
-    >
-      <span className="absolute inset-0 z-0 bg-gradient-to-b from-transparent via-slate-900/90 to-slate-900" />
-      <img
-        src={src}
-        alt="Artist's picture"
-        className="object-cover w-full h-full"
-        onLoad={() => setLoaded(true)}
-      />
-    </div>
-  );
-}
-
 export function Playlist() {
   const params = useParams<'id'>();
   const { state } = useLocation();
@@ -142,7 +121,11 @@ export function Playlist() {
 
   return (
     <>
-      <Img src={data?.images?.[0]?.url} key={params.id} />
+      <BgImg
+        src={data?.images?.[0]?.url}
+        key={params.id}
+        alt="Playlist cover picture"
+      />
 
       <div className="p-3 border-b border-white/5 backdrop-blur-lg">
         <h2 className="text-xl text-white font-bold leading-none">

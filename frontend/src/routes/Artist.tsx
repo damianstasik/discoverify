@@ -6,7 +6,7 @@ import {
   useResolvedPath,
 } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { Suspense, useState } from 'react';
+import { Suspense } from 'react';
 import { trpc } from '../trpc';
 import { twMerge } from 'tailwind-merge';
 import { Icon } from '../components/Icon';
@@ -18,27 +18,7 @@ import {
   mdiPlayBoxMultipleOutline,
   mdiTrendingUp,
 } from '@mdi/js';
-
-function Img({ src }) {
-  const [loaded, setLoaded] = useState(false);
-
-  return (
-    <div
-      className={twMerge(
-        'absolute top-0 inset-x-0 z-0 h-[500px] opacity-0 transition-opacity duration-500',
-        loaded && 'opacity-20',
-      )}
-    >
-      <span className="absolute inset-0 z-0 bg-gradient-to-b from-transparent to-slate-900" />
-      <img
-        src={src}
-        alt="Artist's picture"
-        className="object-cover w-full h-full"
-        onLoad={() => setLoaded(true)}
-      />
-    </div>
-  );
-}
+import { BgImg } from '../components/BgImg';
 
 function TabLink({ tab }) {
   const match = useResolvedPath(tab.to);
@@ -122,7 +102,11 @@ export function Artist() {
 
   return (
     <>
-      <Img src={data?.images?.[0].url} key={params.id} />
+      <BgImg
+        src={data?.images?.[0].url}
+        key={params.id}
+        alt="Artist's picture"
+      />
       <div className="relative">
         <div className="border-b border-white/5 backdrop-blur-lg">
           <h2 className="p-3 text-xl text-white font-bold leading-none">
