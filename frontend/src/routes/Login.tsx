@@ -6,7 +6,7 @@ import { Button } from '../components/Button';
 export function Login() {
   const { enqueueSnackbar } = useSnackbar();
 
-  const { mutate, isLoading } = useMutation(authUrlMutation, {
+  const { mutate, isLoading, isSuccess } = useMutation(authUrlMutation, {
     onSuccess(url) {
       window.location.href = url;
     },
@@ -26,7 +26,7 @@ export function Login() {
         <p className="my-3 text-slate-300 text-sm">
           You can login with Spotify by clicking the button below.
         </p>
-        <Button onClick={handleClick} loading={isLoading}>
+        <Button onClick={handleClick} loading={isLoading || isSuccess}>
           Login with Spotify
         </Button>
       </div>
