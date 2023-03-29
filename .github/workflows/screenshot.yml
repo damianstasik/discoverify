@@ -14,13 +14,14 @@ jobs:
           node-version: 16
       - run: npm i --global turbo
       - run: turbo prune --scope=scripts
-      - run: cd out
-      - run: npm ci
-      - run: cd scripts
-      - run: ls
-      - run: cat package.json
-      - run: npm run generate-screenshot
+      - run: |
+          cd out
+          npm ci
+          cd scripts
+          ls
+          cat package.json
+          npm run generate-screenshot
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
         with:
-          add-paths: screenshot.png
+          add-paths: out/scripts/screenshot.png
