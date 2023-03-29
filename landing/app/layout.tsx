@@ -6,7 +6,7 @@ interface Props {
 
 export default function RootLayout({ children }: Props) {
   return (
-    <html lang="en" className="bg-gray-900 text-white">
+    <html lang="en" className="bg-slate-1000 text-white">
       <head />
       <body>{children}</body>
     </html>
