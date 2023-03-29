@@ -21,7 +21,9 @@ jobs:
           ls
           cat package.json
           npm run generate-screenshot
+          ls
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
         with:
-          add-paths: out/scripts/screenshot.png
+          add-paths: |
+            out/scripts/screenshot.png
