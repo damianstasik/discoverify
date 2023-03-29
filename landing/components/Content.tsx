@@ -1,3 +1,6 @@
+import Image from 'next/image';
+import screenshotUrl from '../public/screenshot.png';
+
 export function Content() {
   return (
     <section className="max-w-5xl mx-auto text-center mt-40">
@@ -68,10 +71,12 @@ export function Content() {
           </div>
         </div>
 
-        <img
-          src="/screenshot.png"
+        <Image
+          src={screenshotUrl}
           className="relative border border-slate-700"
           alt="Screenshot of the app"
+          placeholder="blur"
+          priority
         />
       </div>
     </section>
