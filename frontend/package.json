@@ -27,7 +27,7 @@
     "postcss": "^8.4.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.9.0",
+    "react-router-dom": "^6.10.0",
     "recoil": "^0.7.7",
     "tailwind-lerp-colors": "^1.1.6",
     "tailwind-merge": "^1.11.0",
