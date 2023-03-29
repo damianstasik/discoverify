@@ -18,13 +18,10 @@ jobs:
           cd out
           npm ci
           cd scripts
-          ls
           cat package.json
           npm run generate-screenshot
-          ls
-          mv screenshot.png sc.png
+          mv screenshot.png ../../landing/public
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
         with:
-          add-paths: |
-            out/scripts/sc.png
+          add-paths: landing/public/screenshot.png
