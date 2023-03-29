@@ -1,0 +1,24 @@
+name: Generate screenshot
+
+on:
+  workflow_dispatch:
+
+jobs:
+  generate:
+    name: Generate screenshot
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - run: npm i --global turbo
+      - run: turbo prune --scope=scripts
+      - run: cd out
+      - run: npm ci
+      - run: cd scripts
+      - run: npm run generate-screenshot
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          add-paths: screenshot.png

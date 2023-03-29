@@ -3,7 +3,8 @@
   "workspaces": [
     "backend",
     "frontend",
-    "landing"
+    "landing",
+    "scripts"
   ],
   "scripts": {
     "dev": "turbo run dev",
