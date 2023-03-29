@@ -57,9 +57,6 @@ export function Content() {
           <span className="text-2xl font-bold">16443</span>
         </div>
       </div> */}
-      <div className="max-w-5xl mx-auto relative blur-[1000px] -z-[1]">
-        <img src="/bg2.svg" className="absolute -top-48 blur-[1000px]" />
-      </div>
       <div className="relative">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-slate-1000 z-10" />
 
