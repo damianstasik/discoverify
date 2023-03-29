@@ -18,10 +18,15 @@ jobs:
           cd out
           npm ci
           cd scripts
-          cat package.json
           npm run generate-screenshot
           mv screenshot.png ../../landing/public
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
         with:
           add-paths: landing/public/screenshot.png
+          branch: screenshot-update
+          delete-branch: true
+          title: Screenshot update
+          body: |
+            > **Note**
+            > This is an automated PR with an updated screenshot of the app to sync landing page with latest changes in the UI
