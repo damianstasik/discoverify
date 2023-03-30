@@ -1,4 +1,4 @@
-import { twMerge } from 'tailwind-merge';
+import { tw } from '../tw';
 
 interface Props {
   className?: string;
@@ -9,10 +9,7 @@ export function CircularProgress({ className }: Props) {
     <div role="status">
       <svg
         aria-hidden="true"
-        className={twMerge(
-          's-3 animate-spin text-white/50 fill-white',
-          className,
-        )}
+        className={tw('s-3 animate-spin text-white/50 fill-white', className)}
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"

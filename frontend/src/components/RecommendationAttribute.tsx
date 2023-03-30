@@ -6,7 +6,7 @@ import { mdiChevronDown, mdiClose } from '@mdi/js';
 import { Icon } from './Icon';
 import { Button } from './Button';
 import { Switch } from './Switch';
-import { twMerge } from 'tailwind-merge';
+import { tw } from '../tw';
 
 interface Props<Value> {
   label: string;
@@ -40,7 +40,7 @@ export function RecommendationAttribute({ attr }: Props) {
               ? 'primary'
               : undefined
           }
-          className={twMerge(
+          className={tw(
             'text-sm rounded-xl border flex items-center h-6 px-2 active:bg-white/10 focus:outline-none focus:ring-2',
             attr.minEnabled || attr.targetEnabled || attr.maxEnabled
               ? 'border-green-600 text-green-600 focus:ring-green-700'

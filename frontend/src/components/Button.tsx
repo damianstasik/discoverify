@@ -1,5 +1,5 @@
-import { twMerge } from 'tailwind-merge';
 import { CircularProgress } from './CircularProgress';
+import { tw } from '../tw';
 
 interface Props {
   children: React.ReactNode;
@@ -26,7 +26,7 @@ export function Button({
   return (
     <Component
       type={component ? undefined : 'button'}
-      className={twMerge(
+      className={tw(
         'inline-flex items-center rounded-md border border-transparent px-3 py-1 text-sm font-medium text-white focus:outline-none focus:ring-1',
 
         color === 'primary' && [

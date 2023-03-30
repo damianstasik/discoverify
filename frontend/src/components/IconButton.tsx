@@ -1,6 +1,6 @@
-import { twMerge } from 'tailwind-merge';
 import { Icon } from './Icon';
 import { forwardRef } from 'react';
+import { tw } from '../tw';
 
 interface Props {
   label?: string;
@@ -21,7 +21,7 @@ export const IconButton = forwardRef<
   return (
     <Component
       type={href ? undefined : 'button'}
-      className={twMerge(
+      className={tw(
         'flex-shrink-0 focus:ring-1 active:bg-white/30 focus:outline-none rounded-lg s-8 p-1 inline-flex text-base items-center justify-center hover:text-white focus:ring-white/50 hover:bg-white/20',
         disabled ? 'opacity-50 pointer-events-none' : '',
         className,

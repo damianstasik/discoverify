@@ -1,7 +1,7 @@
 import { Combobox } from '@headlessui/react';
 import { Icon } from './Icon';
 import { mdiMenuDown } from '@mdi/js';
-import { twMerge } from 'tailwind-merge';
+import { tw } from '../tw';
 
 interface Item {
   type: 'artist' | 'track' | 'genre';
@@ -16,7 +16,7 @@ const Option = ({ item }: { item: Item }) => {
       return (
         <Combobox.Option
           className={({ active }) =>
-            twMerge(
+            tw(
               'text-white px-3 py-2 flex items-center gap-3 cursor-pointer',
               active && 'bg-slate-500/50',
             )
@@ -36,7 +36,7 @@ const Option = ({ item }: { item: Item }) => {
       return (
         <Combobox.Option
           className={({ active }) =>
-            twMerge(
+            tw(
               'text-white px-3 py-2 flex items-center gap-3 cursor-pointer',
               active && 'bg-slate-500/50',
             )
@@ -50,7 +50,7 @@ const Option = ({ item }: { item: Item }) => {
       return (
         <Combobox.Option
           className={({ active }) =>
-            twMerge(
+            tw(
               'text-white px-3 py-2 flex items-center gap-3 cursor-pointer',
               active && 'bg-slate-500/50',
             )
@@ -101,7 +101,7 @@ export function EntityAutocomplete({
 
   return (
     <Combobox onChange={onSelection}>
-      <div className={twMerge('relative z-10', className)}>
+      <div className={tw('relative z-10', className)}>
         <div className="relative w-full overflow-hidden rounded-lg border border-slate-600 bg-slate-950 text-left focus:outline-none">
           <Combobox.Input
             className="w-full border-none bg-transparent py-2 pl-3 pr-10 text-sm/5 placeholder-slate-450 text-white focus:ring-0"

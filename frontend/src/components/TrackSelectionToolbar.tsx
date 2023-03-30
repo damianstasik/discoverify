@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
-import { twMerge } from 'tailwind-merge';
 import { Button } from './Button';
 import { Row } from '@tanstack/react-table';
+import { tw } from '../tw';
 
 function extractId(value: string) {
   if (value.includes('::')) {
@@ -20,7 +20,7 @@ export const TrackSelectionToolbar = <T extends { spotifyId: string }>({
 }: Props<T>) => {
   return (
     <div
-      className={twMerge(
+      className={tw(
         'p-3 gap-3 border-b border-white/5 backdrop-blur-lg',
         rows.length > 0 ? 'flex' : 'hidden',
       )}

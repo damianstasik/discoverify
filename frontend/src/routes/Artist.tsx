@@ -8,7 +8,6 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { Suspense } from 'react';
 import { trpc } from '../trpc';
-import { twMerge } from 'tailwind-merge';
 import { Icon } from '../components/Icon';
 import {
   mdiAccountMusic,
@@ -19,6 +18,7 @@ import {
   mdiTrendingUp,
 } from '@mdi/js';
 import { BgImg } from '../components/BgImg';
+import { tw } from '../tw';
 
 function TabLink({ tab }) {
   const match = useResolvedPath(tab.to);
@@ -28,7 +28,7 @@ function TabLink({ tab }) {
   return (
     <Link
       to={tab.to}
-      className={twMerge(
+      className={tw(
         isCurrent
           ? 'border-green-500 text-green-600'
           : 'border-transparent text-slate-400 hover:text-slate-300 hover:border-slate-400',
@@ -38,7 +38,7 @@ function TabLink({ tab }) {
     >
       <Icon
         path={tab.icon}
-        className={twMerge(
+        className={tw(
           isCurrent
             ? 'text-green-500'
             : 'text-slate-450 group-hover:text-slate-400',

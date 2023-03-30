@@ -12,16 +12,16 @@ import { useQuery } from '@tanstack/react-query';
 import { trpc } from '../trpc';
 import { recommendIconPath } from '../icons/recommend';
 import { Icon } from './Icon';
-import { twMerge } from 'tailwind-merge';
+import { tw } from '../tw';
 
 function Heading({ children, className, separatorClassName }: any) {
   return (
-    <div className={twMerge('flex items-center px-2', className)}>
+    <div className={tw('flex items-center px-2', className)}>
       <span className="flex-shrink pr-3 font-semibold text-sm text-white">
         {children}
       </span>
       <div
-        className={twMerge(
+        className={tw(
           'flex-grow h-px bg-gradient-to-r to-transparent',
           separatorClassName,
         )}
@@ -62,7 +62,7 @@ function RouterListItem({
   return (
     <RouterLink
       to={to}
-      className={twMerge(
+      className={tw(
         isActive
           ? 'bg-slate-800 text-white'
           : 'text-slate-400 hover:bg-slate-700 hover:text-white',
@@ -76,7 +76,7 @@ function RouterListItem({
       {icon && (
         <Icon
           path={icon}
-          className={twMerge(
+          className={tw(
             isActive
               ? 'text-slate-300'
               : 'text-slate-500 group-hover:text-slate-300',

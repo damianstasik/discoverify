@@ -2,9 +2,9 @@ import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { mdiPauseCircle, mdiPlayCircle } from '@mdi/js';
 import { trpc } from '../trpc';
-import { twMerge } from 'tailwind-merge';
 import { Button } from '../components/Button';
 import { IconButton } from '../components/IconButton';
+import { tw } from '../tw';
 
 function CardWithLink({ title, children, linkTo, isLoading, linkLabel }) {
   return (
@@ -111,7 +111,7 @@ function findImageUrlByMinWidth(images: any[], width: number) {
 
 function Card({ children, className }) {
   return (
-    <div className={twMerge('px-3 py-2 bg-slate-700 rounded-md', className)}>
+    <div className={tw('px-3 py-2 bg-slate-700 rounded-md', className)}>
       {children}
     </div>
   );
