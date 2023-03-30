@@ -18,7 +18,7 @@ const columns = [
     cell: (params) => (
       <RouterLink
         to={`/playlist/${params.row.original.id}`}
-        className='text-white underline decoration-blue-900 underline-offset-4 hover:decoration-blue-500'
+        className='text-white underline decoration-blue-900 underline-offset-4 hover:decoration-blue-500 hover:text-blue-500'
       >
         {params.getValue()}
       </RouterLink>
