@@ -49,6 +49,9 @@ export const seedRouter = router({
       const results = await getSpotifyApi(req.ctx.token.accessToken).search(
         req.input,
         ['artist', 'track'],
+        {
+          market: 'from_token',
+        },
       );
 
       const artists: ArtistSearchResult[] =

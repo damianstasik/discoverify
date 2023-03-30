@@ -18,6 +18,7 @@ export const playlistRouter = router({
       const tracks = await spotifyApi.getPlaylistTracks(req.input.id, {
         limit: 50,
         offset: req.input.page === 1 ? 0 : req.input.page * 50,
+        market: 'from_token',
       });
 
       mixpanel.track('get_playlist_tracks', {
@@ -39,7 +40,10 @@ export const playlistRouter = router({
     }),
   byId: procedureWithAuthToken.input(z.string()).query(async (req) => {
     const spotifyApi = getSpotifyApi(req.ctx.token.accessToken);
-    const playlist = await spotifyApi.getPlaylist(req.input);
+
+    const playlist = await spotifyApi.getPlaylist(req.input, {
+      market: 'from_token',
+    });
 
     mixpanel.track('get_playlist', {
       distinct_id: req.ctx.token.userId,

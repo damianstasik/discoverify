@@ -107,7 +107,7 @@ interface Props<Data extends { spotifyId: string }> {
   fetchNextPage?: () => void;
 }
 
-export const VirtualTable = <Data extends { spotifyId: string }>({
+const VirtualTableRaw = <Data extends { spotifyId: string }>({
   columns,
   data,
   isLoading,
@@ -186,3 +186,5 @@ export const VirtualTable = <Data extends { spotifyId: string }>({
     </div>
   );
 };
+
+export const VirtualTable = memo(VirtualTableRaw);

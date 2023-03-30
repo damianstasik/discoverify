@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { tokenState, trackPreviewState } from '../store';
+import { useRecoilValue } from 'recoil';
+import { tokenState } from '../store';
 
 function ArtistCardSkeleton() {
   return (
@@ -27,7 +27,6 @@ function ArtistCard({ artist }: { artist: any }) {
   const [isLoading, setLoading] = useState(false);
   const [isFollowing, setFollowingState] = useState(false);
   const token = useRecoilValue(tokenState);
-  const [trackPreview, setTrackPreview] = useRecoilState(trackPreviewState);
   const handleFollow = () => {
     setLoading(true);
 
@@ -66,22 +65,6 @@ function ArtistCard({ artist }: { artist: any }) {
                 primary={tr.name}
                 secondary={tr.artists.map((a) => a.name).join(', ')}
               />
-              <div>
-                <div
-                  edge="end"
-                  aria-label="delete"
-                  onClick={() =>
-                    setTrackPreview({ url: tr.preview_url, context: artist })
-                  }
-                >
-                  {/* {tr.preview_url === trackPreview?.url &&
-                  trackPreview?.context === artist ? (
-                    <StopCircleTwoToneIcon />
-                  ) : (
-                    <PlayCircleFilledTwoToneIcon />
-                  )} */}
-                </div>
-              </div>
             </div>
           ))}
         </div>

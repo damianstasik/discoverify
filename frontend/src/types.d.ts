@@ -4,12 +4,6 @@ export interface Attribute<Value> {
   max: Value | null;
 }
 
-export enum PlaybackState {
-  PLAYING,
-  PAUSED,
-  LOADING,
-}
-
 export interface User {
   email: string;
   photoUrl: string;

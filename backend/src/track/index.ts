@@ -19,6 +19,7 @@ export const trackRouter = router({
       const res = await spotifyApi.getAlbumTracks(req.input.albumId, {
         limit: 50,
         offset: req.input.page === 1 ? 0 : req.input.page * 50,
+        market: 'from_token',
       });
 
       mixpanel.track('get_album_tracks', {
@@ -156,6 +157,9 @@ export const trackRouter = router({
     .query(async (req) => {
       const res = await getSpotifyApi(req.ctx.token.accessToken).getTracks(
         req.input,
+        {
+          market: 'from_token',
+        },
       );
 
       mixpanel.track('get_tracks_by_id', {
@@ -295,6 +299,8 @@ export const trackRouter = router({
 
         seed_tracks: req.input.trackIds,
         seed_artists: req.input.artistIds,
+
+        market: 'from_token',
       });
 
       const ids = songs.body.tracks.map((tr) => tr.id);
@@ -345,6 +351,7 @@ export const trackRouter = router({
       const tracks = await spotifyApi.getMySavedTracks({
         limit: 50,
         offset: req.input.page === 1 ? 0 : req.input.page * 50,
+        market: 'from_token',
       });
 
       mixpanel.track('get_saved_tracks', {

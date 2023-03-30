@@ -1,35 +1,31 @@
 import { mdiPauseCircle, mdiPlayCircle } from '@mdi/js';
-import { useRecoilValue } from 'recoil';
-import { playerStateAtom, playerTrackAtom } from '../store';
-import { PlaybackState } from '../types.d';
 import { useEventBus } from './EventBus';
 import { CellContext } from '@tanstack/react-table';
 import { IconButton } from './IconButton';
-import { twMerge } from 'tailwind-merge';
-import { CircularProgress } from './CircularProgress';
+import { observer } from 'mobx-react-lite';
+import { player } from '../state';
+import { computed } from 'mobx';
 
-export const TrackPreviewColumn = <Data,>(props: CellContext<Data, string>) => {
+const Component = <Data,>(props: CellContext<Data, string>) => {
   const uri = props.getValue();
   const eventBus = useEventBus();
-  const playerTrack = useRecoilValue(playerTrackAtom);
-  const isPlayingTrack = playerTrack?.uri === uri; // && trackPreview?.context === context
-  const playerState = useRecoilValue(playerStateAtom);
 
-  return isPlayingTrack && playerState === PlaybackState.LOADING ? (
-    <CircularProgress />
-  ) : (
+  const isPlaying = computed(() => player.isPlaying(uri)).get();
+  const isLoading = computed(() => player.isLoading(uri)).get();
+
+  console.log('track preview', uri, isPlaying, isLoading);
+
+  return (
     <IconButton
-      icon={
-        isPlayingTrack && playerState === PlaybackState.PLAYING
-          ? mdiPauseCircle
-          : mdiPlayCircle
+      icon={isPlaying ? mdiPauseCircle : mdiPlayCircle}
+      className={
+        isPlaying ? 'text-green-500 hover:text-green-600' : 'text-white'
       }
-      className={twMerge(
-        'p-1',
-        isPlayingTrack ? 'text-green-500' : 'text-white',
-      )}
-      onClick={() => eventBus.emit('playPauseTrack', uri)}
-      label={isPlayingTrack ? 'Pause' : 'Play'}
+      disabled={isLoading}
+      onClick={() => eventBus.emit('playPauseTrack', { uri, isPlaying })}
+      label={isPlaying ? 'Pause' : 'Play'}
     />
   );
 };
+
+export const TrackPreviewColumn = observer(Component);
