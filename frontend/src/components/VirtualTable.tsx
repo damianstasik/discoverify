@@ -22,10 +22,7 @@ const TableHeader = ({ table }: TableHeaderProps) => {
   return (
     <div className="backdrop-blur-lg border-b border-white/5">
       {table.getHeaderGroups().map((headerGroup) => (
-        <div
-          key={headerGroup.id}
-          className="flex bg-black/40 pr-[--scrollbar]"
-        >
+        <div key={headerGroup.id} className="flex bg-black/40 pr-[--scrollbar]">
           {headerGroup.headers.map((header) => {
             return (
               <div
@@ -86,7 +83,9 @@ const TableVirtualRow = forwardRef<HTMLDivElement, TableVirtualRowProps>(
       <div
         data-index={virtualItem.index}
         ref={ref}
-        className={'absolute top-0 left-0 w-full flex hover:bg-slate-800'}
+        className={
+          'absolute top-0 left-0 w-full flex hover:bg-slate-700/50 hover:backdrop-blur'
+        }
         style={{
           transform: `translate3d(0, ${virtualItem.start}px, 0)`,
         }}

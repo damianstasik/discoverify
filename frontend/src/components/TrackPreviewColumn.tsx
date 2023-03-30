@@ -1,4 +1,4 @@
-import { mdiPauseCircle, mdiPlayCircle } from '@mdi/js';
+import { mdiPauseCircle, mdiPlayCircle, mdiPlayCircleOutline } from '@mdi/js';
 import { useEventBus } from './EventBus';
 import { CellContext } from '@tanstack/react-table';
 import { IconButton } from './IconButton';
@@ -17,9 +17,9 @@ const Component = <Data,>(props: CellContext<Data, string>) => {
 
   return (
     <IconButton
-      icon={isPlaying ? mdiPauseCircle : mdiPlayCircle}
+      icon={isPlaying ? mdiPauseCircle : mdiPlayCircleOutline}
       className={
-        isPlaying ? 'text-green-500 hover:text-green-600' : 'text-white'
+        isPlaying ? 'text-green-500 hover:text-green-600' : 'text-slate-400'
       }
       disabled={isLoading}
       onClick={() => eventBus.emit('playPauseTrack', { uri, isPlaying })}

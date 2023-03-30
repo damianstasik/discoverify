@@ -22,7 +22,7 @@ export function SaveColumn<Data extends { id: string }>(
           isSaved,
         })
       }
-      className="p-1 text-white"
+      className={`p-1 ${isSaved ? 'text-white' : 'text-slate-400'}`}
     />
   );
 }
