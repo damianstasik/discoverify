@@ -87,6 +87,7 @@ export const userRouter = router({
       }),
       spotifyApi.getMySavedTracks({
         limit: 1,
+        market: 'from_token',
       }),
       spotifyApi.getFollowedArtists({
         limit: 1,

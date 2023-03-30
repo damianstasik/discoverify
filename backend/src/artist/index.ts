@@ -6,42 +6,6 @@ import { concatLimit } from 'async';
 import { shuffle } from 'lodash';
 import { mixpanel } from '../mixpanel';
 
-interface Response<T> {
-  body: T;
-  headers: Record<string, string>;
-  statusCode: number;
-}
-
-type EndpointFunction<T> = (
-  limit?: number,
-  offset?: number,
-) => Promise<Response<SpotifyApi.PagingObject<T>>>;
-
-async function getOffsetPaginatedEndpoint<T>(
-  endpoint: EndpointFunction<T>,
-  rootKey?: keyof SpotifyApi.PagingObject<T>,
-  limit = 50,
-  offset = 0,
-) {
-  const res = await endpoint(limit, offset);
-  const body = res.body;
-  const result = body.items;
-
-  if (body.total <= limit) {
-    return result;
-  }
-
-  const requests = Array.from({
-    length: Math.ceil(body.total / limit) - 1,
-  }).map((_, i) => endpoint(limit, limit * (i + 1)).then((r) => r.body.items));
-
-  const results = await Promise.all(requests);
-
-  results.unshift(result);
-
-  return results.flat();
-}
-
 export const artistRouter = router({
   top: procedureWithAuthToken
     .input(
@@ -104,7 +68,7 @@ export const artistRouter = router({
 
     const tracks = await spotifyApi.getArtistTopTracks(
       req.input,
-      me.body.country,
+      me.body.country, // TODO: this is passed as `country` in the code, but it should be `market`
     );
 
     mixpanel.track('get_artist_top_tracks', {
@@ -127,6 +91,9 @@ export const artistRouter = router({
       const albums = await spotifyApi.getArtistAlbums(req.input.id, {
         limit: 50,
         include_groups: req.input.type,
+
+        // @ts-ignore - this is a valid option
+        market: 'from_token',
       });
 
       mixpanel.track('get_artist_albums', {
@@ -158,7 +125,7 @@ export const artistRouter = router({
         const t = await concatLimit(d.body.artists, 8, async (a) => {
           const tops = await spotifyApi.getArtistTopTracks(
             a.id,
-            me.body.country,
+            me.body.country, // TODO: this is passed as `country` in the code, but it should be `market`
           );
 
           return tops.body.tracks;
