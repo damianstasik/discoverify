@@ -1,23 +1,17 @@
-import { useCallback, useState, useEffect, useRef } from 'react';
-import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
+import { useCallback, useState, useEffect } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { useQuery } from '@tanstack/react-query';
 import {
-  trackPreviewState,
-  loadingTrackPreview,
-  playerStateAtom,
-  playerTrackAtom,
   playerVolumeAtom,
   queueVisibilityAtom,
   userAtom,
   savedTracksAtom,
-  trackStateAtom,
 } from '../store';
 import { useSpotifyWebPlaybackSdk } from '../hooks/useSpotifyWebPlaybackSdk';
 import { VolumeControl } from './Player/VolumeControl';
 import { SeekControl } from './Player/SeekControl';
 import { TrackInfo } from './Player/TrackInfo';
 import { PlaybackControl } from './Player/PlaybackControl';
-import { PlaybackState } from '../types.d';
 import { useTimer } from '../hooks/useTimer';
 import { useThrottledCallback } from 'use-debounce';
 import { IconButton } from './IconButton';
@@ -25,17 +19,11 @@ import { mdiDevices, mdiHeart, mdiHeartOutline } from '@mdi/js';
 import { QueueButton } from './Player/QueueButton';
 import { trpc } from '../trpc';
 import { useEventBus } from './EventBus';
+import { player as pl } from '../state';
+import { runInAction } from 'mobx';
+import { observer } from 'mobx-react-lite';
 
-export function Player() {
-  const [trackPreview, setTrackPreview] = useRecoilState(trackPreviewState);
-  const [playerTrack, setPlayerTrack] = useRecoilState(playerTrackAtom);
-  const [isLoadingTrackPreview, setLoadingTrackPreview] =
-    useRecoilState(loadingTrackPreview);
-
-  // const [playTrackPreviews, setPlayTrackPreviews] = useRecoilState(
-  //   playTrackPreviewsState,
-  // );
-  // const [deviceId, setDeviceId] = useRecoilState(deviceIdState);
+export const Player = observer(() => {
   const user = useRecoilValue(userAtom);
 
   const decoded = user?.accessToken;
@@ -51,55 +39,33 @@ export function Player() {
   const [volume, setVolume] = useRecoilState(playerVolumeAtom);
   const [isChangingVolume, setIsChangingVolume] = useState(false);
   const [isSeeking, setIsSeeking] = useState(false);
-  const [playerState, setPlayerState] = useRecoilState(playerStateAtom);
 
   const [meta, setMeta] = useState<Spotify.PlaybackContextMetadata | null>(
     null,
   );
 
-  const prevTrackUri = useRef();
+  const h = useCallback(
+    (state) => {
+      setDuration(state.duration / 1000);
+      setMeta(state.context.metadata);
 
-  const h = useRecoilCallback<[Spotify.PlaybackState], void>(
-    ({ set: recoilSet }) =>
-      (state) => {
-        setDuration(state.duration / 1000);
-        setMeta(state.context.metadata);
+      runInAction(() => {
+        pl.resetLoadingTrackId();
+        pl.setPlayingTrackId(state.context.metadata?.current_item.uri);
+      });
 
-        recoilSet(
-          playerStateAtom,
-          state.paused ? PlaybackState.PAUSED : PlaybackState.PLAYING,
-        );
+      set(state.position / 1000);
 
-        if (prevTrackUri.current) {
-          recoilSet(trackStateAtom(prevTrackUri.current), {
-            isPlaying: false,
-            isLoading: false,
-          });
-        }
+      if (state.paused && status === 'RUNNING') {
+        pause();
+      }
 
-        recoilSet(trackStateAtom(state.context.metadata?.current_item.uri), {
-          isPlaying: !state.paused,
-          isLoading: false,
-        });
-
-        prevTrackUri.current = state.context.metadata?.current_item.uri;
-
-        set(state.position / 1000);
-
-        if (state.paused && status === 'RUNNING') {
-          pause();
-        }
-
-        if (!state.paused && status !== 'RUNNING') {
-          start();
-        }
-      },
+      if (!state.paused && status !== 'RUNNING') {
+        start();
+      }
+    },
     [status],
   );
-
-  useEffect(() => {
-    setPlayerTrack(meta?.current_item ?? null);
-  }, [meta]);
 
   useEffect(() => {
     if (isSeeking && status === 'RUNNING') {
@@ -115,10 +81,7 @@ export function Player() {
   });
 
   useQuery<number>(['volume', deviceId], async () => player!.getVolume(), {
-    enabled:
-      player !== null &&
-      playerState === PlaybackState.PLAYING &&
-      !isChangingVolume,
+    enabled: player !== null && pl.isPlaying() && !isChangingVolume,
     refetchInterval: 2500,
     onSuccess(data) {
       setVolume(data);
@@ -216,7 +179,7 @@ export function Player() {
         <div className="w-4/12 justify-center flex flex-col">
           <div className="flex flex-col items-center gap-1">
             <PlaybackControl
-              state={playerState}
+              isPlaying={pl.isPlaying()}
               onPlayPauseClick={handlePlayPause}
               onNextClick={handleNext}
               onPreviousClick={handlePrevious}
@@ -252,4 +215,4 @@ export function Player() {
       </div>
     </div>
   );
-}
+});

@@ -1,8 +1,6 @@
-import { useRecoilState, useRecoilValue } from 'recoil';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { mdiPauseCircle, mdiPlayCircle } from '@mdi/js';
-import { loadingTrackPreview, trackPreviewState } from '../store';
 import { trpc } from '../trpc';
 import { twMerge } from 'tailwind-merge';
 import { Button } from '../components/Button';
@@ -33,30 +31,10 @@ function getRandomArbitrary(min: number, max: number) {
 }
 
 function Track({ track }) {
-  const [trackPreview, setTrackPreview] = useRecoilState(trackPreviewState);
-
-  const isLoadingTrackPreview = useRecoilValue(loadingTrackPreview);
-
-  const isCurrentlyPlaying = (t) =>
-    trackPreview?.url === t.preview_url && trackPreview?.context === t;
-
-  const playPreview = (t) =>
-    setTrackPreview({
-      url: t.preview_url,
-      context: t,
-      state: 'playing',
-    });
-
   return (
     <div className="flex gap-2 items-center">
       <div>
-        <IconButton
-          label="Play"
-          disabled={isLoadingTrackPreview}
-          onClick={() => playPreview(track)}
-          icon={isCurrentlyPlaying(track) ? mdiPauseCircle : mdiPlayCircle}
-          className='text-white'
-        />
+        <IconButton label="Play" icon={mdiPlayCircle} className='text-white' />
       </div>
       <div className="flex gap-1 w-full flex-col">
         <Link

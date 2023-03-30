@@ -1,5 +1,4 @@
 import { memo } from 'react';
-import { PlaybackState } from '../../types.d';
 import { IconButton } from '../IconButton';
 import {
   mdiPauseCircle,
@@ -11,14 +10,14 @@ import {
 } from '@mdi/js';
 
 interface Props {
-  state: PlaybackState | null;
+  isPlaying: boolean;
   onPlayPauseClick: () => void;
   onPreviousClick: () => void;
   onNextClick: () => void;
 }
 
 export const PlaybackControl = memo(
-  ({ state, onPlayPauseClick, onNextClick, onPreviousClick }: Props) => {
+  ({ isPlaying, onPlayPauseClick, onNextClick, onPreviousClick }: Props) => {
     return (
       <div className="gap-2 flex items-center text-white">
         <IconButton icon={mdiShuffle} />
@@ -26,9 +25,7 @@ export const PlaybackControl = memo(
         <IconButton icon={mdiSkipPrevious} onClick={onPreviousClick} />
 
         <IconButton
-          icon={
-            state === PlaybackState.PLAYING ? mdiPauseCircle : mdiPlayCircle
-          }
+          icon={isPlaying ? mdiPauseCircle : mdiPlayCircle}
           onClick={onPlayPauseClick}
           className="s-10"
         />

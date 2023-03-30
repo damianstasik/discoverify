@@ -1,30 +1,31 @@
 import { mdiPauseCircle, mdiPlayCircle } from '@mdi/js';
-import { useRecoilValue } from 'recoil';
-import { trackStateAtom } from '../store';
 import { useEventBus } from './EventBus';
 import { CellContext } from '@tanstack/react-table';
 import { IconButton } from './IconButton';
-import { twMerge } from 'tailwind-merge';
-import { CircularProgress } from './CircularProgress';
+import { observer } from 'mobx-react-lite';
+import { player } from '../state';
+import { computed } from 'mobx';
 
-export const TrackPreviewColumn = <Data,>(props: CellContext<Data, string>) => {
+const Component = <Data,>(props: CellContext<Data, string>) => {
   const uri = props.getValue();
   const eventBus = useEventBus();
-  const { isLoading, isPlaying } = useRecoilValue(trackStateAtom(uri));
 
-  console.log('preview', uri);
+  const isPlaying = computed(() => player.isPlaying(uri)).get();
+  const isLoading = computed(() => player.isLoading(uri)).get();
+
+  console.log('track preview', uri, isPlaying, isLoading);
+
   return (
     <IconButton
       icon={isPlaying ? mdiPauseCircle : mdiPlayCircle}
-      className={twMerge(
-        'p-1',
-        isPlaying ? 'text-green-500' : 'text-white',
-        isLoading ? 'opacity-50 pointer-events-none' : '',
-      )}
-      onClick={() =>
-        eventBus.emit('playPauseTrack', { uri, isLoading, isPlaying })
+      className={
+        isPlaying ? 'text-green-500 hover:text-green-600' : 'text-white'
       }
+      disabled={isLoading}
+      onClick={() => eventBus.emit('playPauseTrack', { uri, isPlaying })}
       label={isPlaying ? 'Pause' : 'Play'}
     />
   );
 };
+
+export const TrackPreviewColumn = observer(Component);
