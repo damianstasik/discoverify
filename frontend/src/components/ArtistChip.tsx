@@ -21,7 +21,7 @@ export const ArtistChip = ({ id, name, imageUrl, onRemove }: Props) => {
         <img className="rounded s-8" src={imageUrl} alt={name} />
       </div>
       <div className="relative flex justify-center flex-col gap-1">
-        <Link to={`/track/${id}`} className="text-white text-sm">
+        <Link to={`/artist/${id}`} className="text-white text-sm">
           {name}
         </Link>
       </div>
