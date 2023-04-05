@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { Attribute } from '../types';
+import { useEffect, useState } from 'react';
 import * as Popover from '@radix-ui/react-popover';
 import * as Slider from '@radix-ui/react-slider';
 import { mdiChevronDown, mdiClose } from '@mdi/js';
@@ -7,50 +6,85 @@ import { Icon } from './Icon';
 import { Button } from './Button';
 import { Switch } from './Switch';
 import { tw } from '../tw';
+import { Attribute, AttributeName } from '../config/attributes';
+import { useSearchParams } from 'react-router-dom';
+import { z } from 'zod';
 
-interface Props<Value> {
-  label: string;
-  name: string;
-  description: string;
-
-  min?: number;
-  max?: number;
-  step?: number | null;
-  marks?: Array<{ value: number; label: string }>;
-  onSave?: (value: Attribute<Value>) => void;
+interface Props {
+  attribute: Attribute;
+  onChange: (v: {
+    min: string;
+    target: string;
+    max: string;
+    minEnabled: boolean;
+    targetEnabled: boolean;
+    maxEnabled: boolean;
+  }) => void;
+  values: {
+    min: string;
+    target: string;
+    max: string;
+    minEnabled: boolean;
+    targetEnabled: boolean;
+    maxEnabled: boolean;
+  };
 }
 
-export function RecommendationAttribute({ attr }: Props) {
-  const [oepn, setOpen] = useState(false);
-  const [minValue, setMin] = useState(attr.minValue);
-  const [maxValue, setMax] = useState(attr.maxValue);
-  const [target, setTarget] = useState(attr.targetValue);
+export function RecommendationAttribute({
+  attribute,
+  onChange,
+  values,
+}: Props) {
+  const [open, setOpen] = useState(false);
 
-  const [useMin, setUseMin] = useState(attr.minEnabled);
-  const [useTarget, setUseTarget] = useState(attr.targetEnabled);
-  const [useMax, setUseMax] = useState(attr.maxEnabled);
+  const [minValue, setMin] = useState(values.min);
+  const [targetValue, setTarget] = useState(values.target);
+  const [maxValue, setMax] = useState(values.max);
+
+  const [useMin, setUseMin] = useState(values.minEnabled);
+  const [useTarget, setUseTarget] = useState(values.targetEnabled);
+  const [useMax, setUseMax] = useState(values.maxEnabled);
+
+  useEffect(() => {
+    setMin(values.min);
+    setTarget(values.target);
+    setMax(values.max);
+    setUseMin(values.minEnabled);
+    setUseTarget(values.targetEnabled);
+    setUseMax(values.maxEnabled);
+  }, [values]);
+
+  const { name, label, description, ...attr } = attribute;
 
   return (
-    <Popover.Root open={oepn} onOpenChange={setOpen}>
+    <Popover.Root open={open} onOpenChange={setOpen}>
       <Popover.Trigger asChild>
         <button
           type="button"
           color={
-            attr.minEnabled || attr.targetEnabled || attr.maxEnabled
+            values.minEnabled || values.targetEnabled || values.maxEnabled
               ? 'primary'
               : undefined
           }
           className={tw(
             'text-sm rounded-xl border flex items-center h-6 px-2 active:bg-white/10 focus:outline-none focus:ring-2',
-            attr.minEnabled || attr.targetEnabled || attr.maxEnabled
+            values.minEnabled || values.targetEnabled || values.maxEnabled
               ? 'border-green-600 text-green-600 focus:ring-green-700'
               : 'border-slate-500 text-slate-300 focus:ring-slate-700',
           )}
           onClick={() => setOpen(true)}
-          aria-describedby={attr.name}
+          aria-describedby={name}
         >
-          {attr.label}
-          <Icon path={mdiChevronDown} className="s-4 ml-2 text-slate-450" />
+          {label}
+          <Icon
+            path={mdiChevronDown}
+            className={tw(
+              's-4 ml-2 ',
+              values.minEnabled || values.targetEnabled || values.maxEnabled
+                ? 'text-green-600'
+                : 'text-slate-450',
+            )}
+          />
         </button>
       </Popover.Trigger>
       <Popover.Portal>
@@ -59,14 +93,12 @@ export function RecommendationAttribute({ attr }: Props) {
           sideOffset={5}
           collisionPadding={10}
         >
-          <h5 className="text-white font-medium">{attr.label}</h5>
+          <h5 className="text-white font-medium">{label}</h5>
 
-          <p className="py-3 text-slate-300 text-sm/relaxed">
-            {attr.description}
-          </p>
+          <p className="py-3 text-slate-300 text-sm/relaxed">{description}</p>
 
           <h6 className="text-white text-sm mb-1">
-            Minimum {attr.label.toLowerCase()}
+            Minimum {label.toLowerCase()}
           </h6>
 
           <div className="flex items-center gap-3">
@@ -93,7 +125,7 @@ export function RecommendationAttribute({ attr }: Props) {
           </div>
 
           <h6 className="text-white text-sm mt-3 mb-1">
-            Target {attr.label.toLowerCase()}
+            Target {label.toLowerCase()}
           </h6>
 
           <div className="flex items-center gap-3">
@@ -106,7 +138,7 @@ export function RecommendationAttribute({ attr }: Props) {
             <div className="flex-1">
               <Slider.Root
                 className="relative flex items-center select-none touch-none w-full h-5"
-                value={[target]}
+                value={[targetValue]}
                 min={attr.min ?? 0}
                 max={attr.max ?? 1}
                 step={typeof attr.step === 'undefined' ? 0.05 : attr.step}
@@ -122,7 +154,7 @@ export function RecommendationAttribute({ attr }: Props) {
           </div>
 
           <h6 className="text-white text-sm mt-3 mb-1">
-            Maximum {attr.label.toLowerCase()}
+            Maximum {label.toLowerCase()}
           </h6>
 
           <div className="flex items-center gap-3">
@@ -149,10 +181,13 @@ export function RecommendationAttribute({ attr }: Props) {
 
           <Button
             onClick={() => {
-              attr.onSave({
-                min: useMin ? minValue : null,
-                max: useMax ? maxValue : null,
-                target: useTarget ? target : null,
+              onChange({
+                min: minValue,
+                max: maxValue,
+                target: targetValue,
+                minEnabled: useMin,
+                maxEnabled: useMax,
+                targetEnabled: useTarget,
               });
               setOpen(false);
             }}

@@ -1,4 +1,21 @@
-export const attributes = [
+export interface Attribute {
+  name: string;
+  label: string;
+  description: string;
+  defaultMin: number;
+  defaultTarget: number;
+  defaultMax: number;
+  min: number;
+  max: number;
+  step: number | null;
+  marks?: ReadonlyArray<{ value: number; label: string }>;
+}
+
+const createAttributes = <const T extends Attribute>(attrs: T[]) => {
+  return attrs;
+};
+
+export const attributes = createAttributes([
   {
     name: 'acousticness',
     label: 'Acousticness',
@@ -14,9 +31,8 @@ export const attributes = [
   {
     label: 'Danceability',
     name: 'danceability',
-    //description: 'Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.',
     description:
-      'The danceability filter helps you find music that is good for dancing. It works by looking at different musical elements like how fast the music is, how steady the rhythm is, and how strong the beat is. The filter gives each song a score between 0 and 1, with 1 being the most danceable and 0 being the least danceable. So, if you want to find music that will get you moving and grooving, use the danceability filter to find tracks with high danceability scores.',
+      'Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.',
     defaultMin: 0,
     defaultTarget: 0.5,
     defaultMax: 1,
@@ -243,4 +259,6 @@ export const attributes = [
     max: 100,
     step: 1,
   },
-];
+]);
+
+export type AttributeName = typeof attributes[number]['name'];

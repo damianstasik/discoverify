@@ -11,6 +11,7 @@ import { savedTracksAtom, userAtom } from '../store';
 import { getCurrentUser, refreshAccessToken } from '../api';
 import { trpc } from '../trpc';
 import { useSaveTrackHook } from '../hooks/useSaveTrackHook';
+import { ph } from '../posthog';
 
 export function Layout() {
   const location = useLocation();
@@ -57,6 +58,10 @@ export function Layout() {
     useErrorBoundary: false,
     onSuccess(data) {
       setUser(data);
+
+      ph.identify(data.spotifyId, {
+        $spotifyId: data.spotifyId,
+      });
     },
     onError() {
       // check error type, if token is expired run the mutation and update token that will rerun this query

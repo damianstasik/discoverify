@@ -1,4 +1,5 @@
 import { makeAutoObservable } from 'mobx';
+import { attributes } from './config/attributes';
 
 class Player {
   loadingTrackId: string | null = null;

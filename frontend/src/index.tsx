@@ -9,6 +9,7 @@ import { Router } from './Router';
 import { EventBusProvider } from './components/EventBus';
 import { CircularProgress } from './components/CircularProgress';
 import './index.css';
+import './posthog';
 
 const queryClient = new QueryClient({
   defaultOptions: {

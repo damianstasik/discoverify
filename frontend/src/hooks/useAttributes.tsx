@@ -1,94 +1,131 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import produce from 'immer';
+import { AttributeName, attributes } from '../config/attributes';
 
-export function useAttributes(config: Record<string, any>) {
+type Vals = Record<
+  AttributeName,
+  {
+    min: string;
+    target: string;
+    max: string;
+    minEnabled: boolean;
+    targetEnabled: boolean;
+    maxEnabled: boolean;
+  }
+>;
+
+import { z } from 'zod';
+import { AttributePreset } from '../config/presets';
+
+const schema = z.object({
+  min: z.coerce.number(),
+  target: z.coerce.number(),
+  max: z.coerce.number(),
+  minEnabled: z.boolean(),
+  targetEnabled: z.boolean(),
+  maxEnabled: z.boolean(),
+});
+
+export function useAttributes() {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [values, setValues] = useState(
-    config.reduce((acc, attr) => {
-      const minKey = `${attr.name}Min`;
-      const targetKey = `${attr.name}Target`;
-      const maxKey = `${attr.name}Max`;
+  const vals = useMemo(
+    () =>
+      attributes.reduce<Vals>((acc, attr) => {
+        const minKey = `${attr.name}Min` as const;
+        const targetKey = `${attr.name}Target` as const;
+        const maxKey = `${attr.name}Max` as const;
 
-      if (searchParams.has(minKey)) {
-        acc[minKey] = searchParams.get(minKey);
-      }
-
-      if (searchParams.has(targetKey)) {
-        acc[targetKey] = searchParams.get(targetKey);
-      }
-
-      if (searchParams.has(maxKey)) {
-        acc[maxKey] = searchParams.get(maxKey);
-      }
-
-      return acc;
-    }, {})
+        return {
+          ...acc,
+          [attr.name]: schema.parse({
+            min: searchParams.get(minKey) ?? attr.defaultMin,
+            target: searchParams.get(targetKey) ?? attr.defaultTarget,
+            max: searchParams.get(maxKey) ?? attr.defaultMax,
+            minEnabled: searchParams.has(minKey),
+            targetEnabled: searchParams.has(targetKey),
+            maxEnabled: searchParams.has(maxKey),
+          }),
+        };
+      }, {} as Vals),
+    [searchParams],
   );
 
+  const [values, setValues] = useState<Vals>(vals);
+
+  const applyPreset = (preset: AttributePreset) => {
+    const draft: Vals = {};
+
+    for (const attribute of attributes) {
+      if (preset.attributes[attribute.name]) {
+        draft[attribute.name] = preset.attributes[attribute.name];
+      } else {
+        draft[attribute.name] = {
+          min: attribute.defaultMin,
+          target: attribute.defaultTarget,
+          max: attribute.defaultMax,
+          minEnabled: false,
+          maxEnabled: false,
+          targetEnabled: false,
+        };
+      }
+    }
+
+    setValues(draft);
+    commit(draft);
+  };
+
+  const updateAttribute = (
+    name: AttributeName,
+    data: {
+      min: string;
+      max: string;
+      target: string;
+      minEnabled: boolean;
+      maxEnabled: boolean;
+      targetEnabled: boolean;
+    },
+  ) => {
+    setValues((v) => {
+      const b = { ...v, [name]: data };
+      commit(b);
+      return b;
+    });
+  };
+
+  const commit = (vals) => {
+    setSearchParams((q) => {
+      for (const [name, attrs] of Object.entries(vals)) {
+        const minKey = `${name}Min` as const;
+        const targetKey = `${name}Target` as const;
+        const maxKey = `${name}Max` as const;
+
+        if (attrs.minEnabled) {
+          q.set(minKey, attrs.min);
+        } else {
+          q.delete(minKey);
+        }
+        if (attrs.targetEnabled) {
+          q.set(targetKey, attrs.target);
+        } else {
+          q.delete(targetKey);
+        }
+        if (attrs.maxEnabled) {
+          q.set(maxKey, attrs.max);
+        } else {
+          q.delete(maxKey);
+        }
+        console.log('q', name, attrs);
+      }
+
+      return q;
+    });
+  };
+
   return {
-    values,
-    attributes: config.map((attr) => {
-      const minKey = `${attr.name}Min`;
-      const targetKey = `${attr.name}Target`;
-      const maxKey = `${attr.name}Max`;
-
-      return {
-        name: attr.name,
-        label: attr.label,
-        marks: attr.marks,
-        description: attr.description,
-        minValue: values[minKey] ?? attr.defaultMin,
-        targetValue: values[targetKey] ?? attr.defaultTarget,
-        maxValue: values[maxKey] ?? attr.defaultMax,
-        minEnabled: searchParams.has(minKey),
-        targetEnabled: searchParams.has(targetKey),
-        maxEnabled: searchParams.has(maxKey),
-        min: attr.min,
-        max: attr.max,
-        step: attr.step,
-        onSave: (values) => {
-          setValues(
-            produce((draft) => {
-              if (values.min !== null) {
-                draft[minKey] = values.min;
-              } else {
-                delete draft[minKey];
-              }
-              if (values.target !== null) {
-                draft[targetKey] = values.target;
-              } else {
-                delete draft[targetKey];
-              }
-              if (values.target !== null) {
-                draft[targetKey] = values.target;
-              } else {
-                delete draft[targetKey];
-              }
-            })
-          );
-
-          const q = new URLSearchParams(searchParams);
-          if (values.min !== null) {
-            q.set(minKey, values.min);
-          } else {
-            q.delete(minKey);
-          }
-          if (values.target !== null) {
-            q.set(targetKey, values.target);
-          } else {
-            q.delete(targetKey);
-          }
-          if (values.max !== null) {
-            q.set(maxKey, values.max);
-          } else {
-            q.delete(maxKey);
-          }
-
-          setSearchParams(q);
-        },
-      };
-    }),
+    values: vals,
+    updateAttribute,
+    attributes,
+    applyPreset,
   };
 }

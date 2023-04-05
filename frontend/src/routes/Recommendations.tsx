@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useQueries } from '@tanstack/react-query';
 import { useDebounce } from 'use-debounce';
@@ -9,7 +9,6 @@ import { TrackChip } from '../components/TrackChip';
 import { EntityAutocomplete } from '../components/EntityAutocomplete';
 import { TrackChipSkeleton } from '../components/TrackChipSkeleton';
 import { useAttributes } from '../hooks/useAttributes';
-import { attributes as attributesConfig } from '../config/attributes';
 import { usePlayPauseTrackHook } from '../hooks/usePlayPauseTrackHook';
 import { VirtualTable } from '../components/VirtualTable';
 import { createColumnHelper } from '@tanstack/react-table';
@@ -24,6 +23,10 @@ import { getArtists } from '../api/artist';
 import { ArtistChip } from '../components/ArtistChip';
 import { ArtistChipSkeleton } from '../components/ArtistChipSkeleton';
 import { AlbumColumn } from '../components/AlbumColumn';
+import { RadioGroup } from '@headlessui/react';
+import { AttributePreset, presets } from '../config/presets';
+import { twMerge } from 'tailwind-merge';
+import { ph } from '../posthog';
 
 type TrackType = RouterOutput['track']['recommended'][number];
 
@@ -116,7 +119,7 @@ export function Recommendations() {
   const [query, setQuery] = useState('');
   const [debouncedQuery] = useDebounce(query, 500);
 
-  const { attributes, values } = useAttributes(attributesConfig);
+  const { attributes, values, updateAttribute, applyPreset } = useAttributes();
 
   const trackIds = searchParams.getAll('trackId');
   const artistIds = searchParams.getAll('artistId');
@@ -143,6 +146,7 @@ export function Recommendations() {
         queryKey: ['seedSearch', debouncedQuery],
         queryFn: seedSearch,
         enabled: !!debouncedQuery,
+        keepPreviousData: true,
       },
     ],
   });
@@ -161,6 +165,13 @@ export function Recommendations() {
     ...artistIds.map((id) => ({ type: 'artist', id })),
     ...genreIds.map((id) => ({ type: 'genre', id })),
   ];
+
+  const [preset, setPreset] = useState<AttributePreset>();
+
+  const handlePresetChange = (preset: AttributePreset) => {
+    setPreset(preset);
+    applyPreset(preset);
+  };
 
   return (
     <>
@@ -191,12 +202,50 @@ export function Recommendations() {
 
         <div className="flex mt-3">
           <div className="w-1/2">
+            {ph.isFeatureEnabled('attribute-presets') && (
+              <RadioGroup
+                value={preset}
+                onChange={handlePresetChange}
+                className="mt-2"
+              >
+                <RadioGroup.Label className="sr-only">
+                  Choose a preset
+                </RadioGroup.Label>
+                <div className="flex gap-3">
+                  {presets.map((option) => (
+                    <RadioGroup.Option
+                      key={option.id}
+                      value={option}
+                      className={({ active, checked }) =>
+                        twMerge(
+                          active ? 'ring-2 ring-offset-2 ring-indigo-500' : '',
+                          checked
+                            ? 'bg-indigo-600 border-transparent text-white hover:bg-indigo-700'
+                            : 'bg-slate-500 border-slate-450 text-slate-300 hover:bg-slate-600',
+                          'border rounded-xl py-1 px-2 flex items-center justify-center text-sm cursor-pointer',
+                        )
+                      }
+                    >
+                      <RadioGroup.Label as="span">
+                        {option.label}
+                      </RadioGroup.Label>
+                    </RadioGroup.Option>
+                  ))}
+                </div>
+              </RadioGroup>
+            )}
+
             <h5 className="uppercase text-slate-400 text-xs font-semibold pb-3 tracking-wide">
               Attributes
             </h5>
             <div className="flex flex-wrap gap-2">
               {attributes.map((attr) => (
-                <RecommendationAttribute key={attr.name} attr={attr} />
+                <RecommendationAttribute
+                  key={attr.name}
+                  attribute={attr}
+                  onChange={(v) => updateAttribute(attr.name, v)}
+                  values={values[attr.name]}
+                />
               ))}
             </div>
           </div>
