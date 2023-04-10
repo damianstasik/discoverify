@@ -125,7 +125,6 @@ const VirtualTableRaw = <Data extends { spotifyId: string }>({
   const contRef = useRef<HTMLDivElement>(null);
 
   const handleInfiniteLoadingScroll = useInfiniteLoading({
-    ref: contRef,
     fetchNextPage,
     isFetching: isLoading,
     hasNextPage,
