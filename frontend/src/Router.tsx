@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 // import { useRecoilValue } from 'recoil';
 import { Login } from './routes/Login';
 import { Authorize } from './routes/Authorize';
-// import { Artists } from './routes/Artists';
+import { ArtistsFromSavedTracks } from './routes/ArtistsFromSavedTracks';
 import { Artist } from './routes/Artist';
 // import { FollowedArtistsTopTracks } from './routes/FollowedArtistsTopTracks';
 // import { FollowedArtistsGenres } from './routes/FollowedArtistsGenres';
@@ -55,10 +55,15 @@ const routes: RouteObject[] = [
         path: 'playlist/:id',
         element: <Playlist />,
       },
-      // {
-      //   path: 'artists',
-      //   element: <Artists />,
-      // },
+      {
+        path: 'artists',
+        children: [
+          {
+            path: 'from-saved-tracks',
+            element: <ArtistsFromSavedTracks />,
+          },
+        ],
+      },
       {
         path: 'top-tracks',
         element: <TopTracks />,
