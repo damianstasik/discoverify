@@ -330,13 +330,14 @@ export const trackRouter = router({
         preview_url: item.preview_url,
         id: item.id,
         album: item.album,
-        artist: item.artists.map((artist) => ({
+        artists: item.artists.map((artist) => ({
           id: artist.id,
           name: artist.name,
         })),
         duration: item.duration_ms,
         isLiked: saved.has(item.id),
         uri: item.uri,
+        spotifyId: item.id,
       }));
     }),
   saved: procedureWithAuthToken

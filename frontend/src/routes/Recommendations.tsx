@@ -64,7 +64,7 @@ const columns = [
     size: 0.4,
     cell: TrackNameColumn,
   }),
-  columnHelper.accessor('artist', {
+  columnHelper.accessor('artists', {
     header: 'Artist(s)',
     cell: ArtistsColumn,
     minSize: 200,
