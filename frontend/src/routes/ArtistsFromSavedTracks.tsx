@@ -10,12 +10,11 @@ import { useInfiniteLoading } from '../hooks/useInfiniteLoading';
 function ArtistCardSkeleton() {
   return (
     <div className="relative flex-1 ">
-      <div>
-        <div className="h-40 rounded-t-md w-full object-cover object-center bg-slate-700" />
-      </div>
-      <div className="p-3 bg-slate-500 rounded-b-md flex group-hover:opacity-80">
+      <div className="h-64 rounded-t-md rounded-b-xl w-full bg-slate-700" />
+
+      <div className="p-3 bg-slate-500 rounded-b-md flex group-hover:opacity-80 absolute bottom-0 inset-x-0">
         <div>
-          <div className="animate-pulse leading-normal w-24 bg-slate-450 rounded-md before:content-['\00a0']" />
+          <div className="animate-pulse leading-normal w-24 bg-slate-475 rounded-md before:content-['\00a0']" />
         </div>
       </div>
     </div>
@@ -42,24 +41,22 @@ function ArtistCard({ artist }: { artist: any }) {
       });
   };
   return (
-    <div className="relative flex-1 group">
-      <div>
-        <img
-          src={artist.images.length > 1 ? artist.images[1].url : ''}
-          alt={artist.name}
-          loading="lazy"
-          className="h-40 rounded-t-md w-full object-cover object-center"
-        />
-      </div>
-      <RouterLink
-        to={`/artist/${artist.id}`}
-        className="p-3 bg-slate-500 rounded-b-md flex group-hover:opacity-80"
-        preventScrollReset
-      >
-        <div className="leading-normal">{artist.name}</div>
+    <RouterLink
+      className="relative flex-1 hover:opacity-80  "
+      to={`/artist/${artist.id}`}
+    >
+      <img
+        src={artist.images.length > 1 ? artist.images[1].url : ''}
+        alt={artist.name}
+        loading="lazy"
+        className="h-64 w-full object-cover object-center rounded-t-md rounded-b-xl"
+      />
+
+      <p className="p-3 bg-slate-500 rounded-b-md flex  absolute bottom-0 inset-x-0">
+        <h6 className="leading-normal">{artist.name}</h6>
         <span aria-hidden="true" className="absolute inset-0" />
-      </RouterLink>
-    </div>
+      </p>
+    </RouterLink>
   );
 }
 
@@ -85,6 +82,13 @@ export function ArtistsFromSavedTracks() {
   );
 
   const flatWithSkel = useMemo(() => {
+    if (!flatData.length && isLoading) {
+      return Array.from({ length: 12 }, (_, i) => ({
+        id: `skeleton${i}`,
+        name: 'skeleton',
+      }));
+    }
+
     if (hasNextPage) {
       const flats = Array.from(
         { length: 4 - (flatData.length % 4) },
@@ -95,7 +99,7 @@ export function ArtistsFromSavedTracks() {
     }
 
     return flatData;
-  }, [flatData, hasNextPage]);
+  }, [flatData, hasNextPage, isLoading]);
 
   const handleInfiniteLoadingScroll = useInfiniteLoading({
     fetchNextPage,
@@ -108,19 +112,25 @@ export function ArtistsFromSavedTracks() {
   const virtualizer = useVirtualizer({
     count: artists.length,
     getScrollElement: () => parentRef.current,
-    estimateSize: (i) => 300,
+    estimateSize: (i) => 256,
     overscan: 5,
   });
 
   return (
     <>
-      <div variant="h5" gutterBottom>
-        Artists from liked tracks
+      <div className='p-3'>
+        <h2 className="mb-2 text-xl/none text-white font-bold">
+          Artists from liked songs
+        </h2>
+        <p className='text-gray-400 text-sm'>
+          Here are artists that you are not following based on songs that you
+          liked. You can follow them or hide them from this list.
+        </p>
       </div>
 
       <div
         ref={parentRef}
-        className="overflow-y-auto px-6"
+        className="overflow-y-auto px-3"
         onScroll={handleInfiniteLoadingScroll}
       >
         <div
@@ -134,7 +144,7 @@ export function ArtistsFromSavedTracks() {
               key={virtualItem.index}
               ref={virtualizer.measureElement}
               data-index={virtualItem.index}
-              className="absolute flex gap-6 w-full top-0 left-0 py-3"
+              className="absolute flex gap-3 w-full top-0 left-0 pb-3"
               style={{
                 transform: `translate3d(0, ${virtualItem.start}px, 0)`,
               }}
