@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import produce from 'immer';
+import { produce } from 'immer';
 
 export function useAttributes(config: Record<string, any>) {
   const [searchParams, setSearchParams] = useSearchParams();

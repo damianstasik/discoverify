@@ -3,7 +3,7 @@ import {
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query';
-import produce from 'immer';
+import { produce } from 'immer';
 import { useCallback, useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import { ignoreTrack } from '../api';
