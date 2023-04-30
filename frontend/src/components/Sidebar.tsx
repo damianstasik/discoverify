@@ -7,6 +7,7 @@ import {
   mdiMusicNotePlus,
   mdiAccountStar,
   mdiHistory,
+  mdiAccountHeart,
 } from '@mdi/js';
 import { useQuery } from '@tanstack/react-query';
 import { trpc } from '../trpc';
@@ -129,15 +130,14 @@ export const Sidebar = memo(({ className }) => {
           label="My top artists"
           to="/top-artists"
           icon={mdiAccountStar}
-          // iconTintColor="text-green-700"
-          // textTintColor="text-green-400"
+        />
+        <RouterListItem
+          label="From liked songs"
+          to="/artists/from-saved-tracks"
+          icon={mdiAccountHeart}
         />
         {/*
-        <RouterListItem
-          label="From liked tracks"
-          to="/artists"
-          icon={<Icon path={mdiAccountHeart} size={1} />}
-        />
+
 
         <RouterListItem
           label="Similar artists"
