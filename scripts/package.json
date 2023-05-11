@@ -4,7 +4,7 @@
     "generate-screenshot": "tsx screenshot.ts"
   },
   "dependencies": {
-    "@faker-js/faker": "^7.6.0",
+    "@faker-js/faker": "^8.0.0",
     "playwright": "^1.33.0",
     "tsx": "^3.12.6",
     "typescript": "^5.0.4"
