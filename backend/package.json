@@ -34,7 +34,7 @@
     "lodash": "^4.17.21",
     "mixpanel": "^0.17.0",
     "pg": "^8.11.0",
-    "prisma": "^4.13.0",
+    "prisma": "^4.16.0",
     "spotify-web-api-node": "^5.0.2",
     "typescript": "^5.0.4",
     "zod": "^3.21.4"
