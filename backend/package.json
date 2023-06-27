@@ -27,7 +27,7 @@
     "cookie": "^0.5.0",
     "date-fns": "^2.30.0",
     "dotenv": "^16.0.3",
-    "esbuild": "^0.17.18",
+    "esbuild": "^0.18.10",
     "fast-fuzzy": "^1.12.0",
     "fastify": "^4.18.0",
     "jsonwebtoken": "^9.0.0",
