@@ -1,4 +1,7 @@
-import { mdiPauseCircle, mdiPlayCircle, mdiPlayCircleOutline } from "@mdi/js";
+"use client";
+
+import mdiPauseCircle from "@slimr/mdi-paths/PauseCircle";
+import mdiPlayCircleOutline from "@slimr/mdi-paths/PlayCircleOutline";
 import { CellContext } from "@tanstack/react-table";
 import { computed } from "mobx";
 import { observer } from "mobx-react-lite";

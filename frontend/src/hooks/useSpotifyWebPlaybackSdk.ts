@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useRef } from "react";
 import { useRecoilState } from "recoil";
 import { deviceIdAtom } from "../store";
@@ -19,7 +20,8 @@ export function useSpotifyWebPlaybackSdk({
   const [deviceId, setDeviceId] = useRecoilState(deviceIdAtom);
 
   useEffect(() => {
-    if (window.Spotify) {
+    window.onSpotifyWebPlaybackSDKReady = () => {
+      console.log("window.Spotify", window.Spotify);
       playerRef.current = new Spotify.Player({
         name,
         getOAuthToken: async (cb) => {
@@ -34,22 +36,20 @@ export function useSpotifyWebPlaybackSdk({
       });
 
       playerRef.current.connect();
-    }
+    };
   }, []);
 
   useEffect(() => {
-    playerRef.current?.addListener(
-      "player_state_changed",
-      onPlayerStateChanged,
-    );
+    const player = playerRef.current;
+    console.log("player", player);
+    if (player) {
+      player?.addListener("player_state_changed", onPlayerStateChanged);
 
-    return () => {
-      playerRef.current?.removeListener(
-        "player_state_changed",
-        onPlayerStateChanged,
-      );
-    };
-  }, [onPlayerStateChanged]);
+      return () => {
+        player?.removeListener("player_state_changed", onPlayerStateChanged);
+      };
+    }
+  }, [onPlayerStateChanged, playerRef.current]);
 
   return {
     player: playerRef.current,

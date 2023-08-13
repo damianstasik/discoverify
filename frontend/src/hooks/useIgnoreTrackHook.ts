@@ -1,14 +1,23 @@
 import {
   InfiniteData,
+  MutationFunction,
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
 import { produce } from "immer";
 import { useCallback, useEffect } from "react";
 import { useRecoilValue } from "recoil";
-import { ignoreTrack } from "../api";
 import { useEventBus } from "../components/EventBus";
 import { tokenState } from "../store";
+
+const ignoreTrack: MutationFunction<void, string> = async (id) => {
+  // await fetch(`${import.meta.env.VITE_API_URL}/track/${id}/ignore`, {
+  //   method: isIgnored ? 'delete' : 'put',
+  //   headers: {
+  //     Authorization: `Bearer ${token}`,
+  //   },
+  // });
+};
 
 export function useIgnoreTrackHook() {
   const queryClient = useQueryClient();

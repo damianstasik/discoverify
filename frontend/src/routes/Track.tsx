@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { tokenState } from "../store";
 
@@ -18,9 +17,9 @@ async function trackQuery({ queryKey, signal }) {
   return body;
 }
 
-export function Track() {
+export function Track({ params }) {
   const token = useRecoilValue(tokenState);
-  const params = useParams<{ id: string }>();
+  // const params = useParams<{ id: string }>();
 
   const { data } = useQuery({
     queryKey: ["track", params.id, token],

@@ -1,4 +1,5 @@
-import { mdiHeart, mdiHeartOutline } from "@mdi/js";
+import mdiHeart from "@slimr/mdi-paths/Heart";
+import mdiHeartOutline from "@slimr/mdi-paths/HeartOutline";
 import { CellContext } from "@tanstack/react-table";
 import { useRecoilValue } from "recoil";
 import { savedTracksSelector } from "../store";

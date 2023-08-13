@@ -1,5 +1,5 @@
+import Link from "next/link";
 import { memo } from "react";
-import { Link } from "react-router-dom";
 
 interface Props {
   name: string | undefined;
@@ -10,7 +10,7 @@ interface Props {
 function ArtistLink({ id, name }) {
   return (
     <Link
-      to={`/artist/${id}`}
+      href={`/artist/${id}`}
       className="text-slate-300 underline decoration-yellow-900 underline-offset-4 hover:decoration-yellow-500"
     >
       {name}

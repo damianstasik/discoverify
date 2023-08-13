@@ -1,5 +1,5 @@
 import { CellContext } from "@tanstack/react-table";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
 interface Artist {
   id: string;
@@ -15,7 +15,7 @@ export const ArtistsColumn = <Data extends { artists: Artist[] }>(
       {artists.map((artist, index) => (
         <div key={artist.id}>
           <Link
-            to={`/artist/${artist.id}`}
+            href={`/artist/${artist.id}`}
             state={artist}
             className="text-white underline decoration-yellow-900 underline-offset-4 hover:decoration-yellow-500 hover:text-yellow-500"
           >

@@ -1,11 +1,9 @@
-import {
-  mdiPauseCircle,
-  mdiPlayCircle,
-  mdiRepeat,
-  mdiShuffle,
-  mdiSkipNext,
-  mdiSkipPrevious,
-} from "@mdi/js";
+import mdiPauseCircle from "@slimr/mdi-paths/PauseCircle";
+import mdiPlayCircle from "@slimr/mdi-paths/PlayCircle";
+import mdiRepeat from "@slimr/mdi-paths/Repeat";
+import mdiShuffle from "@slimr/mdi-paths/Shuffle";
+import mdiSkipNext from "@slimr/mdi-paths/SkipNext";
+import mdiSkipPrevious from "@slimr/mdi-paths/SkipPrevious";
 import { memo } from "react";
 import { IconButton } from "../IconButton";
 

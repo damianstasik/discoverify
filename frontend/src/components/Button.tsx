@@ -9,6 +9,7 @@ interface Props {
   loading?: boolean;
   onClick?: () => void;
   variant?: "contained" | "outlined";
+  type?: string;
 }
 
 export function Button({
@@ -20,12 +21,13 @@ export function Button({
   variant = "contained",
   onClick,
   component,
+  type = "button",
   ...rest
 }: Props) {
   const Component = component || "button";
   return (
     <Component
-      type={component ? undefined : "button"}
+      type={component ? undefined : type}
       className={tw(
         "inline-flex items-center rounded-md border border-transparent px-3 py-1 text-sm font-medium text-white focus:outline-none focus:ring-1",
 

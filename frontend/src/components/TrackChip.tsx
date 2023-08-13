@@ -1,7 +1,6 @@
-import { mdiClose } from "@mdi/js";
+import Link from "next/link";
 import { Fragment } from "react";
-import { Link } from "react-router-dom";
-import { IconButton } from "./IconButton";
+import { TrackChipRemoveButton } from "./TrackChipRemoveButton";
 
 interface Props {
   id: string;
@@ -11,10 +10,9 @@ interface Props {
     name: string;
   }>;
   imageUrl: string;
-  onRemove: () => void;
 }
 
-export const TrackChip = ({ id, name, artists, imageUrl, onRemove }: Props) => {
+export const TrackChip = ({ id, name, artists, imageUrl }: Props) => {
   return (
     <div className="shadow-inner h-12 pl-2 pr-1 bg-slate-500 rounded-md flex-shrink-0 flex items-center gap-2 relative overflow-hidden">
       <img
@@ -26,14 +24,14 @@ export const TrackChip = ({ id, name, artists, imageUrl, onRemove }: Props) => {
         <img className="rounded s-8" src={imageUrl} alt={name} />
       </div>
       <div className="relative flex justify-center flex-col gap-1">
-        <Link to={`/track/${id}`} className="text-white text-sm">
+        <Link href={`/track/${id}`} className="text-white text-sm">
           {name}
         </Link>
 
         <div className="text-xs">
           {artists.map((artist, index) => (
             <Fragment key={artist.id}>
-              <Link to={`/artist/${artist.id}`} className="text-slate-300">
+              <Link href={`/artist/${artist.id}`} className="text-slate-300">
                 {artist.name}
               </Link>
               {index < artists.length - 1 && (
@@ -44,12 +42,7 @@ export const TrackChip = ({ id, name, artists, imageUrl, onRemove }: Props) => {
         </div>
       </div>
       <div className="relative">
-        <IconButton
-          icon={mdiClose}
-          label="Remove"
-          className="text-slate-400"
-          onClick={onRemove}
-        />
+        <TrackChipRemoveButton id={id} />
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
-import { mdiVolumeHigh, mdiVolumeLow } from "@mdi/js";
 import * as Slider from "@radix-ui/react-slider";
+import mdiVolumeHigh from "@slimr/mdi-paths/VolumeHigh";
+import mdiVolumeLow from "@slimr/mdi-paths/VolumeLow";
 import { memo } from "react";
 import { IconButton } from "../IconButton";
 

@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { useRecoilValue } from "recoil";
 import { Button } from "../components/Button";
 import { VirtualTable } from "../components/VirtualTable";
@@ -20,7 +20,7 @@ const columns = [
     cell: (params) => (
       <Button
         component={Link}
-        to={`/followed-artists/top-tracks?genre=${encodeURIComponent(
+        href={`/followed-artists/top-tracks?genre=${encodeURIComponent(
           params.row.original.name,
         )}`}
       >

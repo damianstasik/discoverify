@@ -1,4 +1,5 @@
-import { mdiThumbDown, mdiThumbDownOutline } from "@mdi/js";
+import mdiThumbDown from "@slimr/mdi-paths/ThumbDown";
+import mdiThumbDownOutline from "@slimr/mdi-paths/ThumbDownOutline";
 import { CellContext } from "@tanstack/react-table";
 import { useEventBus } from "./EventBus";
 import { IconButton } from "./IconButton";

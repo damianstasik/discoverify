@@ -1,10 +1,16 @@
-import { mdiDevices, mdiHeart, mdiHeartOutline } from "@mdi/js";
+"use client";
+
+import mdiDevices from "@slimr/mdi-paths/Devices";
+import mdiHeart from "@slimr/mdi-paths/Heart";
+import mdiHeartOutline from "@slimr/mdi-paths/HeartOutline";
 import { useQuery } from "@tanstack/react-query";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react-lite";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { useThrottledCallback } from "use-debounce";
+import { TokenContext, useToken } from "../app/(authorized)/context";
+import { getTokenFromCookie } from "../app/user";
 import { useSpotifyWebPlaybackSdk } from "../hooks/useSpotifyWebPlaybackSdk";
 import { useTimer } from "../hooks/useTimer";
 import { player as pl } from "../state";
@@ -14,7 +20,6 @@ import {
   savedTracksAtom,
   userAtom,
 } from "../store";
-import { trpc } from "../trpc";
 import { useEventBus } from "./EventBus";
 import { IconButton } from "./IconButton";
 import { PlaybackControl } from "./Player/PlaybackControl";
@@ -24,9 +29,11 @@ import { TrackInfo } from "./Player/TrackInfo";
 import { VolumeControl } from "./Player/VolumeControl";
 
 export const Player = observer(() => {
-  const user = useRecoilValue(userAtom);
+  // const user = useRecoilValue(userAtom);
 
-  const decoded = user?.accessToken;
+  const token = useContext(TokenContext);
+
+  // const decoded = user?.accessToken;
 
   // const { data = [], isLoading } = useQuery(['devices', tokenId], async () => {
   //   const res = await fetch(`/devices?tokenId=${tokenId}`);
@@ -46,6 +53,7 @@ export const Player = observer(() => {
 
   const h = useCallback(
     (state) => {
+      console.log("state", state);
       setDuration(state.duration / 1000);
       setMeta(state.context.metadata);
 
@@ -75,7 +83,7 @@ export const Player = observer(() => {
 
   const { deviceId, player } = useSpotifyWebPlaybackSdk({
     name: "Discoverify",
-    getOAuthToken: () => decoded,
+    getOAuthToken: () => token,
     onPlayerStateChanged: h,
     volume,
   });
@@ -149,8 +157,9 @@ export const Player = observer(() => {
   const { data: queue } = useQuery({
     queryKey: ["queue"],
     queryFn: async ({ signal }) => {
-      const queue = await trpc.player.queue.query(undefined, { signal });
-      return queue;
+      // todo use server action
+      // const queue = await trpc.player.queue.query(undefined, { signal });
+      return [];
     },
     enabled: isQueueOpen,
   });

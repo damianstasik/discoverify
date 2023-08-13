@@ -1,15 +1,13 @@
-import { mdiClose } from "@mdi/js";
-import { Link } from "react-router-dom";
-import { IconButton } from "./IconButton";
+import Link from "next/link";
+import { ArtistChipRemoveButton } from "./ArtistChipRemoveButton";
 
 interface Props {
   id: string;
   name: string;
   imageUrl: string;
-  onRemove: () => void;
 }
 
-export const ArtistChip = ({ id, name, imageUrl, onRemove }: Props) => {
+export const ArtistChip = ({ id, name, imageUrl }: Props) => {
   return (
     <div className="shadow-inner h-12 pl-2 pr-1 bg-slate-500 rounded-md flex-shrink-0 flex items-center gap-2 relative overflow-hidden">
       <img
@@ -21,17 +19,12 @@ export const ArtistChip = ({ id, name, imageUrl, onRemove }: Props) => {
         <img className="rounded s-8" src={imageUrl} alt={name} />
       </div>
       <div className="relative flex justify-center flex-col gap-1">
-        <Link to={`/artist/${id}`} className="text-white text-sm">
+        <Link href={`/artist/${id}`} className="text-white text-sm">
           {name}
         </Link>
       </div>
       <div className="relative">
-        <IconButton
-          icon={mdiClose}
-          label="Remove"
-          className="text-slate-400"
-          onClick={onRemove}
-        />
+        <ArtistChipRemoveButton id={id} />
       </div>
     </div>
   );

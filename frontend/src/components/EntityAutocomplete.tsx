@@ -1,5 +1,5 @@
 import { Combobox } from "@headlessui/react";
-import { mdiMenuDown } from "@mdi/js";
+import mdiMenuDown from "@slimr/mdi-paths/MenuDown";
 import { tw } from "../tw";
 import { Icon } from "./Icon";
 

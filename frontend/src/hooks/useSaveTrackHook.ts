@@ -1,7 +1,14 @@
-import { useMutation } from "@tanstack/react-query";
+import { Mutation, useMutation } from "@tanstack/react-query";
 import { useEffect } from "react";
-import { saveTrack, unsaveTrack } from "../api";
 import { useEventBus } from "../components/EventBus";
+
+const saveTrack: Mutation<"track.save", string> = async (id) => {
+  // await trpc.track.save.mutate(id);
+};
+
+const unsaveTrack: Mutation<"track.unsave", string> = async (id) => {
+  // await trpc.track.unsave.mutate(id);
+};
 
 export function useSaveTrackHook() {
   const eventBus = useEventBus();

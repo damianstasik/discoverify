@@ -1,7 +1,6 @@
-import { mdiSpotify } from "@mdi/js";
+import mdiSpotify from "@slimr/mdi-paths/Spotify";
 import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
 import { memo, useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import * as artistApi from "../api/artist";
 import * as trackApi from "../api/track";
@@ -53,19 +52,19 @@ const columns = [
 
 export function FollowedArtistsTopTracks() {
   const token = useRecoilValue(tokenState);
-  const [searchParams] = useSearchParams();
-  const genre = searchParams.get("genre");
+  // const [searchParams] = useSearchParams();
+  // const genre = searchParams.get('genre');
 
   const { mutateAsync: saveTrack } = useMutation<void, Error, string>({
     mutationFn: async (id) => trackApi.saveTrack(token, id),
   });
 
   const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery({
-    queryKey: ["top-tracks", genre],
+    queryKey: ["top-tracks", "genre"],
     queryFn: async function followedArtistsTopTracksQuery({ pageParam }) {
       return artistApi.getFollowedArtistsTopTracks(
         token,
-        searchParams.get("genre"),
+        "test", // searchParams.get('genre'),
         pageParam,
       );
     },

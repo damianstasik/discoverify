@@ -1,5 +1,5 @@
+import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Link as RouterLink } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { tokenState } from "../store";
 
@@ -44,7 +44,7 @@ function ArtistCard({ artist }: { artist: any }) {
   };
   return (
     <div>
-      <div component={RouterLink} to={`/artist/${artist.id}`}>
+      <div component={Link} href={`/artist/${artist.id}`}>
         <div
           sx={{
             height: 300,

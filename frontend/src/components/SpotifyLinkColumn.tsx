@@ -1,4 +1,4 @@
-import { mdiSpotify } from "@mdi/js";
+import mdiSpotify from "@slimr/mdi-paths/Spotify";
 import { CellContext } from "@tanstack/react-table";
 import { IconButton } from "./IconButton";
 

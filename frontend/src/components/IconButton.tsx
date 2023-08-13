@@ -1,3 +1,5 @@
+"use client";
+
 import { forwardRef } from "react";
 import { tw } from "../tw";
 import { Icon } from "./Icon";

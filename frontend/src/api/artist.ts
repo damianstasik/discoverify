@@ -1,4 +1,37 @@
-import { trpc } from "../trpc";
+"use server";
+import { notFound } from "next/navigation";
+import { getSpotifyApi } from "../app/sp";
+import { getTokenFromCookie } from "../app/user";
+
+export async function getTopTracks(id: string) {
+  const token = await getTokenFromCookie();
+  if (!token) {
+    return null;
+  }
+
+  const spotifyApi = getSpotifyApi(token.accessToken);
+
+  const me = await spotifyApi.getMe();
+
+  const tracks = await spotifyApi.getArtistTopTracks(
+    id,
+    me.body.country, // TODO: this is passed as `country` in the code, but it should be `market`
+  );
+
+  return tracks.body.tracks;
+}
+
+export async function getArtist(id: string) {
+  const token = await getTokenFromCookie();
+  if (!token) {
+    return null;
+  }
+
+  const spotifyApi = getSpotifyApi(token.accessToken);
+  const artist = await spotifyApi.getArtist(id);
+
+  return artist.body;
+}
 
 export async function getFollowedArtistsTopTracks(
   token: string,
@@ -41,7 +74,13 @@ export const getArtists: Query<
   "artist.byIds",
   [key: string, artistIds: string[]]
 > = async ({ queryKey, signal }) => {
-  const artists = await trpc.artist.byIds.query(queryKey[1], { signal });
+  const token = await getTokenFromCookie();
+  if (!token) {
+    notFound();
+  }
+  const spotifyApi = getSpotifyApi(token.accessToken);
 
-  return artists;
+  const res = await spotifyApi.getArtists(queryKey[1]);
+
+  return res.body.artists;
 };

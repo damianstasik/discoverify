@@ -1,7 +1,7 @@
-import { mdiSpotify } from "@mdi/js";
+import mdiSpotify from "@slimr/mdi-paths/Spotify";
 import { QueryFunction, useQuery } from "@tanstack/react-query";
+import Link from "next/link";
 import { useDeferredValue, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { IconButton } from "../components/IconButton";
 import { PageTitle } from "../components/PageTitle";
@@ -13,7 +13,7 @@ const columns = [
     accessorKey: "name",
     header: "Name",
     cell: (params) => (
-      <Link to={`/playlist/${params.row.original.id}`}>
+      <Link href={`/playlist/${params.row.original.id}`}>
         {params.getValue()}
       </Link>
     ),
@@ -22,7 +22,7 @@ const columns = [
     accessorKey: "owner",
     header: "Owner",
     cell: (params) => (
-      <Link to={`/artist/${params.getValue().id}`}>
+      <Link href={`/artist/${params.getValue().id}`}>
         {params.getValue().display_name}
       </Link>
     ),
@@ -58,10 +58,10 @@ const autocompleteQuery: QueryFunction<
 
 export function Test() {
   const token = useRecoilValue(tokenState);
-  const [searchParams, setSearchParams] = useSearchParams();
+  // const [searchParams, setSearchParams] = useSearchParams();
   const [query, setQuery] = useState("");
   const deferredQuery = useDeferredValue(query);
-  const q = searchParams.get("q");
+  const q = ""; //searchParams.get('q');
 
   const { data, isLoading } = useQuery({
     queryKey: ["lays", token, q],

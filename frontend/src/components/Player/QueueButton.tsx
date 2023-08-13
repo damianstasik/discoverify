@@ -1,13 +1,14 @@
-import { mdiClose, mdiPlaylistMusicOutline } from "@mdi/js";
 import * as Popover from "@radix-ui/react-popover";
-import { Link } from "react-router-dom";
+import mdiClose from "@slimr/mdi-paths/Close";
+import mdiPlaylistMusicOutline from "@slimr/mdi-paths/PlaylistMusicOutline";
+import Link from "next/link";
 import { Icon } from "../Icon";
 import { IconButton } from "../IconButton";
 
 function ArtistLink({ id, name }) {
   return (
     <Link
-      to={`/artist/${id}`}
+      href={`/artist/${id}`}
       className="text-slate-300 underline decoration-yellow-900 underline-offset-4 hover:decoration-yellow-500"
     >
       {name}

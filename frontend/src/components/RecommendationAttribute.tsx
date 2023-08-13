@@ -1,6 +1,9 @@
-import { mdiChevronDown, mdiClose } from "@mdi/js";
+"use client";
+
 import * as Popover from "@radix-ui/react-popover";
 import * as Slider from "@radix-ui/react-slider";
+import mdiChevronDown from "@slimr/mdi-paths/ChevronDown";
+import mdiClose from "@slimr/mdi-paths/Close";
 import { useState } from "react";
 import { tw } from "../tw";
 import { Attribute } from "../types";

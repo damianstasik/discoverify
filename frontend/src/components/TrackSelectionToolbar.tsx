@@ -1,5 +1,5 @@
 import { Row } from "@tanstack/react-table";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { tw } from "../tw";
 import { Button } from "./Button";
 
@@ -29,14 +29,13 @@ export const TrackSelectionToolbar = <T extends { spotifyId: string }>({
         <Button
           variant="outlined"
           component={Link}
-          to={{
+          href={{
             pathname: "/recommendations",
-            search: `?${rows
-              .map(
-                (selectedRow) =>
-                  `trackId=${extractId(selectedRow.original.spotifyId)}`,
-              )
-              .join("&")}`,
+            query: {
+              trackId: rows.map((selectedRow) =>
+                extractId(selectedRow.original.spotifyId),
+              ),
+            },
           }}
         >
           Generate recommendations
@@ -46,14 +45,13 @@ export const TrackSelectionToolbar = <T extends { spotifyId: string }>({
       <Button
         variant="outlined"
         component={Link}
-        to={{
+        href={{
           pathname: "/playlist/create",
-          search: `?${rows
-            .map(
-              (selectedRow) =>
-                `trackId=${extractId(selectedRow.original.spotifyId)}`,
-            )
-            .join("&")}`,
+          query: {
+            trackId: rows.map((selectedRow) =>
+              extractId(selectedRow.original.spotifyId),
+            ),
+          },
         }}
       >
         Create a new playlist
