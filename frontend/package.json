@@ -23,7 +23,7 @@
     "date-fns": "^2.30.0",
     "immer": "^10.0.1",
     "mitt": "^3.0.0",
-    "mobx": "^6.9.0",
+    "mobx": "^6.10.2",
     "mobx-react-lite": "^3.4.3",
     "notistack": "3.0.1",
     "postcss": "^8.4.24",
