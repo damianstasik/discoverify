@@ -11,7 +11,7 @@
     "@tanstack/react-query": "^4.29.13",
     "@tanstack/react-query-devtools": "^4.29.13",
     "@tanstack/react-table": "^8.8.5",
-    "@tanstack/react-virtual": "^3.0.0-beta.54",
+    "@tanstack/react-virtual": "^3.0.0-beta.58",
     "@trpc/client": "^10.21.2",
     "@trpc/server": "^10.21.2",
     "@types/react": "^18.2.0",
