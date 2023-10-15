@@ -22,7 +22,7 @@
     "@types/pg": "^8.10.2",
     "@types/spotify-api": "^0.0.22",
     "@types/spotify-web-api-node": "^5.0.7",
-    "@types/spotify-web-playback-sdk": "^0.1.15",
+    "@types/spotify-web-playback-sdk": "^0.1.16",
     "async": "^3.2.4",
     "cookie": "^0.5.0",
     "date-fns": "^2.30.0",
