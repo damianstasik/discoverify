@@ -1,4 +1,4 @@
-FROM node:18.15.0-alpine3.17 AS builder
+FROM node:18.18.2-alpine3.18 AS builder
 
 RUN apk add --no-cache libc6-compat
 RUN apk update
@@ -7,7 +7,7 @@ RUN npm i --global turbo
 COPY . .
 RUN turbo prune --scope=backend --docker
 
-FROM node:18.15.0-alpine3.17 AS installer
+FROM node:18.18.2-alpine3.18 AS installer
 
 RUN apk add --no-cache libc6-compat
 RUN apk update
@@ -20,7 +20,7 @@ COPY --from=builder /app/out/full/ .
 COPY turbo.json turbo.json
 RUN npm run build:backend
  
-FROM node:18.15.0-alpine3.17 AS runner
+FROM node:18.18.2-alpine3.18 AS runner
 
 WORKDIR /app
 RUN addgroup --system --gid 1001 nodejs
