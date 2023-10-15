@@ -18,9 +18,9 @@ export function Background() {
             y2="190"
             gradientUnits="userSpaceOnUse"
           >
-            <stop stop-color="#3F2758" />
-            <stop offset="0.5" stop-color="#2D4686" />
-            <stop offset="1" stop-color="#2FFFCD" />
+            <stop stopColor="#3F2758" />
+            <stop offset="0.5" stopColor="#2D4686" />
+            <stop offset="1" stopColor="#2FFFCD" />
           </linearGradient>
         </defs>
       </svg>
