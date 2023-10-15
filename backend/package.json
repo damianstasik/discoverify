@@ -37,7 +37,7 @@
     "prisma": "^4.13.0",
     "spotify-web-api-node": "^5.0.2",
     "typescript": "^5.0.4",
-    "zod": "^3.21.4"
+    "zod": "^3.22.2"
   },
   "devDependencies": {
     "tsx": "^3.12.9"
