@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@fastify/cookie": "^8.3.0",
-    "@fastify/cors": "^8.2.1",
+    "@fastify/cors": "^8.3.0",
     "@fastify/static": "^6.10.1",
     "@fastify/websocket": "^8.0.0",
     "@prisma/client": "^4.13.0",
