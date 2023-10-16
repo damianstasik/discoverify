@@ -3,7 +3,7 @@ import { router } from '..';
 import { procedureWithAuthToken } from '../auth/middleware';
 import { getSpotifyApi } from '../spotify';
 import { concatLimit } from 'async';
-import { shuffle } from 'lodash';
+import shuffle from 'lodash/shuffle';
 import { mixpanel } from '../mixpanel';
 
 export const artistRouter = router({

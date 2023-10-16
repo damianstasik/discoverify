@@ -2,7 +2,6 @@ import { router } from '..';
 import { getSpotifyApi } from '../spotify';
 import { procedureWithAuthToken } from '../auth/middleware';
 import { z } from 'zod';
-import { chunk } from 'lodash';
 import { mixpanel } from '../mixpanel';
 
 export const playlistRouter = router({

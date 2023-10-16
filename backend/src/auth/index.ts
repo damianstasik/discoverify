@@ -4,7 +4,7 @@ import { router, procedure } from '..';
 import { getSpotifyApi } from '../spotify';
 import { procedureWithAuthToken, withAuthToken } from './middleware';
 import * as jwt from 'jsonwebtoken';
-import { isPast } from 'date-fns';
+import isPast from 'date-fns/isPast';
 import { mixpanel } from '../mixpanel';
 
 function to<T, U = Error>(

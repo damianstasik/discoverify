@@ -2,7 +2,7 @@ import { ee, router } from '..';
 import { getSpotifyApi } from '../spotify';
 import { procedureWithAuthToken } from '../auth/middleware';
 import { z } from 'zod';
-import { chunk } from 'lodash';
+import chunk from 'lodash/chunk';
 import { mixpanel } from '../mixpanel';
 
 export const trackRouter = router({
