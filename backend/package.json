@@ -1,12 +1,5 @@
 {
   "name": "backend",
-  "private": true,
-  "types": "./src/router.ts",
-  "scripts": {
-    "dev": "tsx watch --experimental-fetch src/server.ts",
-    "build": "esbuild src/server.ts --bundle --platform=node --target=node18 --outfile=dist/server.js",
-    "start": "node dist/server.js"
-  },
   "dependencies": {
     "@fastify/cookie": "^9.1.0",
     "@fastify/cors": "^8.4.0",
@@ -18,16 +11,14 @@
     "@types/cookie": "^0.5.2",
     "@types/jsonwebtoken": "^9.0.3",
     "@types/lodash": "^4.14.199",
-    "@types/node": "^20.8.6",
     "@types/pg": "^8.10.5",
     "@types/spotify-api": "^0.0.23",
     "@types/spotify-web-api-node": "^5.0.8",
     "@types/spotify-web-playback-sdk": "^0.1.17",
     "async": "^3.2.4",
+    "bun-types": "^1.0.6",
     "cookie": "^0.5.0",
     "date-fns": "^2.30.0",
-    "dotenv": "^16.3.1",
-    "esbuild": "^0.19.4",
     "fast-fuzzy": "^1.12.0",
     "fastify": "^4.24.2",
     "jsonwebtoken": "^9.0.2",
@@ -39,7 +30,11 @@
     "typescript": "^5.2.2",
     "zod": "^3.22.4"
   },
-  "devDependencies": {
-    "tsx": "^3.13.0"
-  }
+  "private": true,
+  "scripts": {
+    "dev": "bun --watch src/server.ts",
+    "build": "bun build src/server.ts --target=bun --outfile=dist/server.js",
+    "start": "bun dist/server.js"
+  },
+  "types": "./src/router.ts"
 }
