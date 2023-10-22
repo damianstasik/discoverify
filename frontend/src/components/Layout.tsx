@@ -37,7 +37,8 @@ export function Layout() {
     };
   }, []);
 
-  const { mutate } = useMutation(refreshAccessToken, {
+  const { mutate } = useMutation({
+    mutationFn: refreshAccessToken,
     // onSuccess(freshToken) {
     //   startTransition(() => {
     //     setToken(freshToken);
@@ -45,7 +46,7 @@ export function Layout() {
     // },
   });
 
-  const { data: user } = useQuery({
+  const { data: user, errorUpdateCount } = useQuery({
     queryFn: getCurrentUser,
     queryKey: ["user"],
     suspense: true,
@@ -54,16 +55,21 @@ export function Layout() {
     refetchOnWindowFocus: true,
     refetchIntervalInBackground: true,
     refetchInterval: 60 * 60 * 1000,
-    useErrorBoundary: false,
-    onSuccess(data) {
-      setUser(data);
-    },
-    onError() {
+  });
+
+  useEffect(() => {
+    if (user) {
+      setUser(user);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (errorUpdateCount) {
       // check error type, if token is expired run the mutation and update token that will rerun this query
       // need to do this with startTransition to avoid triggering suspense
       mutate();
-    },
-  });
+    }
+  }, [errorUpdateCount, mutate]);
 
   if (!user) {
     return <Navigate to="/login" state={location} replace />;

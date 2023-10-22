@@ -56,23 +56,22 @@ export function FollowedArtistsTopTracks() {
   const [searchParams] = useSearchParams();
   const genre = searchParams.get("genre");
 
-  const { mutateAsync: saveTrack } = useMutation<void, Error, string>(
-    async (id) => trackApi.saveTrack(token, id),
-  );
+  const { mutateAsync: saveTrack } = useMutation<void, Error, string>({
+    mutationFn: async (id) => trackApi.saveTrack(token, id),
+  });
 
-  const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery(
-    ["top-tracks", genre],
-    async function followedArtistsTopTracksQuery({ pageParam = 0 }) {
+  const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery({
+    queryKey: ["top-tracks", genre],
+    queryFn: async function followedArtistsTopTracksQuery({ pageParam }) {
       return artistApi.getFollowedArtistsTopTracks(
         token,
         searchParams.get("genre"),
         pageParam,
       );
     },
-    {
-      getNextPageParam: (lastPage) => lastPage.nextPage,
-    },
-  );
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) => lastPage.nextPage,
+  });
 
   const rows = useMemo(
     () => (data?.pages || []).flatMap((page) => page.tracks),

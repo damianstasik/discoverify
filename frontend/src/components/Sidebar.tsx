@@ -92,14 +92,14 @@ function RouterListItem({
 }
 
 export const Sidebar = memo(({ className }) => {
-  const { data, isLoading } = useQuery(
-    ["sidebarPlaylists"],
-    async function playlistsQuery() {
+  const { data, isLoading } = useQuery({
+    queryKey: ["sidebarPlaylists"],
+    queryFn: async function playlistsQuery() {
       const playlists = await trpc.user.playlists.query();
 
       return playlists;
     },
-  );
+  });
 
   return (
     <div className="p-3 h-full overflow-y-auto">

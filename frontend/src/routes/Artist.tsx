@@ -55,17 +55,18 @@ export function Artist() {
   const params = useParams();
   const { state } = useLocation();
 
-  const { data } = useQuery(
-    ["artist", params.id],
-    async function artistQuery({ queryKey, signal }) {
+  const { data } = useQuery({
+    queryKey: ["artist", params.id],
+    queryFn: async function artistQuery({ queryKey, signal }) {
       const artist = await trpc.artist.byId.query(queryKey[1], {
         signal,
       });
 
       return artist;
     },
-    { refetchOnMount: true, placeholderData: state },
-  );
+    refetchOnMount: true,
+    placeholderData: state,
+  });
 
   const tabs = [
     {

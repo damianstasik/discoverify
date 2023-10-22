@@ -50,18 +50,17 @@ function TimeRangeOption({
 export function TopArtists() {
   const [timeRange, setTimeRange] = useState("short_term");
 
-  const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery(
-    ["top-artists", timeRange],
-    async function topTracksQuery({ pageParam = 1 }) {
+  const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery({
+    queryKey: ["top-artists", timeRange],
+    queryFn: async function topTracksQuery({ pageParam }) {
       return trpc.artist.top.query({
         timeRange,
         page: pageParam,
       });
     },
-    {
-      getNextPageParam: (lastPage) => lastPage.nextPage,
-    },
-  );
+    getNextPageParam: (lastPage) => lastPage.nextPage,
+    initialPageParam: 1,
+  });
 
   const flatData = useMemo(
     () => data?.pages?.flatMap((page) => page.artists) ?? [],

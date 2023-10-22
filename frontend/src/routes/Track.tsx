@@ -22,7 +22,9 @@ export function Track() {
   const token = useRecoilValue(tokenState);
   const params = useParams<{ id: string }>();
 
-  const { data } = useQuery(["track", params.id, token], trackQuery, {
+  const { data } = useQuery({
+    queryKey: ["track", params.id, token],
+    queryFn: trackQuery,
     refetchOnMount: true,
   });
 

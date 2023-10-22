@@ -1,5 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
+import { useEffect } from "react";
 import { Navigate, useSearchParams } from "react-router-dom";
 import { trpc } from "../trpc";
 
@@ -15,16 +16,18 @@ export function Authorize() {
 
   const code = searchParams.get("code");
 
-  const { isSuccess } = useQuery(["authorize", code!], authorizeQuery, {
-    enabled: !!code,
-    suspense: true,
-    useErrorBoundary: false,
-    onError(e) {
+  const { isSuccess, errorUpdateCount } = useSuspenseQuery({
+    queryKey: ["authorize", code!],
+    queryFn: authorizeQuery,
+  });
+
+  useEffect(() => {
+    if (errorUpdateCount) {
       enqueueSnackbar("Authorization error", {
         variant: "error",
       });
-    },
-  });
+    }
+  }, [errorUpdateCount]);
 
   return <Navigate to={isSuccess ? "/recommendations" : "/login"} />;
 }
