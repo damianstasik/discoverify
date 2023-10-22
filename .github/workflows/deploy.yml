@@ -10,9 +10,9 @@ on:
 jobs:
   deploy:
     name: Deploy api
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - run: flyctl deploy --remote-only --config ./backend/fly.toml
         env:
