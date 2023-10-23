@@ -1,34 +1,34 @@
-import { Navigate, RouteObject, useRoutes } from 'react-router-dom';
-import { Suspense } from 'react';
-// import { useRecoilValue } from 'recoil';
-import { Login } from './routes/Login';
-import { Authorize } from './routes/Authorize';
+import { Suspense } from "react";
+import { Navigate, RouteObject, useRoutes } from "react-router-dom";
+import { CircularProgress } from "./components/CircularProgress";
+import { Layout } from "./components/Layout";
 // import { Artists } from './routes/Artists';
-import { Artist } from './routes/Artist';
+import { Artist } from "./routes/Artist";
+import { ArtistAlbums } from "./routes/ArtistAlbums";
+import { ArtistTopTracks } from "./routes/ArtistTopTracks";
+import { Authorize } from "./routes/Authorize";
 // import { FollowedArtistsTopTracks } from './routes/FollowedArtistsTopTracks';
 // import { FollowedArtistsGenres } from './routes/FollowedArtistsGenres';
 // import { userState } from './store';
-import { Liked } from './routes/Liked';
-import { Recommendations } from './routes/Recommendations';
-import { RelatedArtistsTopTracks } from './routes/RelatedArtistsTopTracks';
-import { TopTracks } from './routes/TopTracks';
-import { Playlists } from './routes/Playlists';
-import { RecentlyPlayed } from './routes/RecentlyPlayed';
-import { Playlist } from './routes/Playlist';
-import { Layout } from './components/Layout';
-import { CircularProgress } from './components/CircularProgress';
-import { ArtistTopTracks } from './routes/ArtistTopTracks';
-import { ArtistAlbums } from './routes/ArtistAlbums';
+import { Liked } from "./routes/Liked";
+// import { useRecoilValue } from 'recoil';
+import { Login } from "./routes/Login";
+import { Playlist } from "./routes/Playlist";
+import { Playlists } from "./routes/Playlists";
+import { RecentlyPlayed } from "./routes/RecentlyPlayed";
+import { Recommendations } from "./routes/Recommendations";
+import { RelatedArtistsTopTracks } from "./routes/RelatedArtistsTopTracks";
+import { TopTracks } from "./routes/TopTracks";
 
-import Dashboard from './routes/Dashboard';
-import { TopArtists } from './routes/TopArtists';
-import { Album } from './routes/Album';
+import { Album } from "./routes/Album";
+import Dashboard from "./routes/Dashboard";
+import { TopArtists } from "./routes/TopArtists";
 // import { Test } from './routes/Test';
 // import { Track } from './routes/Track';
 
 const routes: RouteObject[] = [
   {
-    path: '/',
+    path: "/",
     element: <Layout />,
     children: [
       {
@@ -36,23 +36,23 @@ const routes: RouteObject[] = [
         element: <Navigate to="/recommendations" replace />,
       },
       {
-        path: 'dashboard',
+        path: "dashboard",
         element: <Dashboard />,
       },
       {
-        path: 'liked',
+        path: "liked",
         element: <Liked />,
       },
       {
-        path: 'recommendations',
+        path: "recommendations",
         element: <Recommendations />,
       },
       {
-        path: 'playlists',
+        path: "playlists",
         element: <Playlists />,
       },
       {
-        path: 'playlist/:id',
+        path: "playlist/:id",
         element: <Playlist />,
       },
       // {
@@ -60,15 +60,15 @@ const routes: RouteObject[] = [
       //   element: <Artists />,
       // },
       {
-        path: 'top-tracks',
+        path: "top-tracks",
         element: <TopTracks />,
       },
       {
-        path: 'top-artists',
+        path: "top-artists",
         element: <TopArtists />,
       },
       {
-        path: 'recently-played',
+        path: "recently-played",
         element: <RecentlyPlayed />,
       },
       // {
@@ -88,7 +88,7 @@ const routes: RouteObject[] = [
       //   element: <Track />,
       // },
       {
-        path: 'album/:id',
+        path: "album/:id",
         element: (
           <Suspense fallback={<CircularProgress />}>
             <Album />
@@ -96,7 +96,7 @@ const routes: RouteObject[] = [
         ),
       },
       {
-        path: 'artist/:id',
+        path: "artist/:id",
         element: (
           <Suspense fallback={<CircularProgress />}>
             <Artist />
@@ -108,11 +108,11 @@ const routes: RouteObject[] = [
             element: <ArtistTopTracks />,
           },
           {
-            path: 'albums',
+            path: "albums",
             element: <ArtistAlbums />,
           },
           {
-            path: 'related-artists-top-tracks',
+            path: "related-artists-top-tracks",
             element: <RelatedArtistsTopTracks />,
           },
         ],
@@ -120,11 +120,11 @@ const routes: RouteObject[] = [
     ],
   },
   {
-    path: '/login',
+    path: "/login",
     element: <Login />,
   },
   {
-    path: '/authorize',
+    path: "/authorize",
     element: <Authorize />,
   },
 ];

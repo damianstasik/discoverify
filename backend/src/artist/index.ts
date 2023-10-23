@@ -1,17 +1,17 @@
-import { z } from 'zod';
-import { router } from '..';
-import { procedureWithAuthToken } from '../auth/middleware';
-import { getSpotifyApi } from '../spotify';
-import { concatLimit } from 'async';
-import shuffle from 'lodash/shuffle';
-import { mixpanel } from '../mixpanel';
+import { concatLimit } from "async";
+import shuffle from "lodash/shuffle";
+import { z } from "zod";
+import { router } from "..";
+import { procedureWithAuthToken } from "../auth/middleware";
+import { mixpanel } from "../mixpanel";
+import { getSpotifyApi } from "../spotify";
 
 export const artistRouter = router({
   top: procedureWithAuthToken
     .input(
       z.object({
         page: z.number(),
-        timeRange: z.enum(['short_term', 'medium_term', 'long_term']),
+        timeRange: z.enum(["short_term", "medium_term", "long_term"]),
       }),
     )
     .query(async (req) => {
@@ -23,7 +23,7 @@ export const artistRouter = router({
         time_range: req.input.timeRange,
       });
 
-      mixpanel.track('get_top_artists', {
+      mixpanel.track("get_top_artists", {
         distinct_id: req.ctx.token.userId,
         time_range: req.input.timeRange,
         page: req.input.page,
@@ -42,7 +42,7 @@ export const artistRouter = router({
     const spotifyApi = getSpotifyApi(req.ctx.token.accessToken);
     const artist = await spotifyApi.getArtist(req.input);
 
-    mixpanel.track('get_artist', {
+    mixpanel.track("get_artist", {
       distinct_id: req.ctx.token.userId,
       artist_id: req.input,
     });
@@ -54,7 +54,7 @@ export const artistRouter = router({
       req.input,
     );
 
-    mixpanel.track('get_artists', {
+    mixpanel.track("get_artists", {
       distinct_id: req.ctx.token.userId,
       artist_ids: req.input,
     });
@@ -71,7 +71,7 @@ export const artistRouter = router({
       me.body.country, // TODO: this is passed as `country` in the code, but it should be `market`
     );
 
-    mixpanel.track('get_artist_top_tracks', {
+    mixpanel.track("get_artist_top_tracks", {
       distinct_id: req.ctx.token.userId,
       artist_id: req.input,
     });
@@ -82,7 +82,7 @@ export const artistRouter = router({
     .input(
       z.object({
         id: z.string(),
-        type: z.enum(['album', 'single', 'appears_on']),
+        type: z.enum(["album", "single", "appears_on"]),
       }),
     )
     .query(async (req) => {
@@ -93,10 +93,10 @@ export const artistRouter = router({
         include_groups: req.input.type,
 
         // @ts-ignore - this is a valid option
-        market: 'from_token',
+        market: "from_token",
       });
 
-      mixpanel.track('get_artist_albums', {
+      mixpanel.track("get_artist_albums", {
         distinct_id: req.ctx.token.userId,
         artist_id: req.input.id,
         type: req.input.type,
@@ -143,7 +143,7 @@ export const artistRouter = router({
           hasNextPage: false,
         };
       } finally {
-        mixpanel.track('get_related_artists_top_tracks', {
+        mixpanel.track("get_related_artists_top_tracks", {
           distinct_id: req.ctx.token.userId,
           artist_id: req.input.id,
           page: req.input.page,

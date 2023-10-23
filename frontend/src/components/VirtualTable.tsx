@@ -2,17 +2,17 @@ import {
   Cell,
   Column,
   ColumnDef,
-  flexRender,
-  getCoreRowModel,
   Row,
   Table,
+  flexRender,
+  getCoreRowModel,
   useReactTable,
-} from '@tanstack/react-table';
-import { useVirtualizer, VirtualItem } from '@tanstack/react-virtual';
-import { forwardRef, memo, useRef } from 'react';
-import { useInfiniteLoading } from '../hooks/useInfiniteLoading';
-import { TrackSelectionToolbar } from './TrackSelectionToolbar';
-import { useScrollbarWidth } from '../hooks/useScrollbarWidth';
+} from "@tanstack/react-table";
+import { VirtualItem, useVirtualizer } from "@tanstack/react-virtual";
+import { forwardRef, memo, useRef } from "react";
+import { useInfiniteLoading } from "../hooks/useInfiniteLoading";
+import { useScrollbarWidth } from "../hooks/useScrollbarWidth";
+import { TrackSelectionToolbar } from "./TrackSelectionToolbar";
 
 interface TableHeaderProps {
   table: Table<any>;
@@ -84,7 +84,7 @@ const TableVirtualRow = forwardRef<HTMLDivElement, TableVirtualRowProps>(
         data-index={virtualItem.index}
         ref={ref}
         className={
-          'absolute top-0 left-0 w-full flex hover:bg-slate-700/50 hover:backdrop-blur'
+          "absolute top-0 left-0 w-full flex hover:bg-slate-700/50 hover:backdrop-blur"
         }
         style={{
           transform: `translate3d(0, ${virtualItem.start}px, 0)`,
@@ -151,8 +151,8 @@ const VirtualTableRaw = <Data extends { spotifyId: string }>({
     <div
       className="text-sm text-slate-400 flex flex-col w-full overflow-hidden"
       style={{
-        '--scrollbar': `${scrollbarSize}px`,
-        '--total': `${staticWidth}px`,
+        "--scrollbar": `${scrollbarSize}px`,
+        "--total": `${staticWidth}px`,
       }}
     >
       <TrackSelectionToolbar rows={flatRows} />

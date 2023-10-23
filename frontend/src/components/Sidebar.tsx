@@ -1,28 +1,28 @@
-import { useMatch, Link as RouterLink } from 'react-router-dom';
-import { memo } from 'react';
 import {
-  mdiPlaylistMusic,
-  mdiHeart,
-  mdiViewDashboard,
-  mdiMusicNotePlus,
   mdiAccountStar,
+  mdiHeart,
   mdiHistory,
-} from '@mdi/js';
-import { useQuery } from '@tanstack/react-query';
-import { trpc } from '../trpc';
-import { recommendIconPath } from '../icons/recommend';
-import { Icon } from './Icon';
-import { tw } from '../tw';
+  mdiMusicNotePlus,
+  mdiPlaylistMusic,
+  mdiViewDashboard,
+} from "@mdi/js";
+import { useQuery } from "@tanstack/react-query";
+import { memo } from "react";
+import { Link as RouterLink, useMatch } from "react-router-dom";
+import { recommendIconPath } from "../icons/recommend";
+import { trpc } from "../trpc";
+import { tw } from "../tw";
+import { Icon } from "./Icon";
 
 function Heading({ children, className, separatorClassName }: any) {
   return (
-    <div className={tw('flex items-center px-2', className)}>
+    <div className={tw("flex items-center px-2", className)}>
       <span className="flex-shrink pr-3 font-semibold text-sm text-white">
         {children}
       </span>
       <div
         className={tw(
-          'flex-grow h-px bg-gradient-to-r to-transparent',
+          "flex-grow h-px bg-gradient-to-r to-transparent",
           separatorClassName,
         )}
         aria-hidden="true"
@@ -64,9 +64,9 @@ function RouterListItem({
       to={to}
       className={tw(
         isActive
-          ? 'bg-slate-800 text-white'
-          : 'text-slate-400 hover:bg-slate-700 hover:text-white',
-        'group flex items-center h-8 px-2 text-sm rounded-md ',
+          ? "bg-slate-800 text-white"
+          : "text-slate-400 hover:bg-slate-700 hover:text-white",
+        "group flex items-center h-8 px-2 text-sm rounded-md ",
         className,
         textTintColor,
       )}
@@ -78,9 +78,9 @@ function RouterListItem({
           path={icon}
           className={tw(
             isActive
-              ? 'text-slate-300'
-              : 'text-slate-500 group-hover:text-slate-300',
-            'mr-2 flex-shrink-0 h-5 w-5',
+              ? "text-slate-300"
+              : "text-slate-500 group-hover:text-slate-300",
+            "mr-2 flex-shrink-0 h-5 w-5",
             iconTintColor,
           )}
           aria-hidden="true"
@@ -93,7 +93,7 @@ function RouterListItem({
 
 export const Sidebar = memo(({ className }) => {
   const { data, isLoading } = useQuery(
-    ['sidebarPlaylists'],
+    ["sidebarPlaylists"],
     async function playlistsQuery() {
       const playlists = await trpc.user.playlists.query();
 

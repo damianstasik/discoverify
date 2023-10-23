@@ -1,10 +1,10 @@
-import { Combobox } from '@headlessui/react';
-import { Icon } from './Icon';
-import { mdiMenuDown } from '@mdi/js';
-import { tw } from '../tw';
+import { Combobox } from "@headlessui/react";
+import { mdiMenuDown } from "@mdi/js";
+import { tw } from "../tw";
+import { Icon } from "./Icon";
 
 interface Item {
-  type: 'artist' | 'track' | 'genre';
+  type: "artist" | "track" | "genre";
   id: string;
   label: string;
   [key: string]: any;
@@ -12,13 +12,13 @@ interface Item {
 
 const Option = ({ item }: { item: Item }) => {
   switch (item.type) {
-    case 'track':
+    case "track":
       return (
         <Combobox.Option
           className={({ active }) =>
             tw(
-              'text-white px-3 py-2 flex items-center gap-3 cursor-pointer',
-              active && 'bg-slate-500/50',
+              "text-white px-3 py-2 flex items-center gap-3 cursor-pointer",
+              active && "bg-slate-500/50",
             )
           }
           value={item}
@@ -27,18 +27,18 @@ const Option = ({ item }: { item: Item }) => {
           <div className="flex flex-col">
             <p>{item.name}</p>
             <p className="text-xs text-slate-300">
-              {item.artists.map((artist: any) => artist.name).join(', ')}
+              {item.artists.map((artist: any) => artist.name).join(", ")}
             </p>
           </div>
         </Combobox.Option>
       );
-    case 'genre':
+    case "genre":
       return (
         <Combobox.Option
           className={({ active }) =>
             tw(
-              'text-white px-3 py-2 flex items-center gap-3 cursor-pointer',
-              active && 'bg-slate-500/50',
+              "text-white px-3 py-2 flex items-center gap-3 cursor-pointer",
+              active && "bg-slate-500/50",
             )
           }
           value={item}
@@ -46,13 +46,13 @@ const Option = ({ item }: { item: Item }) => {
           {item.label}
         </Combobox.Option>
       );
-    case 'artist':
+    case "artist":
       return (
         <Combobox.Option
           className={({ active }) =>
             tw(
-              'text-white px-3 py-2 flex items-center gap-3 cursor-pointer',
-              active && 'bg-slate-500/50',
+              "text-white px-3 py-2 flex items-center gap-3 cursor-pointer",
+              active && "bg-slate-500/50",
             )
           }
           value={item}
@@ -65,9 +65,9 @@ const Option = ({ item }: { item: Item }) => {
 };
 
 const groups = {
-  genre: 'Genres',
-  track: 'Tracks',
-  artist: 'Artists',
+  genre: "Genres",
+  track: "Tracks",
+  artist: "Artists",
 } as const;
 
 interface Props {
@@ -101,11 +101,11 @@ export function EntityAutocomplete({
 
   return (
     <Combobox onChange={onSelection}>
-      <div className={tw('relative z-10', className)}>
+      <div className={tw("relative z-10", className)}>
         <div className="relative w-full overflow-hidden rounded-lg border border-slate-600 bg-slate-950 text-left focus:outline-none">
           <Combobox.Input
             className="w-full border-none bg-transparent py-2 pl-3 pr-10 text-sm/5 placeholder-slate-450 text-white focus:ring-0"
-            displayValue={(person) => ''}
+            displayValue={(person) => ""}
             onChange={(event) => onQueryChange(event.target.value)}
             placeholder="Search by tracks, artists or genres..."
           />
@@ -118,7 +118,7 @@ export function EntityAutocomplete({
           </Combobox.Button>
         </div>
         <Combobox.Options className="absolute mt-1 max-h-96 w-full overflow-auto rounded-md bg-slate-500/50 backdrop-blur-lg text-sm focus:outline-none">
-          {seeds.length === 0 && query !== '' ? (
+          {seeds.length === 0 && query !== "" ? (
             <div className="relative  select-none py-2 px-4 text-white">
               Nothing found.
             </div>

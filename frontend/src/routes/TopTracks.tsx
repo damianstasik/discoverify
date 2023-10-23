@@ -1,29 +1,29 @@
-import { useMemo, useState } from 'react';
-import { useInfiniteQuery } from '@tanstack/react-query';
-import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
-import { ArtistsColumn } from '../components/ArtistsColumn';
-import { TrackNameColumn } from '../components/TrackNameColumn';
-import { VirtualTable } from '../components/VirtualTable';
-import { createColumnHelper } from '@tanstack/react-table';
-import { RouterOutput, trpc } from '../trpc';
-import { usePlayPauseTrackHook } from '../hooks/usePlayPauseTrackHook';
-import { CheckboxColumn } from '../components/CheckboxColumn';
-import { AlbumColumn } from '../components/AlbumColumn';
-import { DurationColumn } from '../components/DurationColumn';
-import { SaveColumn } from '../components/SaveColumn';
-import { SpotifyLinkColumn } from '../components/SpotifyLinkColumn';
-import { RadioGroup } from '@headlessui/react';
-import { mdiCheck } from '@mdi/js';
-import { Icon } from '../components/Icon';
+import { RadioGroup } from "@headlessui/react";
+import { mdiCheck } from "@mdi/js";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { createColumnHelper } from "@tanstack/react-table";
+import { useMemo, useState } from "react";
+import { AlbumColumn } from "../components/AlbumColumn";
+import { ArtistsColumn } from "../components/ArtistsColumn";
+import { CheckboxColumn } from "../components/CheckboxColumn";
+import { DurationColumn } from "../components/DurationColumn";
+import { Icon } from "../components/Icon";
+import { SaveColumn } from "../components/SaveColumn";
+import { SpotifyLinkColumn } from "../components/SpotifyLinkColumn";
+import { TrackNameColumn } from "../components/TrackNameColumn";
+import { TrackPreviewColumn } from "../components/TrackPreviewColumn";
+import { VirtualTable } from "../components/VirtualTable";
+import { usePlayPauseTrackHook } from "../hooks/usePlayPauseTrackHook";
+import { RouterOutput, trpc } from "../trpc";
 
-type TrackType = RouterOutput['track']['top']['tracks'][number];
+type TrackType = RouterOutput["track"]["top"]["tracks"][number];
 
 const columnHelper = createColumnHelper<TrackType>();
 
 const columns = [
   columnHelper.display({
     size: 40,
-    id: 'select',
+    id: "select",
     header: ({ table }) => (
       <CheckboxColumn
         {...{
@@ -43,43 +43,43 @@ const columns = [
       />
     ),
   }),
-  columnHelper.accessor('uri', {
-    header: '',
-    id: 'preview',
+  columnHelper.accessor("uri", {
+    header: "",
+    id: "preview",
     size: 50,
     cell: TrackPreviewColumn,
   }),
-  columnHelper.accessor('name', {
-    header: 'Name',
+  columnHelper.accessor("name", {
+    header: "Name",
     minSize: 200,
     cell: TrackNameColumn,
     size: 0.4,
   }),
-  columnHelper.accessor('artists', {
-    header: 'Artist(s)',
+  columnHelper.accessor("artists", {
+    header: "Artist(s)",
     cell: ArtistsColumn,
     minSize: 200,
     size: 0.3,
   }),
-  columnHelper.accessor('album', {
-    header: 'Album',
+  columnHelper.accessor("album", {
+    header: "Album",
     cell: AlbumColumn,
     minSize: 200,
     size: 0.3,
   }),
-  columnHelper.accessor('duration_ms', {
-    header: 'Duration',
+  columnHelper.accessor("duration_ms", {
+    header: "Duration",
     cell: DurationColumn,
     size: 80,
   }),
-  columnHelper.accessor('isLiked', {
-    header: '',
+  columnHelper.accessor("isLiked", {
+    header: "",
     size: 40,
     cell: SaveColumn,
   }),
-  columnHelper.accessor('uri', {
-    id: 'open',
-    header: '',
+  columnHelper.accessor("uri", {
+    id: "open",
+    header: "",
     size: 50,
     cell: SpotifyLinkColumn,
   }),
@@ -106,10 +106,10 @@ function TimeRangeOption({
 }
 
 export function TopTracks() {
-  const [timeRange, setTimeRange] = useState('short_term');
+  const [timeRange, setTimeRange] = useState("short_term");
 
   const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery(
-    ['top-tracks', timeRange],
+    ["top-tracks", timeRange],
     async function topTracksQuery({ pageParam = 1 }) {
       return trpc.track.top.query({
         timeRange,

@@ -1,14 +1,14 @@
-import { StrictMode, Suspense } from 'react';
-import { BrowserRouter } from 'react-router-dom';
-import { createRoot } from 'react-dom/client';
-import { RecoilRoot } from 'recoil';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { SnackbarProvider } from 'notistack';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { Router } from './Router';
-import { EventBusProvider } from './components/EventBus';
-import { CircularProgress } from './components/CircularProgress';
-import './index.css';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { SnackbarProvider } from "notistack";
+import { StrictMode, Suspense } from "react";
+import { createRoot } from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
+import { RecoilRoot } from "recoil";
+import { Router } from "./Router";
+import { CircularProgress } from "./components/CircularProgress";
+import { EventBusProvider } from "./components/EventBus";
+import "./index.css";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -38,7 +38,7 @@ function SuspensedApp() {
   );
 }
 
-const root = createRoot(document.getElementById('root')!);
+const root = createRoot(document.getElementById("root")!);
 
 root.render(
   <StrictMode>

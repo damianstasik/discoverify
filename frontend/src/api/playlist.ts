@@ -1,6 +1,6 @@
-import { trpc } from '../trpc';
+import { trpc } from "../trpc";
 
-export const getPlaylists: Query<'user.playlists', [key: string]> = async ({
+export const getPlaylists: Query<"user.playlists", [key: string]> = async ({
   pageParam = 1,
   signal,
 }) => {

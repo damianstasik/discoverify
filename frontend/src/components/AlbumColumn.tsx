@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom';
-import { CellContext } from '@tanstack/react-table';
+import { CellContext } from "@tanstack/react-table";
+import { Link } from "react-router-dom";
 
 interface Album {
   id: string;

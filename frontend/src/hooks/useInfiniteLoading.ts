@@ -1,5 +1,5 @@
-import { useCallback, MouseEvent } from 'react';
-import { useDebouncedCallback } from 'use-debounce';
+import { MouseEvent, useCallback } from "react";
+import { useDebouncedCallback } from "use-debounce";
 
 interface Props {
   fetchNextPage: () => void;

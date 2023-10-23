@@ -1,9 +1,9 @@
-import { ee, router } from '..';
-import { getSpotifyApi } from '../spotify';
-import { procedureWithAuthToken } from '../auth/middleware';
-import { z } from 'zod';
-import chunk from 'lodash/chunk';
-import { mixpanel } from '../mixpanel';
+import chunk from "lodash/chunk";
+import { z } from "zod";
+import { ee, router } from "..";
+import { procedureWithAuthToken } from "../auth/middleware";
+import { mixpanel } from "../mixpanel";
+import { getSpotifyApi } from "../spotify";
 
 export const trackRouter = router({
   byAlbumId: procedureWithAuthToken
@@ -19,10 +19,10 @@ export const trackRouter = router({
       const res = await spotifyApi.getAlbumTracks(req.input.albumId, {
         limit: 50,
         offset: req.input.page === 1 ? 0 : req.input.page * 50,
-        market: 'from_token',
+        market: "from_token",
       });
 
-      mixpanel.track('get_album_tracks', {
+      mixpanel.track("get_album_tracks", {
         distinct_id: req.ctx.token.userId,
         album_id: req.input.albumId,
         page: req.input.page,
@@ -51,7 +51,7 @@ export const trackRouter = router({
         // offset: req.input.page === 1 ? 0 : req.input.page * 50,
       });
 
-      mixpanel.track('get_recently_played_tracks', {
+      mixpanel.track("get_recently_played_tracks", {
         distinct_id: req.ctx.token.userId,
       });
 
@@ -69,7 +69,7 @@ export const trackRouter = router({
     .input(
       z.object({
         page: z.number(),
-        timeRange: z.enum(['short_term', 'medium_term', 'long_term']),
+        timeRange: z.enum(["short_term", "medium_term", "long_term"]),
       }),
     )
     .query(async (req) => {
@@ -81,7 +81,7 @@ export const trackRouter = router({
         time_range: req.input.timeRange,
       });
 
-      mixpanel.track('get_top_tracks', {
+      mixpanel.track("get_top_tracks", {
         distinct_id: req.ctx.token.userId,
         time_range: req.input.timeRange,
         page: req.input.page,
@@ -103,7 +103,7 @@ export const trackRouter = router({
 
     ee.emit(`save:${req.ctx.token.userId}`, req.input);
 
-    mixpanel.track('save_track', {
+    mixpanel.track("save_track", {
       distinct_id: req.ctx.token.userId,
       uri: req.input,
     });
@@ -115,7 +115,7 @@ export const trackRouter = router({
 
     ee.emit(`unsave:${req.ctx.token.userId}`, req.input);
 
-    mixpanel.track('unsave_track', {
+    mixpanel.track("unsave_track", {
       distinct_id: req.ctx.token.userId,
       uri: req.input,
     });
@@ -125,7 +125,7 @@ export const trackRouter = router({
       device_id: req.input,
     });
 
-    mixpanel.track('pause_track', {
+    mixpanel.track("pause_track", {
       distinct_id: req.ctx.token.userId,
       uri: req.input,
     });
@@ -145,7 +145,7 @@ export const trackRouter = router({
         offset: { uri: req.input.offset },
       });
 
-      mixpanel.track('play_track', {
+      mixpanel.track("play_track", {
         distinct_id: req.ctx.token.userId,
         deviceId: req.input.deviceId,
         trackIds: req.input.trackIds,
@@ -158,11 +158,11 @@ export const trackRouter = router({
       const res = await getSpotifyApi(req.ctx.token.accessToken).getTracks(
         req.input,
         {
-          market: 'from_token',
+          market: "from_token",
         },
       );
 
-      mixpanel.track('get_tracks_by_id', {
+      mixpanel.track("get_tracks_by_id", {
         distinct_id: req.ctx.token.userId,
         track_ids: req.input,
       });
@@ -300,7 +300,7 @@ export const trackRouter = router({
         seed_tracks: req.input.trackIds,
         seed_artists: req.input.artistIds,
 
-        market: 'from_token',
+        market: "from_token",
       });
 
       const ids = songs.body.tracks.map((tr) => tr.id);
@@ -317,7 +317,7 @@ export const trackRouter = router({
         });
       }
 
-      mixpanel.track('get_recommendations', {
+      mixpanel.track("get_recommendations", {
         distinct_id: req.ctx.token.userId,
         attributes,
         trackIds: req.input.trackIds,
@@ -352,10 +352,10 @@ export const trackRouter = router({
       const tracks = await spotifyApi.getMySavedTracks({
         limit: 50,
         offset: req.input.page === 1 ? 0 : req.input.page * 50,
-        market: 'from_token',
+        market: "from_token",
       });
 
-      mixpanel.track('get_saved_tracks', {
+      mixpanel.track("get_saved_tracks", {
         distinct_id: req.ctx.token.userId,
         page: req.input.page,
       });

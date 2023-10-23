@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { produce } from 'immer';
+import { produce } from "immer";
+import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 export function useAttributes(config: Record<string, any>) {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -24,7 +24,7 @@ export function useAttributes(config: Record<string, any>) {
       }
 
       return acc;
-    }, {})
+    }, {}),
   );
 
   return {
@@ -66,7 +66,7 @@ export function useAttributes(config: Record<string, any>) {
               } else {
                 delete draft[targetKey];
               }
-            })
+            }),
           );
 
           const q = new URLSearchParams(searchParams);

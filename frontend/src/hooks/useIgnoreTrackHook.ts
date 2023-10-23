@@ -2,13 +2,13 @@ import {
   InfiniteData,
   useMutation,
   useQueryClient,
-} from '@tanstack/react-query';
-import { produce } from 'immer';
-import { useCallback, useEffect } from 'react';
-import { useRecoilValue } from 'recoil';
-import { ignoreTrack } from '../api';
-import { useEventBus } from '../components/EventBus';
-import { tokenState } from '../store';
+} from "@tanstack/react-query";
+import { produce } from "immer";
+import { useCallback, useEffect } from "react";
+import { useRecoilValue } from "recoil";
+import { ignoreTrack } from "../api";
+import { useEventBus } from "../components/EventBus";
+import { tokenState } from "../store";
 
 export function useIgnoreTrackHook() {
   const queryClient = useQueryClient();
@@ -18,7 +18,7 @@ export function useIgnoreTrackHook() {
   const { mutate } = useMutation(ignoreTrack, {
     onSuccess(_, { id, isIgnored }) {
       queryClient.setQueryData<InfiniteData<any>>(
-        ['liked', token],
+        ["liked", token],
         produce((draft) => {
           if (!draft) return;
 
@@ -47,10 +47,10 @@ export function useIgnoreTrackHook() {
   );
 
   useEffect(() => {
-    eventBus.on('ignoreTrack', ignore);
+    eventBus.on("ignoreTrack", ignore);
 
     return () => {
-      eventBus.off('ignoreTrack', ignore);
+      eventBus.off("ignoreTrack", ignore);
     };
   }, [ignore]);
 }

@@ -1,11 +1,11 @@
-import { inferAsyncReturnType } from '@trpc/server';
-import { CreateFastifyContextOptions } from '@trpc/server/adapters/fastify';
-import { parse } from 'cookie';
+import { inferAsyncReturnType } from "@trpc/server";
+import { CreateFastifyContextOptions } from "@trpc/server/adapters/fastify";
+import { parse } from "cookie";
 
 export async function createContext({ req, res }: CreateFastifyContextOptions) {
-  const cookie = req.headers['cookie'];
+  const cookie = req.headers.cookie;
 
-  const parsedCookie = parse(cookie || '');
+  const parsedCookie = parse(cookie || "");
 
   if (parsedCookie?.token) {
     return {

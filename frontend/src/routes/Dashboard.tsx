@@ -1,10 +1,10 @@
-import { useQuery } from '@tanstack/react-query';
-import { Link } from 'react-router-dom';
-import { mdiPauseCircle, mdiPlayCircle } from '@mdi/js';
-import { trpc } from '../trpc';
-import { Button } from '../components/Button';
-import { IconButton } from '../components/IconButton';
-import { tw } from '../tw';
+import { mdiPauseCircle, mdiPlayCircle } from "@mdi/js";
+import { useQuery } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
+import { Button } from "../components/Button";
+import { IconButton } from "../components/IconButton";
+import { trpc } from "../trpc";
+import { tw } from "../tw";
 
 function CardWithLink({ title, children, linkTo, isLoading, linkLabel }) {
   return (
@@ -34,7 +34,7 @@ function Track({ track }) {
   return (
     <div className="flex gap-2 items-center">
       <div>
-        <IconButton label="Play" icon={mdiPlayCircle} className='text-white' />
+        <IconButton label="Play" icon={mdiPlayCircle} className="text-white" />
       </div>
       <div className="flex gap-1 w-full flex-col">
         <Link
@@ -111,13 +111,13 @@ function findImageUrlByMinWidth(images: any[], width: number) {
 
 function Card({ children, className }) {
   return (
-    <div className={tw('px-3 py-2 bg-slate-700 rounded-md', className)}>
+    <div className={tw("px-3 py-2 bg-slate-700 rounded-md", className)}>
       {children}
     </div>
   );
 }
 
-const statsQuery: Query<'user.stats', [key: string]> = async ({ signal }) => {
+const statsQuery: Query<"user.stats", [key: string]> = async ({ signal }) => {
   const stats = await trpc.user.stats.query(undefined, {
     signal,
   });
@@ -126,7 +126,7 @@ const statsQuery: Query<'user.stats', [key: string]> = async ({ signal }) => {
 };
 
 export default function Dashboard() {
-  const { data, isLoading } = useQuery(['stats'], statsQuery);
+  const { data, isLoading } = useQuery(["stats"], statsQuery);
 
   return (
     <div className="p-3 grid gap-4 grid-cols-3">
@@ -138,7 +138,7 @@ export default function Dashboard() {
           {isLoading ? (
             <div className="animate-pulse h-em w-16 bg-slate-500 rounded-md" />
           ) : (
-            data?.likedTracksSpotify ?? 'N/A'
+            data?.likedTracksSpotify ?? "N/A"
           )}
         </h6>
         <p className="text-slate-300 text-base">on Spotify</p>
@@ -162,7 +162,7 @@ export default function Dashboard() {
           {isLoading ? (
             <div className="animate-pulse h-em w-16 bg-slate-500 rounded-md" />
           ) : (
-            data?.followedArtistsSpotify ?? 'N/A'
+            data?.followedArtistsSpotify ?? "N/A"
           )}
         </h6>
         <p className="text-slate-300 text-base">on Spotify</p>

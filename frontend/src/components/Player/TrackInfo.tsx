@@ -1,5 +1,5 @@
-import { memo } from 'react';
-import { Link } from 'react-router-dom';
+import { memo } from "react";
+import { Link } from "react-router-dom";
 
 interface Props {
   name: string | undefined;
@@ -30,7 +30,7 @@ export const TrackInfo = memo(({ name, artists, imageUrl }: Props) => {
           {artists?.map((artist, index) => (
             <div key={artist.id}>
               <ArtistLink
-                id={artist.uri.replace('spotify:artist:', '')}
+                id={artist.uri.replace("spotify:artist:", "")}
                 name={artist.name}
                 key={artist.uri}
               />

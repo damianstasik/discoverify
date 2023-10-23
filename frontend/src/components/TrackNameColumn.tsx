@@ -1,5 +1,5 @@
-import { CellContext } from '@tanstack/react-table';
-import { Link } from 'react-router-dom';
+import { CellContext } from "@tanstack/react-table";
+import { Link } from "react-router-dom";
 
 export const TrackNameColumn = <Data extends { id: string }>(
   props: CellContext<Data, string>,

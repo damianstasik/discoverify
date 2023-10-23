@@ -1,12 +1,12 @@
-import { useState } from 'react';
-import { Attribute } from '../types';
-import * as Popover from '@radix-ui/react-popover';
-import * as Slider from '@radix-ui/react-slider';
-import { mdiChevronDown, mdiClose } from '@mdi/js';
-import { Icon } from './Icon';
-import { Button } from './Button';
-import { Switch } from './Switch';
-import { tw } from '../tw';
+import { mdiChevronDown, mdiClose } from "@mdi/js";
+import * as Popover from "@radix-ui/react-popover";
+import * as Slider from "@radix-ui/react-slider";
+import { useState } from "react";
+import { tw } from "../tw";
+import { Attribute } from "../types";
+import { Button } from "./Button";
+import { Icon } from "./Icon";
+import { Switch } from "./Switch";
 
 interface Props<Value> {
   label: string;
@@ -37,14 +37,14 @@ export function RecommendationAttribute({ attr }: Props) {
           type="button"
           color={
             attr.minEnabled || attr.targetEnabled || attr.maxEnabled
-              ? 'primary'
+              ? "primary"
               : undefined
           }
           className={tw(
-            'text-sm rounded-xl border flex items-center h-6 px-2 active:bg-white/10 focus:outline-none focus:ring-2',
+            "text-sm rounded-xl border flex items-center h-6 px-2 active:bg-white/10 focus:outline-none focus:ring-2",
             attr.minEnabled || attr.targetEnabled || attr.maxEnabled
-              ? 'border-green-600 text-green-600 focus:ring-green-700'
-              : 'border-slate-500 text-slate-300 focus:ring-slate-700',
+              ? "border-green-600 text-green-600 focus:ring-green-700"
+              : "border-slate-500 text-slate-300 focus:ring-slate-700",
           )}
           onClick={() => setOpen(true)}
           aria-describedby={attr.name}
@@ -80,7 +80,7 @@ export function RecommendationAttribute({ attr }: Props) {
                 value={[minValue]}
                 min={attr.min ?? 0}
                 max={attr.max ?? 1}
-                step={typeof attr.step === 'undefined' ? 0.05 : attr.step}
+                step={typeof attr.step === "undefined" ? 0.05 : attr.step}
                 disabled={!useMin}
                 onValueChange={(v) => setMin(v[0])}
               >
@@ -109,7 +109,7 @@ export function RecommendationAttribute({ attr }: Props) {
                 value={[target]}
                 min={attr.min ?? 0}
                 max={attr.max ?? 1}
-                step={typeof attr.step === 'undefined' ? 0.05 : attr.step}
+                step={typeof attr.step === "undefined" ? 0.05 : attr.step}
                 disabled={!useTarget}
                 onValueChange={(v) => setTarget(v[0])}
               >
@@ -135,7 +135,7 @@ export function RecommendationAttribute({ attr }: Props) {
                 value={[maxValue]}
                 min={attr.min ?? 0}
                 max={attr.max ?? 1}
-                step={typeof attr.step === 'undefined' ? 0.05 : attr.step}
+                step={typeof attr.step === "undefined" ? 0.05 : attr.step}
                 disabled={!useMax}
                 onValueChange={(v) => setMax(v[0])}
               >

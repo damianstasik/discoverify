@@ -1,8 +1,8 @@
-import { router } from '..';
-import { getSpotifyApi } from '../spotify';
-import { procedureWithAuthToken } from '../auth/middleware';
-import { z } from 'zod';
-import { mixpanel } from '../mixpanel';
+import { z } from "zod";
+import { router } from "..";
+import { procedureWithAuthToken } from "../auth/middleware";
+import { mixpanel } from "../mixpanel";
+import { getSpotifyApi } from "../spotify";
 
 export const playlistRouter = router({
   tracks: procedureWithAuthToken
@@ -17,10 +17,10 @@ export const playlistRouter = router({
       const tracks = await spotifyApi.getPlaylistTracks(req.input.id, {
         limit: 50,
         offset: req.input.page === 1 ? 0 : req.input.page * 50,
-        market: 'from_token',
+        market: "from_token",
       });
 
-      mixpanel.track('get_playlist_tracks', {
+      mixpanel.track("get_playlist_tracks", {
         distinct_id: req.ctx.token.userId,
         playlist_id: req.input.id,
         page: req.input.page,
@@ -41,10 +41,10 @@ export const playlistRouter = router({
     const spotifyApi = getSpotifyApi(req.ctx.token.accessToken);
 
     const playlist = await spotifyApi.getPlaylist(req.input, {
-      market: 'from_token',
+      market: "from_token",
     });
 
-    mixpanel.track('get_playlist', {
+    mixpanel.track("get_playlist", {
       distinct_id: req.ctx.token.userId,
       playlist_id: req.input,
     });

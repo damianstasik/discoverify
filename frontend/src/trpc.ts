@@ -4,9 +4,9 @@ import {
   httpBatchLink,
   splitLink,
   wsLink,
-} from '@trpc/client';
-import { inferRouterOutputs } from '@trpc/server';
-import type { AppRouter } from 'backend';
+} from "@trpc/client";
+import { inferRouterOutputs } from "@trpc/server";
+import type { AppRouter } from "backend";
 
 const wsClient = createWSClient({
   url: import.meta.env.VITE_WS_URL,
@@ -16,7 +16,7 @@ export const trpc = createTRPCProxyClient<AppRouter>({
   links: [
     splitLink({
       condition(op) {
-        return op.type === 'subscription';
+        return op.type === "subscription";
       },
       true: wsLink({
         client: wsClient,
@@ -26,7 +26,7 @@ export const trpc = createTRPCProxyClient<AppRouter>({
         fetch(url, options) {
           return fetch(url, {
             ...options,
-            credentials: 'include',
+            credentials: "include",
           });
         },
       }),

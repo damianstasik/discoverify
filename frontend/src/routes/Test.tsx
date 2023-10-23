@@ -1,17 +1,17 @@
-import { useState, useDeferredValue } from 'react';
-import { QueryFunction, useQuery } from '@tanstack/react-query';
-import { Link, useSearchParams } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
-import { mdiSpotify } from '@mdi/js';
-import { tokenState } from '../store';
-import { PageTitle } from '../components/PageTitle';
-import { VirtualTable } from '../components/VirtualTable';
-import { IconButton } from '../components/IconButton';
+import { mdiSpotify } from "@mdi/js";
+import { QueryFunction, useQuery } from "@tanstack/react-query";
+import { useDeferredValue, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { IconButton } from "../components/IconButton";
+import { PageTitle } from "../components/PageTitle";
+import { VirtualTable } from "../components/VirtualTable";
+import { tokenState } from "../store";
 
 const columns = [
   {
-    accessorKey: 'name',
-    header: 'Name',
+    accessorKey: "name",
+    header: "Name",
     cell: (params) => (
       <Link to={`/playlist/${params.row.original.id}`}>
         {params.getValue()}
@@ -19,8 +19,8 @@ const columns = [
     ),
   },
   {
-    accessorKey: 'owner',
-    header: 'Owner',
+    accessorKey: "owner",
+    header: "Owner",
     cell: (params) => (
       <Link to={`/artist/${params.getValue().id}`}>
         {params.getValue().display_name}
@@ -28,8 +28,8 @@ const columns = [
     ),
   },
   {
-    id: 'actions',
-    header: 'Actions',
+    id: "actions",
+    header: "Actions",
     cell: (params) => (
       <IconButton
         label="Open in Spotify"
@@ -59,12 +59,12 @@ const autocompleteQuery: QueryFunction<
 export function Test() {
   const token = useRecoilValue(tokenState);
   const [searchParams, setSearchParams] = useSearchParams();
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const deferredQuery = useDeferredValue(query);
-  const q = searchParams.get('q');
+  const q = searchParams.get("q");
 
   const { data, isLoading } = useQuery(
-    ['lays', token, q],
+    ["lays", token, q],
     async ({ queryKey }) => {
       const res = await fetch(
         `${
@@ -84,7 +84,7 @@ export function Test() {
   );
 
   const { data: autosongs, isLoading: isLoadingAutocomplete } = useQuery(
-    ['search', token, deferredQuery],
+    ["search", token, deferredQuery],
     autocompleteQuery,
     {
       enabled: !!deferredQuery,

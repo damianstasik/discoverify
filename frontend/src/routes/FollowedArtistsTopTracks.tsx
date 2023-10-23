@@ -1,16 +1,16 @@
-import { memo, useMemo, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
-import { useInfiniteQuery, useMutation } from '@tanstack/react-query';
-import { mdiSpotify } from '@mdi/js';
-import { tokenState } from '../store';
-import * as trackApi from '../api/track';
-import * as artistApi from '../api/artist';
-import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
-import { ArtistsColumn } from '../components/ArtistsColumn';
-import { TrackNameColumn } from '../components/TrackNameColumn';
-import { VirtualTable } from '../components/VirtualTable';
-import { IconButton } from '../components/IconButton';
+import { mdiSpotify } from "@mdi/js";
+import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
+import { memo, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import * as artistApi from "../api/artist";
+import * as trackApi from "../api/track";
+import { ArtistsColumn } from "../components/ArtistsColumn";
+import { IconButton } from "../components/IconButton";
+import { TrackNameColumn } from "../components/TrackNameColumn";
+import { TrackPreviewColumn } from "../components/TrackPreviewColumn";
+import { VirtualTable } from "../components/VirtualTable";
+import { tokenState } from "../store";
 
 const OpenInSpotify = memo(({ row }) => {
   return (
@@ -25,24 +25,24 @@ const OpenInSpotify = memo(({ row }) => {
 
 const columns = [
   {
-    accessorKey: 'uri',
-    header: '',
+    accessorKey: "uri",
+    header: "",
     size: 50,
     cell: TrackPreviewColumn,
   },
   {
-    accessorKey: 'name',
-    header: 'Name',
+    accessorKey: "name",
+    header: "Name",
     cell: TrackNameColumn,
   },
   {
-    accessorKey: 'artists',
-    header: 'Artist(s)',
+    accessorKey: "artists",
+    header: "Artist(s)",
     cell: ArtistsColumn,
   },
   {
-    id: 'actions',
-    header: 'Actions',
+    id: "actions",
+    header: "Actions",
     cell: (params) => (
       <>
         <OpenInSpotify row={params.row.original} />
@@ -54,18 +54,18 @@ const columns = [
 export function FollowedArtistsTopTracks() {
   const token = useRecoilValue(tokenState);
   const [searchParams] = useSearchParams();
-  const genre = searchParams.get('genre');
+  const genre = searchParams.get("genre");
 
   const { mutateAsync: saveTrack } = useMutation<void, Error, string>(
     async (id) => trackApi.saveTrack(token, id),
   );
 
   const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery(
-    ['top-tracks', genre],
+    ["top-tracks", genre],
     async function followedArtistsTopTracksQuery({ pageParam = 0 }) {
       return artistApi.getFollowedArtistsTopTracks(
         token,
-        searchParams.get('genre'),
+        searchParams.get("genre"),
         pageParam,
       );
     },
@@ -75,7 +75,7 @@ export function FollowedArtistsTopTracks() {
   );
 
   const rows = useMemo(
-    () => (data?.pages || []).map((page) => page.tracks).flat(),
+    () => (data?.pages || []).flatMap((page) => page.tracks),
     [data],
   );
 

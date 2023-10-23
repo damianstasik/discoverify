@@ -1,4 +1,4 @@
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable } from "mobx";
 
 class Player {
   loadingTrackId: string | null = null;
