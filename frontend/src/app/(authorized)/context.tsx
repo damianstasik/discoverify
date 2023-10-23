@@ -1,5 +1,5 @@
 "use client";
-import { createContext } from "react";
+import { createContext, ReactNode } from "react";
 
 export const TokenContext = createContext<string | null>(null);
 
@@ -7,7 +7,7 @@ export const TokenProvider = ({
   children,
   token,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
   token: string;
 }) => {
   return (

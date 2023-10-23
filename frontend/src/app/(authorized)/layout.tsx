@@ -3,6 +3,7 @@ import { Player } from "../../components/Player";
 import { Sidebar } from "../../components/Sidebar";
 import { getTokenFromCookie } from "../user";
 import { TokenProvider } from "./context";
+import { ReactNode } from "react";
 
 async function getCurrentUser() {
   const token = await getTokenFromCookie();
@@ -33,7 +34,11 @@ async function getCurrentUser() {
   };
 }
 
-export default async function Layout({ children }) {
+export default async function Layout({
+  children,
+}: {
+  children: ReactNode;
+}) {
   const user = await getCurrentUser();
 
   if (!user) {
