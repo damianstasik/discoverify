@@ -1,4 +1,4 @@
-import { redirect } from "next/navigation";
+import { RedirectType, redirect } from "next/navigation";
 import { Player } from "../../components/Player";
 import { Sidebar } from "../../components/Sidebar";
 import { getTokenFromCookie } from "../user";
@@ -20,7 +20,7 @@ async function getCurrentUser() {
     return null;
   }
 
-  const body = await res.json();
+  const body = (await res.json()) as SpotifyApi.CurrentUsersProfileResponse;
 
   const { email, display_name: displayName, id, images } = body;
 
@@ -37,7 +37,7 @@ export default async function Layout({ children }) {
   const user = await getCurrentUser();
 
   if (!user) {
-    return <div to="/login" state={location} replace />;
+    redirect("/login", RedirectType.replace);
   }
 
   return (
@@ -48,16 +48,11 @@ export default async function Layout({ children }) {
         </aside>
 
         <main className="bg-slate-900 flex flex-col flex-1">
-          <div
-            className="flex flex-col relative overflow-hidden"
-            style={{
-              height: "calc(100% - 100px)",
-            }}
-          >
+          <div className="flex flex-col relative overflow-hidden h-[calc(100%-theme(spacing.28))]">
             {children}
           </div>
 
-          <div style={{ height: "100px" }} className="mt-auto">
+          <div className="mt-auto h-28">
             <Player />
           </div>
         </main>
