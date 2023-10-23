@@ -1,38 +1,38 @@
-import { useState, useMemo } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { useQueries } from '@tanstack/react-query';
-import { useDebounce } from 'use-debounce';
-import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
-import { TrackNameColumn } from '../components/TrackNameColumn';
-import { getRecommendedTracks, getTracks, seedSearch } from '../api';
-import { TrackChip } from '../components/TrackChip';
-import { EntityAutocomplete } from '../components/EntityAutocomplete';
-import { TrackChipSkeleton } from '../components/TrackChipSkeleton';
-import { useAttributes } from '../hooks/useAttributes';
-import { attributes as attributesConfig } from '../config/attributes';
-import { usePlayPauseTrackHook } from '../hooks/usePlayPauseTrackHook';
-import { VirtualTable } from '../components/VirtualTable';
-import { createColumnHelper } from '@tanstack/react-table';
-import { RouterOutput } from '../trpc';
-import { DurationColumn } from '../components/DurationColumn';
-import { CheckboxColumn } from '../components/CheckboxColumn';
-import { SpotifyLinkColumn } from '../components/SpotifyLinkColumn';
-import { SaveColumn } from '../components/SaveColumn';
-import { RecommendationAttribute } from '../components/RecommendationAttribute';
-import { ArtistsColumn } from '../components/ArtistsColumn';
-import { getArtists } from '../api/artist';
-import { ArtistChip } from '../components/ArtistChip';
-import { ArtistChipSkeleton } from '../components/ArtistChipSkeleton';
-import { AlbumColumn } from '../components/AlbumColumn';
+import { useQueries } from "@tanstack/react-query";
+import { createColumnHelper } from "@tanstack/react-table";
+import { useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import { useDebounce } from "use-debounce";
+import { getRecommendedTracks, getTracks, seedSearch } from "../api";
+import { getArtists } from "../api/artist";
+import { AlbumColumn } from "../components/AlbumColumn";
+import { ArtistChip } from "../components/ArtistChip";
+import { ArtistChipSkeleton } from "../components/ArtistChipSkeleton";
+import { ArtistsColumn } from "../components/ArtistsColumn";
+import { CheckboxColumn } from "../components/CheckboxColumn";
+import { DurationColumn } from "../components/DurationColumn";
+import { EntityAutocomplete } from "../components/EntityAutocomplete";
+import { RecommendationAttribute } from "../components/RecommendationAttribute";
+import { SaveColumn } from "../components/SaveColumn";
+import { SpotifyLinkColumn } from "../components/SpotifyLinkColumn";
+import { TrackChip } from "../components/TrackChip";
+import { TrackChipSkeleton } from "../components/TrackChipSkeleton";
+import { TrackNameColumn } from "../components/TrackNameColumn";
+import { TrackPreviewColumn } from "../components/TrackPreviewColumn";
+import { VirtualTable } from "../components/VirtualTable";
+import { attributes as attributesConfig } from "../config/attributes";
+import { useAttributes } from "../hooks/useAttributes";
+import { usePlayPauseTrackHook } from "../hooks/usePlayPauseTrackHook";
+import { RouterOutput } from "../trpc";
 
-type TrackType = RouterOutput['track']['recommended'][number];
+type TrackType = RouterOutput["track"]["recommended"][number];
 
 const columnHelper = createColumnHelper<TrackType>();
 
 const columns = [
   columnHelper.display({
     size: 40,
-    id: 'select',
+    id: "select",
     header: ({ table }) => (
       <CheckboxColumn
         {...{
@@ -52,43 +52,43 @@ const columns = [
       />
     ),
   }),
-  columnHelper.accessor('uri', {
-    header: '',
-    id: 'preview',
+  columnHelper.accessor("uri", {
+    header: "",
+    id: "preview",
     size: 50,
     cell: TrackPreviewColumn,
   }),
-  columnHelper.accessor('name', {
-    header: 'Name',
+  columnHelper.accessor("name", {
+    header: "Name",
     minSize: 200,
     size: 0.4,
     cell: TrackNameColumn,
   }),
-  columnHelper.accessor('artists', {
-    header: 'Artist(s)',
+  columnHelper.accessor("artists", {
+    header: "Artist(s)",
     cell: ArtistsColumn,
     minSize: 200,
     size: 0.3,
   }),
-  columnHelper.accessor('album', {
-    header: 'Album',
+  columnHelper.accessor("album", {
+    header: "Album",
     cell: AlbumColumn,
     minSize: 200,
     size: 0.3,
   }),
-  columnHelper.accessor('duration', {
-    header: 'Duration',
+  columnHelper.accessor("duration", {
+    header: "Duration",
     cell: DurationColumn,
     size: 80,
   }),
-  columnHelper.accessor('isLiked', {
-    header: '',
+  columnHelper.accessor("isLiked", {
+    header: "",
     size: 40,
     cell: SaveColumn,
   }),
-  columnHelper.accessor('uri', {
-    id: 'open',
-    header: '',
+  columnHelper.accessor("uri", {
+    id: "open",
+    header: "",
     size: 50,
     cell: SpotifyLinkColumn,
   }),
@@ -113,34 +113,34 @@ const deleteWithKeyAndValue = function (key: string, value: string) {
 
 export function Recommendations() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const [debouncedQuery] = useDebounce(query, 500);
 
   const { attributes, values } = useAttributes(attributesConfig);
 
-  const trackIds = searchParams.getAll('trackId');
-  const artistIds = searchParams.getAll('artistId');
-  const genreIds = searchParams.getAll('genres');
+  const trackIds = searchParams.getAll("trackId");
+  const artistIds = searchParams.getAll("artistId");
+  const genreIds = searchParams.getAll("genres");
 
   const [recommended, tracks, artists, search] = useQueries({
     queries: [
       {
-        queryKey: ['recommendedTracks', trackIds, artistIds, values],
+        queryKey: ["recommendedTracks", trackIds, artistIds, values],
         queryFn: getRecommendedTracks,
         enabled: trackIds.length > 0 || artistIds.length > 0,
       },
       {
-        queryKey: ['tracks', trackIds],
+        queryKey: ["tracks", trackIds],
         queryFn: getTracks,
         enabled: trackIds.length > 0,
       },
       {
-        queryKey: ['artists', artistIds],
+        queryKey: ["artists", artistIds],
         queryFn: getArtists,
         enabled: artistIds.length > 0,
       },
       {
-        queryKey: ['seedSearch', debouncedQuery],
+        queryKey: ["seedSearch", debouncedQuery],
         queryFn: seedSearch,
         enabled: !!debouncedQuery,
       },
@@ -157,9 +157,9 @@ export function Recommendations() {
   // useIgnoreTrackHook();
 
   const seeds = [
-    ...trackIds.map((id) => ({ type: 'track', id })),
-    ...artistIds.map((id) => ({ type: 'artist', id })),
-    ...genreIds.map((id) => ({ type: 'genre', id })),
+    ...trackIds.map((id) => ({ type: "track", id })),
+    ...artistIds.map((id) => ({ type: "artist", id })),
+    ...genreIds.map((id) => ({ type: "genre", id })),
   ];
 
   return (
@@ -174,14 +174,14 @@ export function Recommendations() {
           onSelection={(b) => {
             setSearchParams((q) => {
               switch (b.type) {
-                case 'track':
-                  q.append('trackId', b.id);
+                case "track":
+                  q.append("trackId", b.id);
                   break;
-                case 'artist':
-                  q.append('artistId', b.id);
+                case "artist":
+                  q.append("artistId", b.id);
                   break;
-                case 'genre':
-                  q.append('genreId', b.id);
+                case "genre":
+                  q.append("genreId", b.id);
                   break;
               }
               return q;
@@ -219,7 +219,7 @@ export function Recommendations() {
                       imageUrl={track.album.images[0].url}
                       onRemove={() => {
                         setSearchParams(
-                          deleteWithKeyAndValue('trackId', track.id),
+                          deleteWithKeyAndValue("trackId", track.id),
                         );
                       }}
                     />
@@ -235,7 +235,7 @@ export function Recommendations() {
                       imageUrl={artist.images[0].url}
                       onRemove={() => {
                         setSearchParams(
-                          deleteWithKeyAndValue('artistId', artist.id),
+                          deleteWithKeyAndValue("artistId", artist.id),
                         );
                       }}
                     />

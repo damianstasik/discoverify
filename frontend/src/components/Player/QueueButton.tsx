@@ -1,8 +1,8 @@
-import * as Popover from '@radix-ui/react-popover';
-import { IconButton } from '../IconButton';
-import { mdiClose, mdiPlaylistMusicOutline } from '@mdi/js';
-import { Link } from 'react-router-dom';
-import { Icon } from '../Icon';
+import { mdiClose, mdiPlaylistMusicOutline } from "@mdi/js";
+import * as Popover from "@radix-ui/react-popover";
+import { Link } from "react-router-dom";
+import { Icon } from "../Icon";
+import { IconButton } from "../IconButton";
 
 function ArtistLink({ id, name }) {
   return (
@@ -30,7 +30,7 @@ export function QueueButton({ queue, isOpen, onVisibilityChange }) {
           sideOffset={5}
           collisionPadding={10}
         >
-          <ul role="list" className="flex flex-col gap-2">
+          <ul className="flex flex-col gap-2">
             {(queue || []).map((track) => (
               <li key={track.id} className="flex items-center">
                 <img

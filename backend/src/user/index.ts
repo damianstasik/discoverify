@@ -1,12 +1,12 @@
-import { ee, router } from '..';
-import { getSpotifyApi } from '../spotify';
-import { procedureWithAuthToken } from '../auth/middleware';
-import { z } from 'zod';
-import { observable } from '@trpc/server/observable';
-import { mixpanel } from '../mixpanel';
+import { observable } from "@trpc/server/observable";
+import { z } from "zod";
+import { ee, router } from "..";
+import { procedureWithAuthToken } from "../auth/middleware";
+import { mixpanel } from "../mixpanel";
+import { getSpotifyApi } from "../spotify";
 
 type TrackSaveChange = {
-  type: 'save' | 'unsave';
+  type: "save" | "unsave";
   id: string;
 };
 
@@ -14,11 +14,11 @@ export const userRouter = router({
   onTrackSave: procedureWithAuthToken.subscription(async (req) => {
     return observable<TrackSaveChange>((emit) => {
       const onSave = (id: string) => {
-        emit.next({ type: 'save', id });
+        emit.next({ type: "save", id });
       };
 
       const onUnsave = (id: string) => {
-        emit.next({ type: 'unsave', id });
+        emit.next({ type: "unsave", id });
       };
 
       const { userId } = req.ctx.token;
@@ -53,7 +53,7 @@ export const userRouter = router({
         offset: req.input.page === 1 ? 0 : req.input.page * 50,
       });
 
-      mixpanel.track('get_playlists', {
+      mixpanel.track("get_playlists", {
         distinct_id: req.ctx.token.userId,
         page: req.input.page,
         per_page: req.input.perPage,
@@ -78,41 +78,41 @@ export const userRouter = router({
         limit: 1,
       }),
       spotifyApi.getMyTopArtists({
-        time_range: 'long_term',
+        time_range: "long_term",
         limit: 5,
       }),
       spotifyApi.getMyTopTracks({
-        time_range: 'long_term',
+        time_range: "long_term",
         limit: 5,
       }),
       spotifyApi.getMySavedTracks({
         limit: 1,
-        market: 'from_token',
+        market: "from_token",
       }),
       spotifyApi.getFollowedArtists({
         limit: 1,
       }),
     ]);
 
-    mixpanel.track('get_stats', {
+    mixpanel.track("get_stats", {
       distinct_id: req.ctx.token.userId,
     });
 
     return {
       recentlyPlayedTrack:
-        recentlyPlayedTrack.status === 'fulfilled'
+        recentlyPlayedTrack.status === "fulfilled"
           ? recentlyPlayedTrack.value.body.items[0]
           : null,
       topArtists:
-        topArtists.status === 'fulfilled' ? topArtists.value.body.items : [],
+        topArtists.status === "fulfilled" ? topArtists.value.body.items : [],
       topTracks:
-        topTracks.status === 'fulfilled' ? topTracks.value.body.items : [],
+        topTracks.status === "fulfilled" ? topTracks.value.body.items : [],
       likedTracksSpotify:
-        likedTracksSpotify.status === 'fulfilled'
+        likedTracksSpotify.status === "fulfilled"
           ? likedTracksSpotify.value.body.total
           : 0,
       followedArtistsSpotify:
-        followedArtistsSpotify.status === 'fulfilled'
+        followedArtistsSpotify.status === "fulfilled"
           ? followedArtistsSpotify.value.body.artists.total
           : 0,
     };

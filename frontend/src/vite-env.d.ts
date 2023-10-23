@@ -4,8 +4,8 @@ import {
   MutationFunction,
   QueryFunction,
   QueryKey,
-} from '@tanstack/react-query';
-import { RouterOutput } from './trpc';
+} from "@tanstack/react-query";
+import { RouterOutput } from "./trpc";
 
 interface ImportMetaEnv {
   readonly VITE_API_URL: string;

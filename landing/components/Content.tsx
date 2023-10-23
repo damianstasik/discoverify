@@ -1,5 +1,5 @@
-import Image from 'next/image';
-import screenshotUrl from '../public/screenshot.png';
+import Image from "next/image";
+import screenshotUrl from "../public/screenshot.png";
 
 export function Content() {
   return (
@@ -10,7 +10,7 @@ export function Content() {
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 559 168"
-          className='h-[1.5em] ml-2'
+          className="h-[1.5em] ml-2"
         >
           <path
             fill="currentColor"
@@ -22,7 +22,7 @@ export function Content() {
         Discoverify makes use of Spotify's API to find songs that could be hard
         to find in the official app.
         <br />
-        It offers a simple and intuitive interface to discover new music.{' '}
+        It offers a simple and intuitive interface to discover new music.{" "}
         <strong>It's free and open source.</strong>
       </p>
       {/* <div className="grid grid-cols-5 gap-4 mb-20">

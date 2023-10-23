@@ -1,4 +1,4 @@
-import { CellContext } from '@tanstack/react-table';
+import { CellContext } from "@tanstack/react-table";
 
 function msToTime(duration: number) {
   const seconds = Math.floor((duration / 1000) % 60);

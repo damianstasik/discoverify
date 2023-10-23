@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { tw } from '../tw';
+import { useState } from "react";
+import { tw } from "../tw";
 
 interface Props {
   src?: string;
@@ -13,8 +13,8 @@ export function BgImg({ src, className, alt }: Props) {
   return (
     <div
       className={tw(
-        'absolute top-0 inset-x-0 z-0 h-[500px] opacity-0 transition-opacity duration-500',
-        loaded && 'opacity-20',
+        "absolute top-0 inset-x-0 z-0 h-[500px] opacity-0 transition-opacity duration-500",
+        loaded && "opacity-20",
         className,
       )}
     >

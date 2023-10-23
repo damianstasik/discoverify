@@ -1,5 +1,5 @@
-import { chromium } from 'playwright';
-import { faker } from '@faker-js/faker';
+import { faker } from "@faker-js/faker";
+import { chromium } from "playwright";
 
 async function run() {
   const browser = await chromium.launch();
@@ -14,7 +14,7 @@ async function run() {
   const page = await context.newPage();
 
   await page.route(
-    'https://api.discoverify.app/trpc/auth.me*',
+    "https://api.discoverify.app/trpc/auth.me*",
     async (route) => {
       const json = [
         {
@@ -35,7 +35,7 @@ async function run() {
   );
 
   await page.route(
-    'https://api.discoverify.app/trpc/user.playlists,track.recommended,track.tracksById*',
+    "https://api.discoverify.app/trpc/user.playlists,track.recommended,track.tracksById*",
     async (route) => {
       const playlist = () => ({
         id: faker.random.alphaNumeric(15),
@@ -122,7 +122,7 @@ async function run() {
         },
         {
           result: {
-            data: [track('test')],
+            data: [track("test")],
           },
         },
       ];
@@ -130,11 +130,11 @@ async function run() {
     },
   );
 
-  await page.goto('https://go.discoverify.app/recommendations?trackId=test', {
-    waitUntil: 'networkidle',
+  await page.goto("https://go.discoverify.app/recommendations?trackId=test", {
+    waitUntil: "networkidle",
   });
 
-  await page.screenshot({ path: 'screenshot.png' });
+  await page.screenshot({ path: "screenshot.png" });
 
   await context.close();
   await browser.close();

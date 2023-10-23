@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
-import { tokenState } from '../store';
+import { useEffect, useState } from "react";
+import { Link as RouterLink } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { tokenState } from "../store";
 
 function ArtistCardSkeleton() {
   return (
@@ -34,7 +34,7 @@ function ArtistCard({ artist }: { artist: any }) {
       `${import.meta.env.VITE_API_URL}/follow?tokenId=${token}&artistId=${
         artist.id
       }`,
-      { method: 'put' },
+      { method: "put" },
     )
       .then((res) => res.json())
       .then(() => {
@@ -49,7 +49,7 @@ function ArtistCard({ artist }: { artist: any }) {
           sx={{
             height: 300,
           }}
-          src={artist.images.length > 1 ? artist.images[1].url : ''}
+          src={artist.images.length > 1 ? artist.images[1].url : ""}
           title={artist.name}
           component="img"
           loading="lazy"
@@ -63,7 +63,7 @@ function ArtistCard({ artist }: { artist: any }) {
             <div key={tr.id} disableGutters>
               <div
                 primary={tr.name}
-                secondary={tr.artists.map((a) => a.name).join(', ')}
+                secondary={tr.artists.map((a) => a.name).join(", ")}
               />
             </div>
           ))}

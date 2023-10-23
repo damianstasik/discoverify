@@ -1,27 +1,27 @@
-import { useMemo, useState } from 'react';
-import { useInfiniteQuery } from '@tanstack/react-query';
-import { VirtualTable } from '../components/VirtualTable';
-import { createColumnHelper } from '@tanstack/react-table';
-import { RouterOutput, trpc } from '../trpc';
-import { SpotifyLinkColumn } from '../components/SpotifyLinkColumn';
-import { RadioGroup } from '@headlessui/react';
-import { mdiCheck } from '@mdi/js';
-import { Icon } from '../components/Icon';
-import { ArtistNameColumn } from '../components/ArtistNameColumn';
+import { RadioGroup } from "@headlessui/react";
+import { mdiCheck } from "@mdi/js";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { createColumnHelper } from "@tanstack/react-table";
+import { useMemo, useState } from "react";
+import { ArtistNameColumn } from "../components/ArtistNameColumn";
+import { Icon } from "../components/Icon";
+import { SpotifyLinkColumn } from "../components/SpotifyLinkColumn";
+import { VirtualTable } from "../components/VirtualTable";
+import { RouterOutput, trpc } from "../trpc";
 
-type ArtistType = RouterOutput['artist']['top']['artists'][number];
+type ArtistType = RouterOutput["artist"]["top"]["artists"][number];
 
 const columnHelper = createColumnHelper<ArtistType>();
 
 const columns = [
-  columnHelper.accessor('name', {
-    header: 'Name',
+  columnHelper.accessor("name", {
+    header: "Name",
     size: 300,
     cell: ArtistNameColumn,
   }),
-  columnHelper.accessor('uri', {
-    id: 'open',
-    header: '',
+  columnHelper.accessor("uri", {
+    id: "open",
+    header: "",
     size: 40,
     cell: SpotifyLinkColumn,
   }),
@@ -48,10 +48,10 @@ function TimeRangeOption({
 }
 
 export function TopArtists() {
-  const [timeRange, setTimeRange] = useState('short_term');
+  const [timeRange, setTimeRange] = useState("short_term");
 
   const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery(
-    ['top-artists', timeRange],
+    ["top-artists", timeRange],
     async function topTracksQuery({ pageParam = 1 }) {
       return trpc.artist.top.query({
         timeRange,

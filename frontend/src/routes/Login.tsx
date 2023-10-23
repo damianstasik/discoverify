@@ -1,7 +1,7 @@
-import { useMutation } from '@tanstack/react-query';
-import { useSnackbar } from 'notistack';
-import { authUrlMutation } from '../api';
-import { Button } from '../components/Button';
+import { useMutation } from "@tanstack/react-query";
+import { useSnackbar } from "notistack";
+import { authUrlMutation } from "../api";
+import { Button } from "../components/Button";
 
 export function Login() {
   const { enqueueSnackbar } = useSnackbar();
@@ -11,8 +11,8 @@ export function Login() {
       window.location.href = url;
     },
     onError(error) {
-      enqueueSnackbar('Login error', {
-        variant: 'error',
+      enqueueSnackbar("Login error", {
+        variant: "error",
       });
     },
   });

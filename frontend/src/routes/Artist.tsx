@@ -1,24 +1,24 @@
 import {
-  Link,
-  Outlet,
-  useLocation,
-  useParams,
-  useResolvedPath,
-} from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-import { Suspense } from 'react';
-import { trpc } from '../trpc';
-import { Icon } from '../components/Icon';
-import {
   mdiAccountMusic,
   mdiFolderPlay,
   mdiMusicBox,
   mdiMusicBoxMultiple,
   mdiPlayBoxMultipleOutline,
   mdiTrendingUp,
-} from '@mdi/js';
-import { BgImg } from '../components/BgImg';
-import { tw } from '../tw';
+} from "@mdi/js";
+import { useQuery } from "@tanstack/react-query";
+import { Suspense } from "react";
+import {
+  Link,
+  Outlet,
+  useLocation,
+  useParams,
+  useResolvedPath,
+} from "react-router-dom";
+import { BgImg } from "../components/BgImg";
+import { Icon } from "../components/Icon";
+import { trpc } from "../trpc";
+import { tw } from "../tw";
 
 function TabLink({ tab }) {
   const match = useResolvedPath(tab.to);
@@ -30,19 +30,19 @@ function TabLink({ tab }) {
       to={tab.to}
       className={tw(
         isCurrent
-          ? 'border-green-500 text-green-600'
-          : 'border-transparent text-slate-400 hover:text-slate-300 hover:border-slate-400',
-        'group inline-flex items-center py-2 px-1 border-b-2 text-sm',
+          ? "border-green-500 text-green-600"
+          : "border-transparent text-slate-400 hover:text-slate-300 hover:border-slate-400",
+        "group inline-flex items-center py-2 px-1 border-b-2 text-sm",
       )}
-      aria-current={isCurrent ? 'page' : undefined}
+      aria-current={isCurrent ? "page" : undefined}
     >
       <Icon
         path={tab.icon}
         className={tw(
           isCurrent
-            ? 'text-green-500'
-            : 'text-slate-450 group-hover:text-slate-400',
-          'mr-2 s-4',
+            ? "text-green-500"
+            : "text-slate-450 group-hover:text-slate-400",
+          "mr-2 s-4",
         )}
         aria-hidden="true"
       />
@@ -56,7 +56,7 @@ export function Artist() {
   const { state } = useLocation();
 
   const { data } = useQuery(
-    ['artist', params.id],
+    ["artist", params.id],
     async function artistQuery({ queryKey, signal }) {
       const artist = await trpc.artist.byId.query(queryKey[1], {
         signal,
@@ -69,32 +69,32 @@ export function Artist() {
 
   const tabs = [
     {
-      to: '',
-      label: 'Popular tracks',
+      to: "",
+      label: "Popular tracks",
       icon: mdiTrendingUp,
     },
     {
-      to: 'albums',
-      label: 'Albums',
+      to: "albums",
+      label: "Albums",
       icon: mdiMusicBoxMultiple,
     },
     {
-      to: 'singles',
-      label: 'Singles and EPs',
+      to: "singles",
+      label: "Singles and EPs",
       icon: mdiMusicBox,
     },
     {
-      to: 'appears-on',
-      label: 'Appears on',
+      to: "appears-on",
+      label: "Appears on",
       icon: mdiPlayBoxMultipleOutline,
     },
     {
-      to: 'compilations',
-      label: 'Compilations',
+      to: "compilations",
+      label: "Compilations",
       icon: mdiFolderPlay,
     },
     {
-      to: 'related-artists-top-tracks',
+      to: "related-artists-top-tracks",
       label: "Related artists' top tracks",
       icon: mdiAccountMusic,
     },

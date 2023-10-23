@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
-import { debounce } from '../utils/debounce';
+import { useEffect, useRef, useState } from "react";
+import { debounce } from "../utils/debounce";
 
 // Taken from
 // https://github.com/shawnmcknight/react-scrollbar-size/blob/16d39fca0347e2a24ad4f347b0633c9ec4ce05fd/src/useScrollbarSize.ts#L11
@@ -11,14 +11,14 @@ export const useScrollbarWidth = () => {
   useEffect(() => {
     const getElement = () => {
       if (element.current == null) {
-        element.current = document.createElement('div');
-        element.current.style.width = '99px';
-        element.current.style.height = '99px';
-        element.current.style.overflow = 'scroll';
-        element.current.style.position = 'absolute';
-        element.current.style.top = '-9999px';
-        element.current.setAttribute('aria-hidden', 'true');
-        element.current.setAttribute('role', 'presentation');
+        element.current = document.createElement("div");
+        element.current.style.width = "99px";
+        element.current.style.height = "99px";
+        element.current.style.overflow = "scroll";
+        element.current.style.position = "absolute";
+        element.current.style.top = "-9999px";
+        element.current.setAttribute("aria-hidden", "true");
+        element.current.setAttribute("role", "presentation");
       }
       return element.current;
     };
@@ -34,7 +34,7 @@ export const useScrollbarWidth = () => {
 
     const handleResize = debounce(updateState, 100);
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
     document.body.appendChild(getElement());
     updateState();
 
@@ -42,7 +42,7 @@ export const useScrollbarWidth = () => {
 
     return () => {
       handleResize.cancel();
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
       document.body.removeChild(elementToRemove);
     };
   }, []);

@@ -1,5 +1,5 @@
-import { CellContext } from '@tanstack/react-table';
-import { Link } from 'react-router-dom';
+import { CellContext } from "@tanstack/react-table";
+import { Link } from "react-router-dom";
 
 interface Artist {
   id: string;

@@ -1,16 +1,16 @@
-import { atom, type AtomEffect, selector } from 'recoil';
+import { type AtomEffect, atom, selector } from "recoil";
 
 // queue
 
 export const queueVisibilityAtom = atom<boolean>({
-  key: 'queueVisibility',
+  key: "queueVisibility",
   default: false,
 });
 
 // non-player
 
 export const deviceIdAtom = atom<string | null>({
-  key: 'deviceId',
+  key: "deviceId",
   default: null,
 });
 
@@ -31,28 +31,28 @@ const localStorageEffect =
 
 /** @deprecated */
 export const tokenState = atom({
-  key: 'token',
-  default: '',
+  key: "token",
+  default: "",
 });
 
-export const userAtom = atom<Output<'auth.me'> | null>({
-  key: 'user',
+export const userAtom = atom<Output<"auth.me"> | null>({
+  key: "user",
   default: null,
 });
 
 export const playerVolumeAtom = atom<number>({
-  key: 'playerVolume',
+  key: "playerVolume",
   default: 0.8,
-  effects: [localStorageEffect<number>('playerVolume')],
+  effects: [localStorageEffect<number>("playerVolume")],
 });
 
 export const savedTracksAtom = atom<string[]>({
-  key: 'savedTracks',
+  key: "savedTracks",
   default: [],
 });
 
 export const savedTracksSelector = selector({
-  key: 'savedTracksSelector',
+  key: "savedTracksSelector",
   get: ({ get, getCallback }) => {
     const savedTracks = get(savedTracksAtom);
 

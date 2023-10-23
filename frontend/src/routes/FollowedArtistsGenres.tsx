@@ -1,22 +1,22 @@
-import { Link } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
-import { useQuery } from '@tanstack/react-query';
-import { tokenState } from '../store';
-import { VirtualTable } from '../components/VirtualTable';
-import { Button } from '../components/Button';
+import { useQuery } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { Button } from "../components/Button";
+import { VirtualTable } from "../components/VirtualTable";
+import { tokenState } from "../store";
 
 const columns = [
   {
-    accessorKey: 'name',
-    header: 'Name',
+    accessorKey: "name",
+    header: "Name",
   },
   {
-    accessorKey: 'count',
-    header: 'Count',
+    accessorKey: "count",
+    header: "Count",
   },
   {
-    id: 'actions',
-    header: 'Top tracks from genre',
+    id: "actions",
+    header: "Top tracks from genre",
     cell: (params) => (
       <Button
         component={Link}
@@ -44,7 +44,7 @@ export function FollowedArtistsGenres() {
   const token = useRecoilValue(tokenState);
 
   const { isLoading, data } = useQuery(
-    ['followed-artists-genres', token],
+    ["followed-artists-genres", token],
     async function followedArtistsGenres() {
       return fetchFollowedArtistsGenres(token);
     },

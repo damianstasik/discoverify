@@ -1,31 +1,31 @@
-import { useLocation, useParams } from 'react-router-dom';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
-import { useMemo } from 'react';
-import { AlbumColumn } from '../components/AlbumColumn';
-import { ArtistsColumn } from '../components/ArtistsColumn';
-import { TrackNameColumn } from '../components/TrackNameColumn';
-import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
-import { VirtualTable } from '../components/VirtualTable';
-import { CheckboxColumn } from '../components/CheckboxColumn';
-import { usePlayPauseTrackHook } from '../hooks/usePlayPauseTrackHook';
-import { useIgnoreTrackHook } from '../hooks/useIgnoreTrackHook';
-import { getPlaylist, getPlaylistTracks } from '../api';
-import { createColumnHelper } from '@tanstack/react-table';
-import { AddedAtColumn } from '../components/AddedAtColumn';
-import { RouterOutput } from '../trpc';
-import { DurationColumn } from '../components/DurationColumn';
-import { SaveColumn } from '../components/SaveColumn';
-import { SpotifyLinkColumn } from '../components/SpotifyLinkColumn';
-import { BgImg } from '../components/BgImg';
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { createColumnHelper } from "@tanstack/react-table";
+import { useMemo } from "react";
+import { useLocation, useParams } from "react-router-dom";
+import { getPlaylist, getPlaylistTracks } from "../api";
+import { AddedAtColumn } from "../components/AddedAtColumn";
+import { AlbumColumn } from "../components/AlbumColumn";
+import { ArtistsColumn } from "../components/ArtistsColumn";
+import { BgImg } from "../components/BgImg";
+import { CheckboxColumn } from "../components/CheckboxColumn";
+import { DurationColumn } from "../components/DurationColumn";
+import { SaveColumn } from "../components/SaveColumn";
+import { SpotifyLinkColumn } from "../components/SpotifyLinkColumn";
+import { TrackNameColumn } from "../components/TrackNameColumn";
+import { TrackPreviewColumn } from "../components/TrackPreviewColumn";
+import { VirtualTable } from "../components/VirtualTable";
+import { useIgnoreTrackHook } from "../hooks/useIgnoreTrackHook";
+import { usePlayPauseTrackHook } from "../hooks/usePlayPauseTrackHook";
+import { RouterOutput } from "../trpc";
 
-type PlaylistType = RouterOutput['playlist']['tracks']['tracks'][number];
+type PlaylistType = RouterOutput["playlist"]["tracks"]["tracks"][number];
 
 const columnHelper = createColumnHelper<PlaylistType>();
 
 const columns = [
   columnHelper.display({
     size: 40,
-    id: 'select',
+    id: "select",
     header: ({ table }) => (
       <CheckboxColumn
         {...{
@@ -45,58 +45,58 @@ const columns = [
       />
     ),
   }),
-  columnHelper.accessor('uri', {
-    header: '',
-    id: 'preview',
+  columnHelper.accessor("uri", {
+    header: "",
+    id: "preview",
     size: 50,
     cell: TrackPreviewColumn,
   }),
-  columnHelper.accessor('name', {
-    header: 'Name',
+  columnHelper.accessor("name", {
+    header: "Name",
     minSize: 200,
     cell: TrackNameColumn,
     size: 0.4,
   }),
-  columnHelper.accessor('artists', {
-    header: 'Artist(s)',
+  columnHelper.accessor("artists", {
+    header: "Artist(s)",
     cell: ArtistsColumn,
     minSize: 200,
     size: 0.3,
   }),
-  columnHelper.accessor('album', {
-    header: 'Album',
+  columnHelper.accessor("album", {
+    header: "Album",
     cell: AlbumColumn,
     minSize: 200,
     size: 0.3,
   }),
-  columnHelper.accessor('added_at', {
-    header: 'Added At',
+  columnHelper.accessor("added_at", {
+    header: "Added At",
     cell: AddedAtColumn,
     size: 180,
   }),
-  columnHelper.accessor('duration_ms', {
-    header: 'Duration',
+  columnHelper.accessor("duration_ms", {
+    header: "Duration",
     cell: DurationColumn,
     size: 80,
   }),
-  columnHelper.accessor('isLiked', {
-    header: '',
+  columnHelper.accessor("isLiked", {
+    header: "",
     size: 40,
     cell: SaveColumn,
   }),
-  columnHelper.accessor('uri', {
-    id: 'open',
-    header: '',
+  columnHelper.accessor("uri", {
+    id: "open",
+    header: "",
     size: 50,
     cell: SpotifyLinkColumn,
   }),
 ];
 
 export function Playlist() {
-  const params = useParams<'id'>();
+  const params = useParams<"id">();
   const { state } = useLocation();
 
-  const { data, isFetching } = useQuery(['playlist', params.id!], getPlaylist, {
+  const { data, isFetching } = useQuery(["playlist", params.id!], getPlaylist, {
     placeholderData: state,
   });
 
@@ -104,7 +104,7 @@ export function Playlist() {
     data: tracks,
     fetchNextPage,
     hasNextPage,
-  } = useInfiniteQuery(['playlistTracks', params.id!], getPlaylistTracks, {
+  } = useInfiniteQuery(["playlistTracks", params.id!], getPlaylistTracks, {
     getNextPageParam: (lastPage) => lastPage.nextPage,
   });
 
@@ -135,7 +135,7 @@ export function Playlist() {
         </h2>
 
         {data?.description && (
-          <p className='text-gray-400 text-sm mt-3'>{data?.description}</p>
+          <p className="text-gray-400 text-sm mt-3">{data?.description}</p>
         )}
       </div>
 

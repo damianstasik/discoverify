@@ -1,7 +1,7 @@
-import { memo } from 'react';
-import { mdiVolumeHigh, mdiVolumeLow } from '@mdi/js';
-import { IconButton } from '../IconButton';
-import * as Slider from '@radix-ui/react-slider';
+import { mdiVolumeHigh, mdiVolumeLow } from "@mdi/js";
+import * as Slider from "@radix-ui/react-slider";
+import { memo } from "react";
+import { IconButton } from "../IconButton";
 
 interface Props {
   onChange: (value: number) => void;

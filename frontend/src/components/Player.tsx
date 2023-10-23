@@ -1,27 +1,27 @@
-import { useCallback, useState, useEffect } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { useQuery } from '@tanstack/react-query';
+import { mdiDevices, mdiHeart, mdiHeartOutline } from "@mdi/js";
+import { useQuery } from "@tanstack/react-query";
+import { runInAction } from "mobx";
+import { observer } from "mobx-react-lite";
+import { useCallback, useEffect, useState } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { useThrottledCallback } from "use-debounce";
+import { useSpotifyWebPlaybackSdk } from "../hooks/useSpotifyWebPlaybackSdk";
+import { useTimer } from "../hooks/useTimer";
+import { player as pl } from "../state";
 import {
   playerVolumeAtom,
   queueVisibilityAtom,
-  userAtom,
   savedTracksAtom,
-} from '../store';
-import { useSpotifyWebPlaybackSdk } from '../hooks/useSpotifyWebPlaybackSdk';
-import { VolumeControl } from './Player/VolumeControl';
-import { SeekControl } from './Player/SeekControl';
-import { TrackInfo } from './Player/TrackInfo';
-import { PlaybackControl } from './Player/PlaybackControl';
-import { useTimer } from '../hooks/useTimer';
-import { useThrottledCallback } from 'use-debounce';
-import { IconButton } from './IconButton';
-import { mdiDevices, mdiHeart, mdiHeartOutline } from '@mdi/js';
-import { QueueButton } from './Player/QueueButton';
-import { trpc } from '../trpc';
-import { useEventBus } from './EventBus';
-import { player as pl } from '../state';
-import { runInAction } from 'mobx';
-import { observer } from 'mobx-react-lite';
+  userAtom,
+} from "../store";
+import { trpc } from "../trpc";
+import { useEventBus } from "./EventBus";
+import { IconButton } from "./IconButton";
+import { PlaybackControl } from "./Player/PlaybackControl";
+import { QueueButton } from "./Player/QueueButton";
+import { SeekControl } from "./Player/SeekControl";
+import { TrackInfo } from "./Player/TrackInfo";
+import { VolumeControl } from "./Player/VolumeControl";
 
 export const Player = observer(() => {
   const user = useRecoilValue(userAtom);
@@ -34,7 +34,7 @@ export const Player = observer(() => {
   //   return body;
   // });
 
-  const { time, start, pause, set, status } = useTimer('player');
+  const { time, start, pause, set, status } = useTimer("player");
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useRecoilState(playerVolumeAtom);
   const [isChangingVolume, setIsChangingVolume] = useState(false);
@@ -56,11 +56,11 @@ export const Player = observer(() => {
 
       set(state.position / 1000);
 
-      if (state.paused && status === 'RUNNING') {
+      if (state.paused && status === "RUNNING") {
         pause();
       }
 
-      if (!state.paused && status !== 'RUNNING') {
+      if (!state.paused && status !== "RUNNING") {
         start();
       }
     },
@@ -68,19 +68,19 @@ export const Player = observer(() => {
   );
 
   useEffect(() => {
-    if (isSeeking && status === 'RUNNING') {
+    if (isSeeking && status === "RUNNING") {
       pause();
     }
   }, [isSeeking, status]);
 
   const { deviceId, player } = useSpotifyWebPlaybackSdk({
-    name: 'Discoverify',
+    name: "Discoverify",
     getOAuthToken: () => decoded,
     onPlayerStateChanged: h,
     volume,
   });
 
-  useQuery<number>(['volume', deviceId], async () => player!.getVolume(), {
+  useQuery<number>(["volume", deviceId], async () => player!.getVolume(), {
     enabled: player !== null && pl.isPlaying() && !isChangingVolume,
     refetchInterval: 2500,
     onSuccess(data) {
@@ -142,7 +142,7 @@ export const Player = observer(() => {
   const [isQueueOpen, setIsQueueOpen] = useRecoilState(queueVisibilityAtom);
 
   const { data: queue } = useQuery(
-    ['queue'],
+    ["queue"],
     async ({ signal }) => {
       const queue = await trpc.player.queue.query(undefined, { signal });
       return queue;
@@ -154,12 +154,12 @@ export const Player = observer(() => {
 
   const eventBus = useEventBus();
   const savedTracks = useRecoilValue(savedTracksAtom);
-  const id = meta?.current_item?.uri?.replace('spotify:track:', '');
+  const id = meta?.current_item?.uri?.replace("spotify:track:", "");
 
   const isSaved = id ? savedTracks.includes(id) : false;
 
   const handleSave = useCallback(() => {
-    eventBus.emit('saveTrack', {
+    eventBus.emit("saveTrack", {
       id,
       isSaved,
     });

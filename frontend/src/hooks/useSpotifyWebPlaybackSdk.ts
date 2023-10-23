@@ -1,6 +1,6 @@
-import { useEffect, useRef } from 'react';
-import { useRecoilState } from 'recoil';
-import { deviceIdAtom } from '../store';
+import { useEffect, useRef } from "react";
+import { useRecoilState } from "recoil";
+import { deviceIdAtom } from "../store";
 
 interface Options {
   name: string;
@@ -29,7 +29,7 @@ export function useSpotifyWebPlaybackSdk({
         volume,
       });
 
-      playerRef.current.addListener('ready', ({ device_id }) => {
+      playerRef.current.addListener("ready", ({ device_id }) => {
         setDeviceId(device_id);
       });
 
@@ -39,13 +39,13 @@ export function useSpotifyWebPlaybackSdk({
 
   useEffect(() => {
     playerRef.current?.addListener(
-      'player_state_changed',
+      "player_state_changed",
       onPlayerStateChanged,
     );
 
     return () => {
       playerRef.current?.removeListener(
-        'player_state_changed',
+        "player_state_changed",
         onPlayerStateChanged,
       );
     };

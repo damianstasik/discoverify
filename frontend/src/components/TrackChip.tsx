@@ -1,7 +1,7 @@
-import { Fragment } from 'react';
-import { Link } from 'react-router-dom';
-import { IconButton } from './IconButton';
-import { mdiClose } from '@mdi/js';
+import { mdiClose } from "@mdi/js";
+import { Fragment } from "react";
+import { Link } from "react-router-dom";
+import { IconButton } from "./IconButton";
 
 interface Props {
   id: string;

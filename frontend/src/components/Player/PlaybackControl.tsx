@@ -1,5 +1,3 @@
-import { memo } from 'react';
-import { IconButton } from '../IconButton';
 import {
   mdiPauseCircle,
   mdiPlayCircle,
@@ -7,7 +5,9 @@ import {
   mdiShuffle,
   mdiSkipNext,
   mdiSkipPrevious,
-} from '@mdi/js';
+} from "@mdi/js";
+import { memo } from "react";
+import { IconButton } from "../IconButton";
 
 interface Props {
   isPlaying: boolean;

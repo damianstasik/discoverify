@@ -1,25 +1,25 @@
-import { router } from '..';
-import { getSpotifyApi } from '../spotify';
-import { procedureWithAuthToken } from '../auth/middleware';
-import { z } from 'zod';
-import { search } from 'fast-fuzzy';
-import { mixpanel } from '../mixpanel';
+import { search } from "fast-fuzzy";
+import { z } from "zod";
+import { router } from "..";
+import { procedureWithAuthToken } from "../auth/middleware";
+import { mixpanel } from "../mixpanel";
+import { getSpotifyApi } from "../spotify";
 
 interface GenreSearchResult {
-  type: 'genre';
+  type: "genre";
   id: string;
   label: string;
 }
 
 interface ArtistSearchResult {
-  type: 'artist';
+  type: "artist";
   id: string;
   label: string;
   img: string;
 }
 
 interface TrackSearchResult {
-  type: 'track';
+  type: "track";
   id: string;
   label: string;
   img: string;
@@ -41,22 +41,22 @@ export const seedRouter = router({
         req.input,
         allGenres.body.genres,
       ).map((genre) => ({
-        type: 'genre',
+        type: "genre",
         label: genre,
         id: `${genre}`,
       }));
 
       const results = await getSpotifyApi(req.ctx.token.accessToken).search(
         req.input,
-        ['artist', 'track'],
+        ["artist", "track"],
         {
-          market: 'from_token',
+          market: "from_token",
         },
       );
 
       const artists: ArtistSearchResult[] =
         results.body.artists?.items.map((artist) => ({
-          type: 'artist',
+          type: "artist",
           label: artist.name,
           id: `${artist.id}`,
           img: artist.images?.[0]?.url,
@@ -64,8 +64,8 @@ export const seedRouter = router({
 
       const tracks: TrackSearchResult[] =
         results.body.tracks?.items.map((track) => ({
-          type: 'track',
-          label: `${track.artists.map((artist) => artist.name).join(', ')} - ${
+          type: "track",
+          label: `${track.artists.map((artist) => artist.name).join(", ")} - ${
             track.name
           }`,
           name: track.name,
@@ -74,7 +74,7 @@ export const seedRouter = router({
           img: track.album.images?.[0]?.url,
         })) ?? [];
 
-      mixpanel.track('get_seeds', {
+      mixpanel.track("get_seeds", {
         distinct_id: req.ctx.token.userId,
         query: req.input,
       });

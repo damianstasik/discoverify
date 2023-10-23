@@ -1,16 +1,16 @@
-import { startTransition, useEffect } from 'react';
-import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { startTransition, useEffect } from "react";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 import {
   useRecoilState_TRANSITION_SUPPORT_UNSTABLE as useRecoilState,
   useSetRecoilState,
-} from 'recoil';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { Sidebar } from './Sidebar';
-import { Player } from './Player';
-import { savedTracksAtom, userAtom } from '../store';
-import { getCurrentUser, refreshAccessToken } from '../api';
-import { trpc } from '../trpc';
-import { useSaveTrackHook } from '../hooks/useSaveTrackHook';
+} from "recoil";
+import { getCurrentUser, refreshAccessToken } from "../api";
+import { useSaveTrackHook } from "../hooks/useSaveTrackHook";
+import { savedTracksAtom, userAtom } from "../store";
+import { trpc } from "../trpc";
+import { Player } from "./Player";
+import { Sidebar } from "./Sidebar";
 
 export function Layout() {
   const location = useLocation();
@@ -47,7 +47,7 @@ export function Layout() {
 
   const { data: user } = useQuery({
     queryFn: getCurrentUser,
-    queryKey: ['user'],
+    queryKey: ["user"],
     suspense: true,
     refetchOnMount: true,
     refetchOnReconnect: true,
@@ -77,15 +77,15 @@ export function Layout() {
 
       <main className="bg-slate-900 flex flex-col flex-1">
         <div
-          className='flex flex-col relative overflow-hidden'
+          className="flex flex-col relative overflow-hidden"
           style={{
-            height: 'calc(100% - 100px)',
+            height: "calc(100% - 100px)",
           }}
         >
           <Outlet />
         </div>
 
-        <div style={{ height: '100px' }} className='mt-auto'>
+        <div style={{ height: "100px" }} className="mt-auto">
           <Player />
         </div>
       </main>

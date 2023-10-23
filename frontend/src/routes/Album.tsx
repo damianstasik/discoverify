@@ -1,27 +1,27 @@
-import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
-import { RouterOutput, trpc } from '../trpc';
-import { useParams } from 'react-router-dom';
-import { useMemo } from 'react';
-import { VirtualTable } from '../components/VirtualTable';
-import { usePlayPauseTrackHook } from '../hooks/usePlayPauseTrackHook';
-import { createColumnHelper } from '@tanstack/react-table';
-import { CheckboxColumn } from '../components/CheckboxColumn';
-import { TrackPreviewColumn } from '../components/TrackPreviewColumn';
-import { TrackNameColumn } from '../components/TrackNameColumn';
-import { ArtistsColumn } from '../components/ArtistsColumn';
-import { DurationColumn } from '../components/DurationColumn';
-import { SaveColumn } from '../components/SaveColumn';
-import { SpotifyLinkColumn } from '../components/SpotifyLinkColumn';
-import { BgImg } from '../components/BgImg';
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { createColumnHelper } from "@tanstack/react-table";
+import { useMemo } from "react";
+import { useParams } from "react-router-dom";
+import { ArtistsColumn } from "../components/ArtistsColumn";
+import { BgImg } from "../components/BgImg";
+import { CheckboxColumn } from "../components/CheckboxColumn";
+import { DurationColumn } from "../components/DurationColumn";
+import { SaveColumn } from "../components/SaveColumn";
+import { SpotifyLinkColumn } from "../components/SpotifyLinkColumn";
+import { TrackNameColumn } from "../components/TrackNameColumn";
+import { TrackPreviewColumn } from "../components/TrackPreviewColumn";
+import { VirtualTable } from "../components/VirtualTable";
+import { usePlayPauseTrackHook } from "../hooks/usePlayPauseTrackHook";
+import { RouterOutput, trpc } from "../trpc";
 
-type TrackType = RouterOutput['track']['byAlbumId']['tracks'][number];
+type TrackType = RouterOutput["track"]["byAlbumId"]["tracks"][number];
 
 const columnHelper = createColumnHelper<TrackType>();
 
 const columns = [
   columnHelper.display({
     size: 40,
-    id: 'select',
+    id: "select",
     header: ({ table }) => (
       <CheckboxColumn
         {...{
@@ -41,37 +41,37 @@ const columns = [
       />
     ),
   }),
-  columnHelper.accessor('uri', {
-    header: '',
-    id: 'preview',
+  columnHelper.accessor("uri", {
+    header: "",
+    id: "preview",
     size: 50,
     cell: TrackPreviewColumn,
   }),
-  columnHelper.accessor('name', {
-    header: 'Name',
+  columnHelper.accessor("name", {
+    header: "Name",
     minSize: 200,
     size: 0.5,
     cell: TrackNameColumn,
   }),
-  columnHelper.accessor('artists', {
-    header: 'Artist(s)',
+  columnHelper.accessor("artists", {
+    header: "Artist(s)",
     cell: ArtistsColumn,
     minSize: 200,
     size: 0.4,
   }),
-  columnHelper.accessor('duration_ms', {
-    header: 'Duration',
+  columnHelper.accessor("duration_ms", {
+    header: "Duration",
     cell: DurationColumn,
     size: 80,
   }),
-  columnHelper.accessor('isLiked', {
-    header: '',
+  columnHelper.accessor("isLiked", {
+    header: "",
     size: 40,
     cell: SaveColumn,
   }),
-  columnHelper.accessor('uri', {
-    id: 'open',
-    header: '',
+  columnHelper.accessor("uri", {
+    id: "open",
+    header: "",
     size: 50,
     cell: SpotifyLinkColumn,
   }),
@@ -80,7 +80,7 @@ const columns = [
 export function Album() {
   const { id } = useParams<{ albumId: string }>();
 
-  const { data } = useQuery(['album', id], ({ signal }) =>
+  const { data } = useQuery(["album", id], ({ signal }) =>
     trpc.album.byId.query(id, { signal }),
   );
 
@@ -90,7 +90,7 @@ export function Album() {
     hasNextPage,
     isFetching,
   } = useInfiniteQuery(
-    ['tracks', id],
+    ["tracks", id],
     ({ signal, pageParam = 1 }) =>
       trpc.track.byAlbumId.query(
         {

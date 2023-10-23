@@ -1,11 +1,11 @@
-import { TRPCError } from '@trpc/server';
-import { z } from 'zod';
-import { router, procedure } from '..';
-import { getSpotifyApi } from '../spotify';
-import { procedureWithAuthToken, withAuthToken } from './middleware';
-import * as jwt from 'jsonwebtoken';
-import isPast from 'date-fns/isPast';
-import { mixpanel } from '../mixpanel';
+import { TRPCError } from "@trpc/server";
+import isPast from "date-fns/isPast";
+import * as jwt from "jsonwebtoken";
+import { z } from "zod";
+import { procedure, router } from "..";
+import { mixpanel } from "../mixpanel";
+import { getSpotifyApi } from "../spotify";
+import { procedureWithAuthToken, withAuthToken } from "./middleware";
 
 function to<T, U = Error>(
   promise: Promise<T>,
@@ -24,19 +24,19 @@ function to<T, U = Error>(
 }
 
 const scopes = [
-  'user-read-private',
-  'user-read-recently-played',
-  'user-read-playback-state',
-  'user-top-read',
-  'user-read-currently-playing',
-  'user-follow-read',
-  'playlist-read-private',
-  'user-read-email',
-  'user-library-read',
-  'playlist-read-collaborative',
-  'user-follow-modify',
-  'user-library-modify',
-  'streaming',
+  "user-read-private",
+  "user-read-recently-played",
+  "user-read-playback-state",
+  "user-top-read",
+  "user-read-currently-playing",
+  "user-follow-read",
+  "playlist-read-private",
+  "user-read-email",
+  "user-library-read",
+  "playlist-read-collaborative",
+  "user-follow-modify",
+  "user-library-modify",
+  "streaming",
 ];
 
 export const authRouter = router({
@@ -48,11 +48,11 @@ export const authRouter = router({
       spotifyApi.setRefreshToken(req.ctx.token.refreshToken);
 
       if (isPast(req.ctx.token.exp)) {
-        console.log('refreshing access token');
+        console.log("refreshing access token");
 
         const res = await spotifyApi.refreshAccessToken();
 
-        console.log('refreshing res', res);
+        console.log("refreshing res", res);
 
         const newToken = jwt.sign(
           {
@@ -66,17 +66,17 @@ export const authRouter = router({
           },
         );
 
-        req.ctx.res.cookie('token', newToken, {
-          path: '/',
+        req.ctx.res.cookie("token", newToken, {
+          path: "/",
           httpOnly: true,
           expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 31),
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: 'lax',
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "lax",
         });
       }
     }),
   url: procedure.mutation(() => {
-    const url = getSpotifyApi().createAuthorizeURL(scopes, '');
+    const url = getSpotifyApi().createAuthorizeURL(scopes, "");
 
     return url;
   }),
@@ -87,7 +87,7 @@ export const authRouter = router({
 
     if (profileError || !profileResult) {
       throw new TRPCError({
-        code: 'INTERNAL_SERVER_ERROR',
+        code: "INTERNAL_SERVER_ERROR",
       });
     }
 
@@ -109,7 +109,7 @@ export const authRouter = router({
     );
 
     if (codeGrantError || !codeGrantResult) {
-      throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
+      throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
     }
 
     spotifyApi.setAccessToken(codeGrantResult.body.access_token);
@@ -118,7 +118,7 @@ export const authRouter = router({
     const [profileError, profileResult] = await to(spotifyApi.getMe());
 
     if (profileError || !profileResult) {
-      throw new TRPCError({ code: 'NOT_FOUND' });
+      throw new TRPCError({ code: "NOT_FOUND" });
     }
 
     const token = jwt.sign(
@@ -133,19 +133,19 @@ export const authRouter = router({
       },
     );
 
-    ctx.res.setCookie('token', token, {
-      path: '/',
+    ctx.res.setCookie("token", token, {
+      path: "/",
       httpOnly: true,
       expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 31),
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
     });
 
     mixpanel.people.set(profileResult.body.id, {
       $country_code: profileResult.body.country,
     });
 
-    mixpanel.track('authorize', {
+    mixpanel.track("authorize", {
       distinct_id: profileResult.body.id,
     });
   }),

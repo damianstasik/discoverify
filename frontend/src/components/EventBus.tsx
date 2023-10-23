@@ -1,5 +1,5 @@
-import { createContext, useContext, useState } from 'react';
-import mitt, { Emitter } from 'mitt';
+import mitt, { Emitter } from "mitt";
+import { createContext, useContext, useState } from "react";
 
 type Events = {
   playPauseTrack: string;

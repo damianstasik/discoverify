@@ -1,10 +1,10 @@
-import { extendTailwindMerge, fromTheme } from 'tailwind-merge';
+import { extendTailwindMerge, fromTheme } from "tailwind-merge";
 
 export const tw = extendTailwindMerge({
   classGroups: {
     size: [
       {
-        s: [fromTheme('spacing')],
+        s: [fromTheme("spacing")],
       },
     ],
   },

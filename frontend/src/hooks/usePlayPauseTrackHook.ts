@@ -1,11 +1,11 @@
-import { useMutation } from '@tanstack/react-query';
-import { useCallback, useEffect } from 'react';
-import { useRecoilValue } from 'recoil';
-import { playTrack } from '../api';
-import { useEventBus } from '../components/EventBus';
-import { deviceIdAtom } from '../store';
-import { trpc } from '../trpc';
-import { player } from '../state';
+import { useMutation } from "@tanstack/react-query";
+import { useCallback, useEffect } from "react";
+import { useRecoilValue } from "recoil";
+import { playTrack } from "../api";
+import { useEventBus } from "../components/EventBus";
+import { player } from "../state";
+import { deviceIdAtom } from "../store";
+import { trpc } from "../trpc";
 
 export function usePlayPauseTrackHook(trackIds: string[]) {
   const eventBus = useEventBus();
@@ -49,10 +49,10 @@ export function usePlayPauseTrackHook(trackIds: string[]) {
   );
 
   useEffect(() => {
-    eventBus.on('playPauseTrack', handler);
+    eventBus.on("playPauseTrack", handler);
 
     return () => {
-      eventBus.off('playPauseTrack', handler);
+      eventBus.off("playPauseTrack", handler);
     };
   }, [handler]);
 }

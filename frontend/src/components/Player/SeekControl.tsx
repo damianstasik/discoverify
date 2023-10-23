@@ -1,13 +1,13 @@
-import { memo } from 'react';
-import * as Slider from '@radix-ui/react-slider';
+import * as Slider from "@radix-ui/react-slider";
+import { memo } from "react";
 
 function formatTime(seconds: number) {
   const h = Math.floor(seconds / 3600);
   const m = Math.floor((seconds % 3600) / 60);
   const s = Math.round(seconds % 60);
-  return [h, m > 9 ? m : h ? `0${m}` : m || '0', s > 9 ? s : `0${s}`]
+  return [h, m > 9 ? m : h ? `0${m}` : m || "0", s > 9 ? s : `0${s}`]
     .filter(Boolean)
-    .join(':');
+    .join(":");
 }
 
 interface Props {

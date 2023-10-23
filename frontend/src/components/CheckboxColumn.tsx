@@ -1,10 +1,10 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef } from "react";
 
 export const CheckboxColumn = ({ onChange, checked, indeterminate }) => {
   const checkboxRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (typeof indeterminate === 'boolean' && checkboxRef.current) {
+    if (typeof indeterminate === "boolean" && checkboxRef.current) {
       checkboxRef.current.indeterminate = !checked && indeterminate;
     }
   }, [checkboxRef, indeterminate]);

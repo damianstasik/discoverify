@@ -1,12 +1,12 @@
-import { authRouter } from './auth';
-import { router } from './';
-import { trackRouter } from './track';
-import { seedRouter } from './seed';
-import { userRouter } from './user';
-import { playlistRouter } from './playlist';
-import { playerRouter } from './player';
-import { artistRouter } from './artist';
-import { albumRouter } from './album';
+import { router } from "./";
+import { albumRouter } from "./album";
+import { artistRouter } from "./artist";
+import { authRouter } from "./auth";
+import { playerRouter } from "./player";
+import { playlistRouter } from "./playlist";
+import { seedRouter } from "./seed";
+import { trackRouter } from "./track";
+import { userRouter } from "./user";
 
 export const appRouter = router({
   auth: authRouter,

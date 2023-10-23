@@ -1,7 +1,7 @@
-import { useMutation } from '@tanstack/react-query';
-import { useEffect } from 'react';
-import { saveTrack, unsaveTrack } from '../api';
-import { useEventBus } from '../components/EventBus';
+import { useMutation } from "@tanstack/react-query";
+import { useEffect } from "react";
+import { saveTrack, unsaveTrack } from "../api";
+import { useEventBus } from "../components/EventBus";
 
 export function useSaveTrackHook() {
   const eventBus = useEventBus();
@@ -17,10 +17,10 @@ export function useSaveTrackHook() {
       }
     };
 
-    eventBus.on('saveTrack', handle);
+    eventBus.on("saveTrack", handle);
 
     return () => {
-      eventBus.off('saveTrack', handle);
+      eventBus.off("saveTrack", handle);
     };
   }, []);
 }

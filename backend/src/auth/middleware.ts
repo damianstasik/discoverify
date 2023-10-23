@@ -1,7 +1,7 @@
-import { TRPCError } from '@trpc/server';
-import { TokenExpiredError } from 'jsonwebtoken';
-import { middleware, procedure } from '..';
-import * as jwt from 'jsonwebtoken';
+import { TRPCError } from "@trpc/server";
+import { TokenExpiredError } from "jsonwebtoken";
+import * as jwt from "jsonwebtoken";
+import { middleware, procedure } from "..";
 
 export interface AuthTokenInterface {
   accessToken: string;
@@ -19,7 +19,7 @@ type MiddlewareOptions = {
 export const withAuthToken = (options?: MiddlewareOptions) =>
   middleware(async ({ ctx, next }) => {
     if (!ctx.rawToken) {
-      throw new TRPCError({ code: 'UNAUTHORIZED' });
+      throw new TRPCError({ code: "UNAUTHORIZED" });
     }
 
     try {
@@ -36,16 +36,16 @@ export const withAuthToken = (options?: MiddlewareOptions) =>
     } catch (e) {
       if (e instanceof TokenExpiredError) {
         throw new TRPCError({
-          code: 'UNAUTHORIZED',
-          message: 'token_expired',
+          code: "UNAUTHORIZED",
+          message: "token_expired",
 
           cause: e,
         });
       }
 
       throw new TRPCError({
-        code: 'BAD_REQUEST',
-        message: 'malformed_header',
+        code: "BAD_REQUEST",
+        message: "malformed_header",
 
         cause: e,
       });

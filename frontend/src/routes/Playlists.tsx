@@ -1,37 +1,37 @@
-import { useMemo } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-import { useInfiniteQuery } from '@tanstack/react-query';
-import * as playlistApi from '../api/playlist';
-import { VirtualTable } from '../components/VirtualTable';
-import { RouterOutput } from '../trpc';
-import { createColumnHelper } from '@tanstack/react-table';
-import { SpotifyLinkColumn } from '../components/SpotifyLinkColumn';
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { createColumnHelper } from "@tanstack/react-table";
+import { useMemo } from "react";
+import { Link as RouterLink } from "react-router-dom";
+import * as playlistApi from "../api/playlist";
+import { SpotifyLinkColumn } from "../components/SpotifyLinkColumn";
+import { VirtualTable } from "../components/VirtualTable";
+import { RouterOutput } from "../trpc";
 
-type PlaylistType = RouterOutput['user']['playlists']['playlists'][number];
+type PlaylistType = RouterOutput["user"]["playlists"]["playlists"][number];
 
 const columnHelper = createColumnHelper<PlaylistType>();
 
 const columns = [
-  columnHelper.accessor('name', {
-    header: 'Name',
+  columnHelper.accessor("name", {
+    header: "Name",
     size: 300,
     cell: (params) => (
       <RouterLink
         to={`/playlist/${params.row.original.id}`}
-        className='text-white underline decoration-blue-900 underline-offset-4 hover:decoration-blue-500 hover:text-blue-500'
+        className="text-white underline decoration-blue-900 underline-offset-4 hover:decoration-blue-500 hover:text-blue-500"
       >
         {params.getValue()}
       </RouterLink>
     ),
   }),
-  columnHelper.accessor('owner', {
-    header: 'Owner',
+  columnHelper.accessor("owner", {
+    header: "Owner",
     size: 300,
     cell: (params) => params.getValue().display_name,
   }),
-  columnHelper.accessor('uri', {
-    id: 'open',
-    header: '',
+  columnHelper.accessor("uri", {
+    id: "open",
+    header: "",
     size: 40,
     cell: SpotifyLinkColumn,
   }),
@@ -39,7 +39,7 @@ const columns = [
 
 export function Playlists() {
   const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery(
-    ['playlists'],
+    ["playlists"],
     playlistApi.getPlaylists,
     {
       getNextPageParam: (lastPage) => lastPage.nextPage,
