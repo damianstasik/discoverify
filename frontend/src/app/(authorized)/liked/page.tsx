@@ -95,7 +95,7 @@ const likedQuery = async ({ pageParam = 1 }) => {
   return tracks;
 };
 
-export function Liked() {
+export default function Liked() {
   const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery({
     queryKey: ["liked"],
     queryFn: likedQuery,
