@@ -14,7 +14,7 @@ import { Sidebar } from "./Sidebar";
 
 export function Layout() {
   const location = useLocation();
-  const setUser = useSetRecoilState(userAtom);
+  const [u, setUser] = useRecoilState(userAtom);
   const setSavedTracks = useSetRecoilState(savedTracksAtom);
 
   useSaveTrackHook();
@@ -74,7 +74,7 @@ export function Layout() {
     }
   }, [error, mutate]);
 
-  if (isLoading) {
+  if (isLoading || !u) {
     return null;
   }
 
