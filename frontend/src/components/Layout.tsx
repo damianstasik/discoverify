@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { startTransition, useEffect } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import {
@@ -46,10 +46,13 @@ export function Layout() {
     // },
   });
 
-  const { data: user, errorUpdateCount } = useQuery({
+  const {
+    data: user,
+    error,
+    isLoading,
+  } = useQuery({
     queryFn: getCurrentUser,
     queryKey: ["user"],
-    suspense: true,
     refetchOnMount: true,
     refetchOnReconnect: true,
     refetchOnWindowFocus: true,
@@ -64,12 +67,16 @@ export function Layout() {
   }, [user]);
 
   useEffect(() => {
-    if (errorUpdateCount) {
+    if (error) {
       // check error type, if token is expired run the mutation and update token that will rerun this query
       // need to do this with startTransition to avoid triggering suspense
       mutate();
     }
-  }, [errorUpdateCount, mutate]);
+  }, [error, mutate]);
+
+  if (isLoading) {
+    return null;
+  }
 
   if (!user) {
     return <Navigate to="/login" state={location} replace />;
