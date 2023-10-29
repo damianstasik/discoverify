@@ -1,6 +1,6 @@
 {
   "name": "discoverify",
-  "workspaces": ["backend", "frontend", "landing", "scripts"],
+  "workspaces": ["backend", "frontend", "scripts"],
   "scripts": {
     "dev": "turbo run dev",
     "build:backend": "turbo build --filter=backend"
