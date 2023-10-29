@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { tw } from "../tw";
+import Image from "next/image";
 
 interface Props {
   src?: string;
@@ -20,11 +21,13 @@ export function BgImg({ src, className, alt }: Props) {
       )}
     >
       <span className="absolute inset-0 z-0 bg-gradient-to-b from-transparent to-slate-900" />
-      <img
+      <Image
         src={src}
         alt={alt}
-        className="object-cover w-full h-full"
-        onLoad={() => setLoaded(true)}
+        sizes="500px"
+        fill
+        className="object-cover w-full h-full -z-10"
+        onLoadingComplete={() => setLoaded(true)}
       />
     </div>
   );

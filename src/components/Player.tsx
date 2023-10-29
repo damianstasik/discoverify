@@ -6,7 +6,13 @@ import mdiHeartOutline from "@slimr/mdi-paths/HeartOutline";
 import { useQuery } from "@tanstack/react-query";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react-lite";
-import { useCallback, useContext, useEffect, useState } from "react";
+import {
+  startTransition,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { useThrottledCallback } from "use-debounce";
 import { TokenContext, useToken } from "../app/(authorized)/context";
@@ -27,6 +33,7 @@ import { QueueButton } from "./Player/QueueButton";
 import { SeekControl } from "./Player/SeekControl";
 import { TrackInfo } from "./Player/TrackInfo";
 import { VolumeControl } from "./Player/VolumeControl";
+import { useInterval } from "../hooks/useInterval";
 
 export const Player = observer(() => {
   // const user = useRecoilValue(userAtom);
@@ -88,18 +95,15 @@ export const Player = observer(() => {
     volume,
   });
 
-  const { data: vol } = useQuery({
-    queryKey: ["volume", deviceId],
-    queryFn: async () => player!.getVolume(),
-    enabled: player !== null && pl.isPlaying() && !isChangingVolume,
-    refetchInterval: 2500,
-  });
-
-  useEffect(() => {
-    if (typeof vol !== "undefined") {
-      setVolume(vol);
-    }
-  }, [vol]);
+  useInterval(
+    () => {
+      startTransition(async () => {
+        const vol = await player!.getVolume();
+        setVolume(vol);
+      });
+    },
+    player !== null && pl.isPlaying() && !isChangingVolume ? 2500 : null,
+  );
 
   const handlePrevious = useCallback(() => {
     player?.previousTrack();

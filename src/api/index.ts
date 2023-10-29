@@ -208,51 +208,6 @@ export const seedSearch = async ({ queryKey, signal }) => {
   return [...artists, ...tracks, ...genres];
 };
 
-export const getPlaylist: Query<"playlist.byId", [key: string, id: string]> =
-  async ({ queryKey, signal }) => {
-    const token = await getTokenFromCookie();
-    if (!token) {
-      return null;
-    }
-
-    const spotifyApi = getSpotifyApi(token.accessToken);
-
-    const playlist = await spotifyApi.getPlaylist(queryKey[1], {
-      market: "from_token",
-    });
-
-    return playlist.body;
-  };
-
-export const getPlaylistTracks: Query<
-  "playlist.tracks",
-  [key: string, id: string]
-> = async ({ pageParam = 1, queryKey, signal }) => {
-  const token = await getTokenFromCookie();
-  if (!token) {
-    return null;
-  }
-
-  const spotifyApi = getSpotifyApi(token.accessToken);
-
-  const tracks = await spotifyApi.getPlaylistTracks(queryKey[1], {
-    limit: 50,
-    offset: pageParam === 1 ? 0 : pageParam * 50,
-    market: "from_token",
-  });
-
-  return {
-    tracks: tracks.body.items.map((item) => ({
-      ...item.track,
-      added_at: item.added_at,
-      isLiked: true,
-      spotifyId: item.track?.id,
-    })),
-    nextPage: tracks.body.next ? pageParam + 1 : null,
-    total: tracks.body.total,
-  };
-};
-
 export const authUrlMutation: Mutation<"auth.url", void> = async () => {
   // const url = await trpc.auth.url.mutate();
   // return url;
