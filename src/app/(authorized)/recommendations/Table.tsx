@@ -13,7 +13,7 @@ import { DurationColumn } from "../../../components/DurationColumn";
 import { SaveColumn } from "../../../components/SaveColumn";
 import { SpotifyLinkColumn } from "../../../components/SpotifyLinkColumn";
 
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { VirtualTable } from "../../../components/VirtualTable";
 
@@ -85,7 +85,7 @@ const columns = [
 ];
 
 export function Table({ trackIds, artistsIds, attributeValues }) {
-  const { data, isLoading } = useSuspenseQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["recommended", trackIds, artistsIds, attributeValues],
     queryFn: () => getRecommendedTracks(trackIds, artistsIds, attributeValues),
   });

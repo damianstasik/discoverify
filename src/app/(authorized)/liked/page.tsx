@@ -89,7 +89,7 @@ const columns = [
   }),
 ];
 
-const likedQuery = async ({ pageParam = 1 }) => {
+const likedQuery = async ({ pageParam }) => {
   const tracks = await getLikedTracks(pageParam);
 
   return tracks;
@@ -100,7 +100,7 @@ export default function Liked() {
     queryKey: ["liked"],
     queryFn: likedQuery,
     getNextPageParam: (lastPage) => lastPage.nextPage,
-    initialPageParam: 0,
+    initialPageParam: 1,
   });
 
   const flatData = useMemo(

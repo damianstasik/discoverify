@@ -1,5 +1,4 @@
 import { redirect } from "next/navigation";
-import { Button } from "../../../components/Button";
 import { getSpotifyApi } from "../../sp";
 import { LoginButton } from "./LoginButton";
 
