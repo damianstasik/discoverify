@@ -5,6 +5,7 @@ import { useCallback, useTransition } from "react";
 import { saveTrack } from "../api/saveTrack";
 import { unsaveTrack } from "../api/unsaveTrack";
 import { useFormState } from "react-dom";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface Props {
   trackId: string;
@@ -14,11 +15,15 @@ interface Props {
 
 export function SaveTrackButton({ trackId, isSaved, className }: Props) {
   const [isSaving, startTransition] = useTransition();
+  const client = useQueryClient();
 
-  const [state, formAction] = useFormState(
-    (is) => (is ? unsaveTrack(trackId) : saveTrack(trackId)),
-    isSaved,
-  );
+  const [state, formAction] = useFormState(async (is) => {
+    const value = is ? await unsaveTrack(trackId) : await saveTrack(trackId);
+
+    client.setQueryData(["is-saved", trackId], value);
+
+    return value;
+  }, isSaved);
 
   const handleSave = useCallback(
     () => startTransition(formAction),

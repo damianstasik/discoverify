@@ -6,7 +6,7 @@ import {
   useSetRecoilState,
 } from "recoil";
 import { getCurrentUser, refreshAccessToken } from "../api";
-import { useSaveTrackHook } from "../hooks/useSaveTrackHook";
+// import { useSaveTrackHook } from "../hooks/useSaveTrackHook";
 import { savedTracksAtom, userAtom } from "../store";
 import { trpc } from "../trpc";
 import { Player } from "./Player";
@@ -15,27 +15,25 @@ import { Sidebar } from "./Sidebar";
 export function Layout() {
   const location = useLocation();
   const [u, setUser] = useRecoilState(userAtom);
-  const setSavedTracks = useSetRecoilState(savedTracksAtom);
+  // const setSavedTracks = useSetRecoilState(savedTracksAtom);
 
-  useSaveTrackHook();
+  // useEffect(() => {
+  //   const sub = trpc.user.onTrackSave.subscribe(undefined, {
+  //     onData: (track) => {
+  //       setSavedTracks((ids) => {
+  //         if (ids.includes(track.id)) {
+  //           return ids.filter((id) => id !== track.id);
+  //         }
 
-  useEffect(() => {
-    const sub = trpc.user.onTrackSave.subscribe(undefined, {
-      onData: (track) => {
-        setSavedTracks((ids) => {
-          if (ids.includes(track.id)) {
-            return ids.filter((id) => id !== track.id);
-          }
+  //         return ids.concat(track.id);
+  //       });
+  //     },
+  //   });
 
-          return ids.concat(track.id);
-        });
-      },
-    });
-
-    return () => {
-      sub.unsubscribe();
-    };
-  }, []);
+  //   return () => {
+  //     sub.unsubscribe();
+  //   };
+  // }, []);
 
   const { mutate } = useMutation({
     mutationFn: refreshAccessToken,

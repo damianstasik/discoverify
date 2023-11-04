@@ -1,10 +1,5 @@
-import mdiHeart from "@slimr/mdi-paths/Heart";
-import mdiHeartOutline from "@slimr/mdi-paths/HeartOutline";
 import { CellContext } from "@tanstack/react-table";
-import { useRecoilValue } from "recoil";
-import { savedTracksSelector } from "../store";
-import { useEventBus } from "./EventBus";
-import { IconButton } from "./IconButton";
+
 import { SaveTrackButton } from "./SaveTrackButton";
 
 export function SaveColumn<Data extends { id: string }>(

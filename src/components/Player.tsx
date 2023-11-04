@@ -35,6 +35,7 @@ import { TrackInfo } from "./Player/TrackInfo";
 import { VolumeControl } from "./Player/VolumeControl";
 import { useInterval } from "../hooks/useInterval";
 import { SaveTrackButton } from "./SaveTrackButton";
+import { SaveTrackControl } from "./Player/SaveTrackControl";
 
 export const Player = observer(() => {
   // const user = useRecoilValue(userAtom);
@@ -157,22 +158,7 @@ export const Player = observer(() => {
     [thottledVolumeChange],
   );
 
-  const [isQueueOpen, setIsQueueOpen] = useRecoilState(queueVisibilityAtom);
-
-  const { data: queue } = useQuery({
-    queryKey: ["queue"],
-    queryFn: async ({ signal }) => {
-      // todo use server action
-      // const queue = await trpc.player.queue.query(undefined, { signal });
-      return [];
-    },
-    enabled: isQueueOpen,
-  });
-
-  const savedTracks = useRecoilValue(savedTracksAtom);
   const id = meta?.current_item?.uri?.replace("spotify:track:", "");
-
-  const isSaved = id ? savedTracks.includes(id) : false;
 
   return (
     <div className="bg-slate-700 flex px-3 py-2 h-full border-t border-slate-675">
@@ -210,7 +196,7 @@ export const Player = observer(() => {
           />
         </div>
         <div className="w-2/12 text-white">
-          <SaveTrackButton trackId={id} isSaved={isSaved} />
+          <SaveTrackControl trackId={id} />
           {/* <QueueButton
             queue={queue || []}
             isOpen={isQueueOpen}
