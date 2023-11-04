@@ -1,8 +1,8 @@
 "use server";
 
-import { getTokenFromCookie } from "../../user";
+import { getTokenFromCookie } from "../../../user";
 
-export async function getTopTracks(
+export async function getTopArtists(
   page: number,
   timeRange: "short_term" | "medium_term" | "long_term",
 ) {
@@ -12,7 +12,7 @@ export async function getTopTracks(
   }
 
   const res = await fetch(
-    `https://api.spotify.com/v1/me/top/tracks?limit=50&offset=${
+    `https://api.spotify.com/v1/me/top/artists?limit=50&offset=${
       page === 1 ? 0 : page * 50
     }&time_range=${timeRange}`,
     {
@@ -27,7 +27,7 @@ export async function getTopTracks(
   const ids = body.items.map((item) => item.id).join(",");
 
   const res2 = await fetch(
-    `https://api.spotify.com/v1/me/tracks/contains?ids=${ids}`,
+    `https://api.spotify.com/v1/me/following/contains?ids=${ids}`,
     {
       headers: {
         Authorization: `Bearer ${token.accessToken}`,
@@ -38,7 +38,7 @@ export async function getTopTracks(
   const body2 = await res2.json();
 
   return {
-    tracks: body.items.map((item, index) => ({
+    artists: body.items.map((item, index) => ({
       ...item,
       spotifyId: item.id,
       isSaved: body2[index],

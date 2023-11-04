@@ -41,7 +41,7 @@ export function Sidebar() {
       <nav className="space-y-1">
         <SidebarLink
           label="My top artists"
-          to="/top-artists"
+          to="/top/artists"
           icon={mdiAccountStar}
           // iconTintColor="text-green-700"
           // textTintColor="text-green-400"
@@ -70,7 +70,7 @@ export function Sidebar() {
 
         <SidebarLink
           label="My top tracks"
-          to="/top-tracks"
+          to="/top/tracks"
           icon={mdiMusicNotePlus}
         />
 

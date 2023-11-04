@@ -2,18 +2,18 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { createColumnHelper } from "@tanstack/react-table";
 import { useMemo } from "react";
-import { AlbumColumn } from "../../../components/AlbumColumn";
-import { ArtistsColumn } from "../../../components/ArtistsColumn";
-import { CheckboxColumn } from "../../../components/CheckboxColumn";
-import { DurationColumn } from "../../../components/DurationColumn";
-import { SaveColumn } from "../../../components/SaveColumn";
-import { SpotifyLinkColumn } from "../../../components/SpotifyLinkColumn";
-import { TrackNameColumn } from "../../../components/TrackNameColumn";
-import { TrackPreviewColumn } from "../../../components/TrackPreviewColumn";
-import { VirtualTable } from "../../../components/VirtualTable";
+import { AlbumColumn } from "../../../../components/AlbumColumn";
+import { ArtistsColumn } from "../../../../components/ArtistsColumn";
+import { CheckboxColumn } from "../../../../components/CheckboxColumn";
+import { DurationColumn } from "../../../../components/DurationColumn";
+import { SaveColumn } from "../../../../components/SaveColumn";
+import { SpotifyLinkColumn } from "../../../../components/SpotifyLinkColumn";
+import { TrackNameColumn } from "../../../../components/TrackNameColumn";
+import { TrackPreviewColumn } from "../../../../components/TrackPreviewColumn";
+import { VirtualTable } from "../../../../components/VirtualTable";
 
 import { getTopTracks } from "./api";
-import { useTimeRange } from "./useTimeRange";
+import { useTimeRange } from "../useTimeRange";
 const columnHelper = createColumnHelper<any>();
 
 const columns = [

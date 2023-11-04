@@ -1,11 +1,10 @@
+import { TimeRange } from "../TimeRange";
 import { Table } from "./Table";
-import { TimeRange } from "./TimeRange";
 
-export default function TopTracks() {
+export default function TopArtists() {
   return (
     <>
       <TimeRange />
-
       <Table />
     </>
   );
