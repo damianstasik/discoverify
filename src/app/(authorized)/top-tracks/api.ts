@@ -1,6 +1,5 @@
 "use server";
 
-import { getSpotifyApi } from "../../sp";
 import { getTokenFromCookie } from "../../user";
 
 export async function getTopTracks(
@@ -11,20 +10,40 @@ export async function getTopTracks(
   if (!token) {
     return null;
   }
-  const spotifyApi = getSpotifyApi(token.accessToken);
 
-  const res = await spotifyApi.getMyTopTracks({
-    limit: 50,
-    offset: page === 1 ? 0 : page * 50,
-    time_range: timeRange,
-  });
+  const res = await fetch(
+    `https://api.spotify.com/v1/me/top/tracks?limit=50&offset=${
+      page === 1 ? 0 : page * 50
+    }&time_range=${timeRange}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token.accessToken}`,
+      },
+    },
+  );
+
+  const body = await res.json();
+
+  const ids = body.items.map((item) => item.id).join(",");
+
+  const res2 = await fetch(
+    `https://api.spotify.com/v1/me/tracks/contains?ids=${ids}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token.accessToken}`,
+      },
+    },
+  );
+
+  const body2 = await res2.json();
 
   return {
-    tracks: res.body.items.map((item) => ({
+    tracks: body.items.map((item, index) => ({
       ...item,
       spotifyId: item.id,
+      isSaved: body2[index],
     })),
-    nextPage: res.body.next ? page + 1 : null,
-    total: res.body.total,
+    nextPage: body.next ? page + 1 : null,
+    total: body.total,
   };
 }

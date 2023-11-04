@@ -1,8 +1,6 @@
 "use client";
-
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { createColumnHelper } from "@tanstack/react-table";
-import { formatRelative } from "date-fns";
 import { useMemo } from "react";
 import { AlbumColumn } from "../../../components/AlbumColumn";
 import { ArtistsColumn } from "../../../components/ArtistsColumn";
@@ -14,8 +12,8 @@ import { TrackNameColumn } from "../../../components/TrackNameColumn";
 import { TrackPreviewColumn } from "../../../components/TrackPreviewColumn";
 import { VirtualTable } from "../../../components/VirtualTable";
 
-import { getRecentlyPlayed } from "./api";
-
+import { getTopTracks } from "./api";
+import { useTimeRange } from "./useTimeRange";
 const columnHelper = createColumnHelper<any>();
 
 const columns = [
@@ -65,13 +63,6 @@ const columns = [
     minSize: 200,
     size: 0.3,
   }),
-  columnHelper.accessor("playedAt", {
-    header: "Played At",
-    cell: (params: any) => {
-      return formatRelative(new Date(params.getValue()), new Date());
-    },
-    size: 180,
-  }),
   columnHelper.accessor("duration_ms", {
     header: "Duration",
     cell: DurationColumn,
@@ -90,18 +81,16 @@ const columns = [
   }),
 ];
 
-const recentlyPlayedQuery = async ({ pageParam }) => {
-  const tracks = await getRecentlyPlayed(pageParam);
-
-  return tracks;
-};
-
 export function Table() {
+  const { timeRange } = useTimeRange();
+
   const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery({
-    queryKey: ["recently-played"],
-    queryFn: recentlyPlayedQuery,
-    getNextPageParam: (d) => d?.nextCursor,
-    initialPageParam: null,
+    queryKey: ["top-tracks", timeRange],
+    queryFn: async function topTracksQuery({ pageParam }) {
+      return getTopTracks(pageParam, timeRange);
+    },
+    getNextPageParam: (lastPage) => lastPage.nextPage,
+    initialPageParam: 1,
   });
 
   const flatData = useMemo(
@@ -115,9 +104,9 @@ export function Table() {
     <VirtualTable
       hasNextPage={hasNextPage}
       fetchNextPage={fetchNextPage}
-      isLoading={isFetching}
       data={flatData}
       columns={columns}
+      isLoading={isFetching}
       meta={ids}
     />
   );
