@@ -27,7 +27,7 @@ export function BgImg({ src, className, alt }: Props) {
         sizes="500px"
         fill
         className="object-cover w-full h-full -z-10"
-        onLoadingComplete={() => setLoaded(true)}
+        onLoad={() => setLoaded(true)}
       />
     </div>
   );

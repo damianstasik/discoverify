@@ -3,7 +3,7 @@
 import { getSpotifyApi } from "../../sp";
 import { getTokenFromCookie } from "../../user";
 
-export async function getRecentlyPlayed(page = 1) {
+export async function getRecentlyPlayed(page) {
   const token = await getTokenFromCookie();
   if (!token) {
     return null;
@@ -12,7 +12,7 @@ export async function getRecentlyPlayed(page = 1) {
 
   const res = await spotifyApi.getMyRecentlyPlayedTracks({
     limit: 50,
-    // offset: req.input.page === 1 ? 0 : req.input.page * 50,
+    offset: page === 1 ? 0 : page * 50,
   });
 
   return {

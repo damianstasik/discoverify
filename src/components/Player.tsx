@@ -34,6 +34,7 @@ import { SeekControl } from "./Player/SeekControl";
 import { TrackInfo } from "./Player/TrackInfo";
 import { VolumeControl } from "./Player/VolumeControl";
 import { useInterval } from "../hooks/useInterval";
+import { SaveTrackButton } from "./SaveTrackButton";
 
 export const Player = observer(() => {
   // const user = useRecoilValue(userAtom);
@@ -60,12 +61,12 @@ export const Player = observer(() => {
 
   const h = useCallback(
     (state) => {
-      console.log("state", state);
       setDuration(state.duration / 1000);
       setMeta(state.context.metadata);
 
       runInAction(() => {
         pl.resetLoadingTrackId();
+        console.log("playing", state.context.metadata?.current_item.uri);
         pl.setPlayingTrackId(state.context.metadata?.current_item.uri);
       });
 
@@ -88,7 +89,7 @@ export const Player = observer(() => {
     }
   }, [isSeeking, status]);
 
-  const { deviceId, player } = useSpotifyWebPlaybackSdk({
+  const player = useSpotifyWebPlaybackSdk({
     name: "Discoverify",
     getOAuthToken: () => token,
     onPlayerStateChanged: h,
@@ -168,21 +169,13 @@ export const Player = observer(() => {
     enabled: isQueueOpen,
   });
 
-  const eventBus = useEventBus();
   const savedTracks = useRecoilValue(savedTracksAtom);
   const id = meta?.current_item?.uri?.replace("spotify:track:", "");
 
   const isSaved = id ? savedTracks.includes(id) : false;
 
-  const handleSave = useCallback(() => {
-    eventBus.emit("saveTrack", {
-      id,
-      isSaved,
-    });
-  }, [isSaved, id]);
-
   return (
-    <div className="bg-slate-700 flex px-3 py-2 h-full">
+    <div className="bg-slate-700 flex px-3 py-2 h-full border-t border-slate-675">
       <div className="flex gap-2 items-center w-full">
         <div className="w-3/12">
           <TrackInfo
@@ -217,16 +210,13 @@ export const Player = observer(() => {
           />
         </div>
         <div className="w-2/12 text-white">
-          <IconButton
-            icon={isSaved ? mdiHeart : mdiHeartOutline}
-            onClick={handleSave}
-          />
-          <QueueButton
+          <SaveTrackButton trackId={id} isSaved={isSaved} />
+          {/* <QueueButton
             queue={queue || []}
             isOpen={isQueueOpen}
             onVisibilityChange={(v) => setIsQueueOpen(v)}
           />
-          <IconButton icon={mdiDevices} />
+          <IconButton icon={mdiDevices} /> */}
         </div>
       </div>
     </div>

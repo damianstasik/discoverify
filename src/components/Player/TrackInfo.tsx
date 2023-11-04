@@ -28,7 +28,7 @@ export const TrackInfo = memo(({ name, artists, imageUrl }: Props) => {
         <p className="text-white">{name}</p>
         <div className="flex gap-1 flex-wrap">
           {artists?.map((artist, index) => (
-            <div key={artist.id}>
+            <div key={artist.uri}>
               <ArtistLink
                 id={artist.uri.replace("spotify:artist:", "")}
                 name={artist.name}

@@ -22,9 +22,9 @@ export function SidebarLink({
       href={to}
       className={tw(
         isActive
-          ? "bg-slate-800 text-white"
-          : "text-slate-400 hover:bg-slate-700 hover:text-white",
-        "group flex items-center h-8 px-2 text-sm rounded-md ",
+          ? "bg-slate-800 text-white border-slate-775"
+          : "text-slate-400 hover:bg-slate-700 hover:border-t-slate-675 hover:text-white border-t-transparent",
+        "group flex items-center h-8 px-2 text-sm rounded-md border-t",
         className,
         textTintColor,
       )}

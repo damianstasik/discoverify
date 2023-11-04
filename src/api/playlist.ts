@@ -3,10 +3,9 @@
 import { getSpotifyApi } from "../app/sp";
 import { getTokenFromCookie } from "../app/user";
 
-export const getPlaylists: Query<"user.playlists", [key: string]> = async ({
-  pageParam = 1,
-  signal,
-}) => {
+export const getPlaylists: Query<"user.playlists", [key: string]> = async (
+  pageParam,
+) => {
   const token = await getTokenFromCookie();
   if (!token) {
     return null;

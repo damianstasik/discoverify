@@ -8,7 +8,12 @@ interface Props {
 
 export function Card({ children, className, title }: Props) {
   return (
-    <div className={tw("px-3 py-2 bg-slate-700 rounded-md", className)}>
+    <div
+      className={tw(
+        "px-3 py-2 bg-slate-700 rounded-md border-t border-t-slate-675",
+        className,
+      )}
+    >
       <h5 className="text-base font-semibold text-white">{title}</h5>
       {children}
     </div>

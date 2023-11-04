@@ -88,6 +88,7 @@ export function Table({ trackIds, artistsIds, attributeValues }) {
   const { data, isLoading } = useQuery({
     queryKey: ["recommended", trackIds, artistsIds, attributeValues],
     queryFn: () => getRecommendedTracks(trackIds, artistsIds, attributeValues),
+    refetchOnWindowFocus: false,
   });
   const ids = useMemo(() => (data || []).map((t) => t.uri), [data]);
 

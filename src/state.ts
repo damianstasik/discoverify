@@ -3,9 +3,14 @@ import { makeAutoObservable } from "mobx";
 class Player {
   loadingTrackId: string | null = null;
   playingTrackId: string | null = null;
+  deviceId: string | null = null;
 
   constructor() {
     makeAutoObservable(this);
+  }
+
+  setDeviceId(deviceId: string) {
+    this.deviceId = deviceId;
   }
 
   setLoadingTrackId(trackId: string) {

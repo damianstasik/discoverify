@@ -1,7 +1,8 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRecoilState } from "recoil";
 import { deviceIdAtom } from "../store";
+import { player } from "../state";
 
 interface Options {
   name: string;
@@ -16,13 +17,13 @@ export function useSpotifyWebPlaybackSdk({
   onPlayerStateChanged,
   volume,
 }: Options) {
-  const playerRef = useRef<Spotify.Player | null>(null);
-  const [deviceId, setDeviceId] = useRecoilState(deviceIdAtom);
+  const [spotifyPlayer, setSpotifyPlayer] = useState<Spotify.Player | null>(
+    null,
+  );
 
   useEffect(() => {
     window.onSpotifyWebPlaybackSDKReady = () => {
-      console.log("window.Spotify", window.Spotify);
-      playerRef.current = new Spotify.Player({
+      const pl = new Spotify.Player({
         name,
         getOAuthToken: async (cb) => {
           const token = await getOAuthToken();
@@ -31,28 +32,28 @@ export function useSpotifyWebPlaybackSdk({
         volume,
       });
 
-      playerRef.current.addListener("ready", ({ device_id }) => {
-        setDeviceId(device_id);
+      setSpotifyPlayer(pl);
+
+      pl.addListener("ready", ({ device_id }) => {
+        player.setDeviceId(device_id);
       });
 
-      playerRef.current.connect();
+      pl.connect();
     };
   }, []);
 
   useEffect(() => {
-    const player = playerRef.current;
-    console.log("player", player);
-    if (player) {
-      player?.addListener("player_state_changed", onPlayerStateChanged);
+    if (spotifyPlayer) {
+      spotifyPlayer.addListener("player_state_changed", onPlayerStateChanged);
 
       return () => {
-        player?.removeListener("player_state_changed", onPlayerStateChanged);
+        spotifyPlayer.removeListener(
+          "player_state_changed",
+          onPlayerStateChanged,
+        );
       };
     }
-  }, [onPlayerStateChanged, playerRef.current]);
+  }, [onPlayerStateChanged, spotifyPlayer]);
 
-  return {
-    player: playerRef.current,
-    deviceId,
-  };
+  return spotifyPlayer;
 }

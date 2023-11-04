@@ -101,7 +101,7 @@ export default function RecentlyPlayed() {
     queryKey: ["recently-played"],
     queryFn: recentlyPlayedQuery,
     getNextPageParam: () => null,
-    initialPageParam: 0,
+    initialPageParam: 1,
   });
 
   const flatData = useMemo(

@@ -5,10 +5,9 @@ import mdiMusicBoxMultiple from "@slimr/mdi-paths/MusicBoxMultiple";
 import mdiPlayBoxMultipleOutline from "@slimr/mdi-paths/PlayBoxMultipleOutline";
 import mdiTrendingUp from "@slimr/mdi-paths/TrendingUp";
 import { Suspense } from "react";
-import { getArtist } from "../../../../api/artist";
-import { BgImg } from "../../../../components/BgImg";
-import { Artist } from "./Artist";
+import { ArtistInfo } from "./ArtistInfo";
 import { TabLink } from "./TabLink";
+import { ArtistInfoSkeleton } from "./ArtistInfoSkeleton";
 
 export default function Layout({
   children,
@@ -51,8 +50,8 @@ export default function Layout({
   ];
   return (
     <div>
-      <Suspense fallback={<div>Loading...</div>}>
-        <Artist id={params.id} />
+      <Suspense fallback={<ArtistInfoSkeleton />}>
+        <ArtistInfo id={params.id} />
       </Suspense>
       <nav className="-mb-px flex gap-4 mx-3 relative" aria-label="Tabs">
         {tabs.map((tab) => (

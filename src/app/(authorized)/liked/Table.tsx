@@ -1,20 +1,19 @@
 "use client";
 
-import { createColumnHelper } from "@tanstack/react-table";
-import { AddedAtColumn } from "../../../../components/AddedAtColumn";
-import { AlbumColumn } from "../../../../components/AlbumColumn";
-import { ArtistsColumn } from "../../../../components/ArtistsColumn";
-import { CheckboxColumn } from "../../../../components/CheckboxColumn";
-import { DurationColumn } from "../../../../components/DurationColumn";
-import { SaveColumn } from "../../../../components/SaveColumn";
-import { SpotifyLinkColumn } from "../../../../components/SpotifyLinkColumn";
-import { TrackNameColumn } from "../../../../components/TrackNameColumn";
-import { TrackPreviewColumn } from "../../../../components/TrackPreviewColumn";
-import { VirtualTable } from "../../../../components/VirtualTable";
 import { useInfiniteQuery } from "@tanstack/react-query";
-
+import { createColumnHelper } from "@tanstack/react-table";
 import { useMemo } from "react";
-import { getPlaylistTracks } from "../../../../api/getPlaylistTracks";
+import { AddedAtColumn } from "../../../components/AddedAtColumn";
+import { AlbumColumn } from "../../../components/AlbumColumn";
+import { ArtistsColumn } from "../../../components/ArtistsColumn";
+import { CheckboxColumn } from "../../../components/CheckboxColumn";
+import { DurationColumn } from "../../../components/DurationColumn";
+import { SaveColumn } from "../../../components/SaveColumn";
+import { SpotifyLinkColumn } from "../../../components/SpotifyLinkColumn";
+import { TrackNameColumn } from "../../../components/TrackNameColumn";
+import { TrackPreviewColumn } from "../../../components/TrackPreviewColumn";
+import { getLikedTracks } from "./api";
+import { VirtualTable } from "../../../components/VirtualTable";
 
 const columnHelper = createColumnHelper<any>();
 
@@ -50,8 +49,8 @@ const columns = [
   columnHelper.accessor("name", {
     header: "Name",
     minSize: 200,
-    cell: TrackNameColumn,
     size: 0.4,
+    cell: TrackNameColumn,
   }),
   columnHelper.accessor("artists", {
     header: "Artist(s)",
@@ -88,31 +87,32 @@ const columns = [
   }),
 ];
 
-export function Table({ id }) {
-  const {
-    data: tracks,
-    fetchNextPage,
-    hasNextPage,
-    isLoading,
-  } = useInfiniteQuery({
-    queryKey: ["playlistTracks", id],
-    queryFn: async ({ pageParam }) => getPlaylistTracks(id, pageParam),
-    initialPageParam: 1,
+const likedQuery = async ({ pageParam }) => {
+  const tracks = await getLikedTracks(pageParam);
+
+  return tracks;
+};
+
+export function Table() {
+  const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery({
+    queryKey: ["liked"],
+    queryFn: likedQuery,
     getNextPageParam: (lastPage) => lastPage.nextPage,
+    initialPageParam: 1,
   });
 
   const flatData = useMemo(
-    () => tracks?.pages?.flatMap((page) => page?.tracks) ?? [],
-    [tracks],
+    () => data?.pages?.flatMap((page) => page.tracks) ?? [],
+    [data],
   );
 
   const ids = useMemo(() => flatData.map((t) => t.uri), [flatData]);
 
   return (
     <VirtualTable
-      columns={columns}
       data={flatData}
-      isLoading={isLoading}
+      columns={columns}
+      isLoading={isFetching}
       hasNextPage={hasNextPage}
       fetchNextPage={fetchNextPage}
       meta={ids}

@@ -36,12 +36,12 @@ const columns = [
   }),
 ];
 
-export function Playlists() {
+export default function Playlists() {
   const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery({
     queryKey: ["playlists"],
-    queryFn: playlistApi.getPlaylists,
+    queryFn: ({ pageParam }) => playlistApi.getPlaylists(pageParam),
     getNextPageParam: (lastPage) => lastPage.nextPage,
-    initialPageParam: 0,
+    initialPageParam: 1,
   });
 
   const flatData = useMemo(

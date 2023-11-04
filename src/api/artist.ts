@@ -21,18 +21,6 @@ export async function getTopTracks(id: string) {
   return tracks.body.tracks;
 }
 
-export async function getArtist(id: string) {
-  const token = await getTokenFromCookie();
-  if (!token) {
-    return null;
-  }
-
-  const spotifyApi = getSpotifyApi(token.accessToken);
-  const artist = await spotifyApi.getArtist(id);
-
-  return artist.body;
-}
-
 export async function getFollowedArtistsTopTracks(
   token: string,
   genre: string | null,

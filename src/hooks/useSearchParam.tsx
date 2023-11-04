@@ -38,7 +38,7 @@ export function useSearchParam(name: string) {
   return {
     remove: (value: string, navigate = true) => {
       const qs = createQueryString(value);
-      console.log("qs", qs);
+
       if (navigate) {
         router.push(`${pathname}?${qs}`);
       } else {

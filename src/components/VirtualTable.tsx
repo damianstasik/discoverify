@@ -104,6 +104,7 @@ interface Props<Data extends { spotifyId: string }> {
   isLoading: boolean;
   hasNextPage?: boolean;
   fetchNextPage?: () => void;
+  meta: any;
 }
 
 const VirtualTableRaw = <Data extends { spotifyId: string }>({
@@ -112,6 +113,7 @@ const VirtualTableRaw = <Data extends { spotifyId: string }>({
   isLoading,
   hasNextPage = false,
   fetchNextPage = () => {},
+  meta,
 }: Props<Data>) => {
   const table = useReactTable<Data>({
     data,
@@ -120,6 +122,7 @@ const VirtualTableRaw = <Data extends { spotifyId: string }>({
       minSize: 0,
     },
     getCoreRowModel: getCoreRowModel(),
+    meta,
   });
 
   const contRef = useRef<HTMLDivElement>(null);

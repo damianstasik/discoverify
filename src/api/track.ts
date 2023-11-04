@@ -1,12 +1,3 @@
-export async function saveTrack(token: string, trackId: string): Promise<void> {
-  await fetch(
-    `${import.meta.env.VITE_API_URL}/save?tokenId=${token}&trackId=${trackId}`,
-    {
-      method: "put",
-    },
-  );
-}
-
 export async function getTopTracks(
   token: string,
   timeRange: string,
