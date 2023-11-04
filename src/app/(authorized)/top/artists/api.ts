@@ -27,7 +27,7 @@ export async function getTopArtists(
   const ids = body.items.map((item) => item.id).join(",");
 
   const res2 = await fetch(
-    `https://api.spotify.com/v1/me/following/contains?ids=${ids}`,
+    `https://api.spotify.com/v1/me/following/contains?type=artist&ids=${ids}`,
     {
       headers: {
         Authorization: `Bearer ${token.accessToken}`,
@@ -39,8 +39,9 @@ export async function getTopArtists(
 
   return {
     artists: body.items.map((item, index) => ({
-      ...item,
-      spotifyId: item.id,
+      id: item.id,
+      name: item.name,
+      uri: item.uri,
       isSaved: body2[index],
     })),
     nextPage: body.next ? page + 1 : null,
