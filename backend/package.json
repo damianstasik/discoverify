@@ -13,7 +13,7 @@
     "@fastify/static": "^6.11.2",
     "@fastify/websocket": "^8.2.0",
     "@prisma/client": "^5.4.2",
-    "@trpc/server": "^10.41.0",
+    "@trpc/server": "^10.43.3",
     "@types/async": "^3.2.22",
     "@types/cookie": "^0.5.3",
     "@types/jsonwebtoken": "^9.0.4",
