@@ -1,7 +1,7 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
-import { useRecoilState } from "recoil";
-import { deviceIdAtom } from "../store";
+import { useEffect, useState } from "react";
+// import { useRecoilState } from "recoil";
+// import { deviceIdAtom } from "../store";
 import { player } from "../state";
 
 interface Options {

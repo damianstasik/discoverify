@@ -1,9 +1,9 @@
 "use client";
 
-import mdiDevices from "@slimr/mdi-paths/Devices";
-import mdiHeart from "@slimr/mdi-paths/Heart";
-import mdiHeartOutline from "@slimr/mdi-paths/HeartOutline";
-import { useQuery } from "@tanstack/react-query";
+// import mdiDevices from "@slimr/mdi-paths/Devices";
+// import mdiHeart from "@slimr/mdi-paths/Heart";
+// import mdiHeartOutline from "@slimr/mdi-paths/HeartOutline";
+// import { useQuery } from "@tanstack/react-query";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react-lite";
 import {
@@ -13,28 +13,23 @@ import {
   useEffect,
   useState,
 } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+// import { useRecoilState, useRecoilValue } from "recoil";
 import { useThrottledCallback } from "use-debounce";
-import { TokenContext, useToken } from "../app/(authorized)/context";
-import { getTokenFromCookie } from "../app/user";
+import { TokenContext } from "../app/(authorized)/context";
+// import { getTokenFromCookie } from "../app/user";
 import { useSpotifyWebPlaybackSdk } from "../hooks/useSpotifyWebPlaybackSdk";
 import { useTimer } from "../hooks/useTimer";
 import { player as pl } from "../state";
-import {
-  playerVolumeAtom,
-  queueVisibilityAtom,
-  savedTracksAtom,
-  userAtom,
-} from "../store";
-import { useEventBus } from "./EventBus";
-import { IconButton } from "./IconButton";
+
+// import { useEventBus } from "./EventBus";
+// import { IconButton } from "./IconButton";
 import { PlaybackControl } from "./Player/PlaybackControl";
-import { QueueButton } from "./Player/QueueButton";
+// import { QueueButton } from "./Player/QueueButton";
 import { SeekControl } from "./Player/SeekControl";
 import { TrackInfo } from "./Player/TrackInfo";
 import { VolumeControl } from "./Player/VolumeControl";
 import { useInterval } from "../hooks/useInterval";
-import { SaveTrackButton } from "./SaveTrackButton";
+// import { SaveTrackButton } from "./SaveTrackButton";
 import { SaveTrackControl } from "./Player/SaveTrackControl";
 
 export const Player = observer(() => {
@@ -52,7 +47,7 @@ export const Player = observer(() => {
 
   const { time, start, pause, set, status } = useTimer("player");
   const [duration, setDuration] = useState(0);
-  const [volume, setVolume] = useRecoilState(playerVolumeAtom);
+  const [volume, setVolume] = useState(0.8);
   const [isChangingVolume, setIsChangingVolume] = useState(false);
   const [isSeeking, setIsSeeking] = useState(false);
 
@@ -67,8 +62,13 @@ export const Player = observer(() => {
 
       runInAction(() => {
         pl.resetLoadingTrackId();
-        console.log("playing", state.context.metadata?.current_item.uri);
-        pl.setPlayingTrackId(state.context.metadata?.current_item.uri);
+
+        pl.setPlayingTrackId(
+          state.context.metadata?.current_item.uri.replace(
+            "spotify:track:",
+            "",
+          ),
+        );
       });
 
       set(state.position / 1000);

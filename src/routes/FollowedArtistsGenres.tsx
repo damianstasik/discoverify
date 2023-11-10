@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
-import { useRecoilValue } from "recoil";
+// import { useRecoilValue } from "recoil";
 import { Button } from "../components/Button";
 import { VirtualTable } from "../components/VirtualTable";
-import { tokenState } from "../store";
+// import { tokenState } from "../store";
 
 const columns = [
   {
@@ -41,12 +41,12 @@ async function fetchFollowedArtistsGenres(token) {
 }
 
 export function FollowedArtistsGenres() {
-  const token = useRecoilValue(tokenState);
+  // const token = useRecoilValue(tokenState);
 
   const { isLoading, data } = useQuery({
-    queryKey: ["followed-artists-genres", token],
+    queryKey: ["followed-artists-genres"],
     queryFn: async function followedArtistsGenres() {
-      return fetchFollowedArtistsGenres(token);
+      return fetchFollowedArtistsGenres();
     },
   });
 

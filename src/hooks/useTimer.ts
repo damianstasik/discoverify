@@ -1,22 +1,15 @@
-import { useCallback, useEffect } from "react";
-import { atomFamily, useRecoilState } from "recoil";
+import { useCallback, useEffect, useState } from "react";
+// import { atomFamily, useRecoilState } from "recoil";
 
-const timerAtom = atomFamily<
-  {
-    time: number;
-    status: "STOPPED" | "RUNNING" | "PAUSED";
-  },
-  string
->({
-  key: "timer",
-  default: {
+interface Timer {
+  time: number;
+  status: "STOPPED" | "RUNNING" | "PAUSED";
+}
+export function useTimer() {
+  const [timer, setTimer] = useState<Timer>({
     time: 0,
     status: "STOPPED",
-  },
-});
-
-export function useTimer(name: string) {
-  const [timer, setTimer] = useRecoilState(timerAtom(name));
+  });
 
   const set = useCallback(
     (time) => {

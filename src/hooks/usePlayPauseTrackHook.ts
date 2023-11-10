@@ -1,16 +1,16 @@
 import { useMutation } from "@tanstack/react-query";
 import { useCallback, useEffect } from "react";
-import { useRecoilValue } from "recoil";
+// import { useRecoilValue } from "recoil";
 
 import { playTrack } from "../api/play";
 import { pausePlayer } from "../api/player";
 import { useEventBus } from "../components/EventBus";
 import { player } from "../state";
-import { deviceIdAtom } from "../store";
+// import { deviceIdAtom } from "../store";
 
 export function usePlayPauseTrackHook(trackIds: string[]) {
   const eventBus = useEventBus();
-  const deviceId = useRecoilValue(deviceIdAtom);
+  const deviceId = "";
 
   const { mutate: play } = useMutation({
     mutationFn: playTrack,

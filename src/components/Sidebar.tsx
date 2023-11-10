@@ -4,6 +4,7 @@ import mdiHistory from "@slimr/mdi-paths/History";
 import mdiMusicNotePlus from "@slimr/mdi-paths/MusicNotePlus";
 import mdiPlaylistMusic from "@slimr/mdi-paths/PlaylistMusic";
 import mdiViewDashboard from "@slimr/mdi-paths/ViewDashboard";
+import mdiCommentQuote from "@slimr/mdi-paths/CommentQuote";
 import { Suspense } from "react";
 import { recommendIconPath } from "../icons/recommend";
 import { SidebarHeading } from "./SidebarHeading";
@@ -13,7 +14,7 @@ import { SidebarPlaylists } from "./SidebarPlaylists";
 
 export function Sidebar() {
   return (
-    <div className="p-3 h-full overflow-y-auto">
+    <div className="p-3 h-full overflow-y-auto flex flex-col">
       <h5 className="text-white inline-flex text-lg/none font-black">
         Discoverify
       </h5>
@@ -134,17 +135,20 @@ export function Sidebar() {
         />
       </nav>
 
-      {/*
-
       <nav className="space-y-1 mt-auto">
-        <ListItem button>
+        <SidebarLink
+          label="Report bugs / request features"
+          to="https://github.com/damianstasik/discoverify/issues"
+          icon={mdiCommentQuote}
+        />
+        {/* <ListItem button>
           <ListItemAvatar>
             <Avatar src={user.photoUrl!} style={{ marginRight: '8px' }} />
           </ListItemAvatar>
 
           <ListItemText primary={user.displayName} secondary="My account" />
-        </ListItem>
-      </nav> */}
+        </ListItem> */}
+      </nav>
     </div>
   );
 }

@@ -92,8 +92,6 @@ export function Table({ trackIds, artistsIds, attributeValues }) {
   });
   const ids = useMemo(() => (data || []).map((t) => t.uri), [data]);
 
-  usePlayPauseTrackHook(ids);
-
   return (
     <VirtualTable
       data={data || []}
@@ -102,6 +100,7 @@ export function Table({ trackIds, artistsIds, attributeValues }) {
       hasNextPage={false}
       fetchNextPage={null}
       isInitialLoading={true}
+      meta={ids}
     />
   );
 }
