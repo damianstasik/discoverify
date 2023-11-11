@@ -23,5 +23,5 @@ async function getRecentlyPlayed() {
 export async function RecentlyPlayed() {
   const track = await getRecentlyPlayed();
 
-  return <Track track={track} />;
+  return <Track {...track} />;
 }

@@ -1,17 +1,17 @@
 "use server";
 
-import { Page, PlaylistedTrack } from "@spotify/web-api-ts-sdk";
+import { Page, SimplifiedTrack } from "@spotify/web-api-ts-sdk";
 import { getTokenFromCookie } from "../app/user";
 import { notFound } from "next/navigation";
 
-export const getPlaylistTracks = async (id: string, pageParam: number) => {
+export const getAlbumTracks = async (id: string, pageParam: number) => {
   const token = await getTokenFromCookie();
   if (!token) {
     notFound();
   }
 
   const res = await fetch(
-    `https://api.spotify.com/v1/playlists/${id}/tracks?limit=50&offset=${
+    `https://api.spotify.com/v1/albums/${id}/tracks?limit=50&offset=${
       pageParam === 1 ? 0 : pageParam * 50
     }&market=from_token`,
     {
@@ -21,9 +21,9 @@ export const getPlaylistTracks = async (id: string, pageParam: number) => {
     },
   );
 
-  const body = (await res.json()) as Page<PlaylistedTrack>;
+  const body = (await res.json()) as Page<SimplifiedTrack>;
 
-  const ids = body.items.map((item) => item.track.id).join(",");
+  const ids = body.items.map((item) => item.id).join(",");
 
   const res2 = await fetch(
     `https://api.spotify.com/v1/me/tracks/contains?ids=${ids}`,
@@ -38,10 +38,9 @@ export const getPlaylistTracks = async (id: string, pageParam: number) => {
 
   return {
     tracks: body.items.map((item, index) => ({
-      ...item.track,
-      added_at: item.added_at,
+      ...item,
       isSaved: body2[index],
-      spotifyId: item.track?.id,
+      spotifyId: item.id,
     })),
     nextPage: body.next ? pageParam + 1 : null,
     total: body.total,

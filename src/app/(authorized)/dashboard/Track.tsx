@@ -1,22 +1,30 @@
-import mdiPlayCircle from "@slimr/mdi-paths/PlayCircle";
 import Link from "next/link";
-import { IconButton } from "../../../components/IconButton";
+import { PlayPauseButton } from "../../../components/PlayPauseButton";
 
-export function Track({ track }) {
+interface Props {
+  name: string;
+  id: string;
+  artists: Array<{
+    name: string;
+    id: string;
+  }>;
+}
+
+export function Track({ id, name, artists }: Props) {
   return (
     <div className="flex gap-2 items-center">
       <div>
-        <IconButton label="Play" icon={mdiPlayCircle} className="text-white" />
+        <PlayPauseButton trackId={id} />
       </div>
       <div className="flex gap-1 w-full flex-col">
         <Link
-          href={`/track/${track.id}`}
+          href={`/track/${id}`}
           className="underline decoration-green-900 underline-offset-4 hover:decoration-green-500"
         >
-          {track.name}
+          {name}
         </Link>
         <div>
-          {track.artists.map((artist) => (
+          {artists.map((artist) => (
             <Link
               href={`/artist/${artist.id}`}
               key={artist.id}

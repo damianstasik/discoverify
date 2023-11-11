@@ -1,6 +1,7 @@
 "use server";
 import { notFound } from "next/navigation";
 import { getTokenFromCookie } from "../../user";
+import { Page, SavedTrack } from "@spotify/web-api-ts-sdk";
 
 export async function getLikedTracks(page: number) {
   const token = await getTokenFromCookie();
@@ -19,7 +20,7 @@ export async function getLikedTracks(page: number) {
     },
   );
 
-  const body = await res.json();
+  const body = (await res.json()) as Page<SavedTrack>;
 
   const ids = body.items.map((item) => item.track.id).join(",");
 
@@ -32,7 +33,7 @@ export async function getLikedTracks(page: number) {
     },
   );
 
-  const body2 = await res2.json();
+  const body2 = (await res2.json()) as boolean[];
 
   return {
     tracks: body.items.map((item, index) => ({

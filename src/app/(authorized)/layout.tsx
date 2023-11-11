@@ -4,6 +4,7 @@ import { Sidebar } from "../../components/Sidebar";
 import { getTokenFromCookie } from "../user";
 import { TokenProvider } from "./context";
 import { ReactNode } from "react";
+import { SpotifyScript } from "../spotify";
 
 async function getCurrentUser() {
   const token = await getTokenFromCookie();
@@ -46,22 +47,25 @@ export default async function Layout({
   }
 
   return (
-    <TokenProvider token={user.token.accessToken}>
-      <div className="flex h-screen">
-        <aside className="w-80">
-          <Sidebar />
-        </aside>
+    <>
+      <SpotifyScript />
+      <TokenProvider token={user.token.accessToken}>
+        <div className="flex h-screen">
+          <aside className="w-80">
+            <Sidebar />
+          </aside>
 
-        <main className="bg-slate-900 flex flex-col flex-1">
-          <div className="flex flex-col relative overflow-hidden h-[calc(100%-theme(spacing.28))]">
-            {children}
-          </div>
+          <main className="bg-slate-900 flex flex-col flex-1">
+            <div className="flex flex-col relative overflow-hidden h-[calc(100%-theme(spacing.28))]">
+              {children}
+            </div>
 
-          <div className="mt-auto h-28">
-            <Player />
-          </div>
-        </main>
-      </div>
-    </TokenProvider>
+            <div className="mt-auto h-28">
+              <Player />
+            </div>
+          </main>
+        </div>
+      </TokenProvider>
+    </>
   );
 }

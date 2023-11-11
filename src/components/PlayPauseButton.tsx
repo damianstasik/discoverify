@@ -2,7 +2,6 @@
 
 import mdiPauseCircle from "@slimr/mdi-paths/PauseCircle";
 import mdiPlayCircleOutline from "@slimr/mdi-paths/PlayCircleOutline";
-import { CellContext } from "@tanstack/react-table";
 import { computed } from "mobx";
 import { observer } from "mobx-react-lite";
 import { player } from "../state";
@@ -11,29 +10,29 @@ import { IconButton } from "./IconButton";
 import { useCallback, useTransition } from "react";
 
 import { playTrack } from "../api/playTrack";
-import { castSpotifyId } from "../utils/castSpotifyId";
 
-const Component = <Data,>(props: CellContext<Data, string>) => {
-  const uri = props.getValue();
+interface Props {
+  trackId: string;
+  trackIds?: string[];
+}
 
-  const isPlaying = computed(() => player.isPlaying(uri)).get();
+function Component({ trackId, trackIds }: Props) {
+  const isPlaying = computed(() => player.isPlaying(trackId)).get();
 
   const [isSaving, startTransition] = useTransition();
 
   const handleSave = useCallback(
     () =>
       startTransition(async () => {
-        const result = await playTrack({
-          trackIds: castSpotifyId(props.table.options.meta),
-          trackId: castSpotifyId(uri),
+        await playTrack({
+          trackIds: trackIds ?? [trackId],
+          trackId,
           deviceId: player.deviceId,
         });
-        console.log("play track", result);
-        if (result) {
-          player.setPlayingTrackId(uri);
-        }
+
+        player.setPlayingTrackId(trackId);
       }),
-    [props.table.options.meta, uri, player.deviceId],
+    [trackIds, trackId, player.deviceId],
   );
 
   return (
@@ -47,6 +46,6 @@ const Component = <Data,>(props: CellContext<Data, string>) => {
       label={isPlaying ? "Pause" : "Play"}
     />
   );
-};
+}
 
-export const TrackPreviewColumn = observer(Component);
+export const PlayPauseButton = observer(Component);

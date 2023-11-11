@@ -1,11 +1,19 @@
 "use server";
 
+import { notFound } from "next/navigation";
 import { getTokenFromCookie } from "../app/user";
 
-export const playTrack = async ({ trackIds, trackId, deviceId }) => {
+interface Params {
+  trackIds: string[];
+  trackId: string;
+  deviceId: string;
+}
+
+export const playTrack = async ({ trackIds, trackId, deviceId }: Params) => {
   const token = await getTokenFromCookie();
+
   if (!token) {
-    return false;
+    notFound();
   }
 
   const res = await fetch(
@@ -21,6 +29,10 @@ export const playTrack = async ({ trackIds, trackId, deviceId }) => {
       }),
     },
   );
+
+  if (!res.ok) {
+    return false;
+  }
 
   return true;
 };

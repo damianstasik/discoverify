@@ -11,7 +11,7 @@ import { DurationColumn } from "../../../../../components/DurationColumn";
 import { SaveColumn } from "../../../../../components/SaveColumn";
 import { SpotifyLinkColumn } from "../../../../../components/SpotifyLinkColumn";
 import { VirtualTable } from "../../../../../components/VirtualTable";
-import { usePlayPauseTrackHook } from "../../../../../hooks/usePlayPauseTrackHook";
+// import { usePlayPauseTrackHook } from "../../../../../hooks/usePlayPauseTrackHook";
 
 const columnHelper = createColumnHelper<any>();
 
@@ -83,6 +83,6 @@ const columns = [
 export function Table({ data }) {
   const ids = useMemo(() => (data || []).map((t) => t.uri), [data]);
 
-  usePlayPauseTrackHook(ids);
-  return <VirtualTable columns={columns} data={data} />;
+  // usePlayPauseTrackHook(ids);
+  return <VirtualTable columns={columns} data={data} meta={ids} />;
 }

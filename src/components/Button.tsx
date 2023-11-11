@@ -35,7 +35,7 @@ export function Button({
           variant === "contained" &&
             "bg-green-700 hover:bg-green-800 focus:ring-green-600 active:bg-green-900",
           variant === "outlined" &&
-            "border-green-700 hover:bg-green-800 focus:ring-green-600 active:bg-green-500/10",
+            "border-t-green-700 border-b-green-800 border-x-green-750 hover:bg-green-800 bg-green-500/10 focus:ring-green-600 active:bg-green-500/10",
         ],
         (loading || disabled) && "bg-slate-500 cursor-default",
         className,
