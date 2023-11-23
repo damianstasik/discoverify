@@ -12,7 +12,7 @@
     "@tanstack/react-query-devtools": "^4.29.13",
     "@tanstack/react-table": "^8.10.7",
     "@tanstack/react-virtual": "^3.0.0-beta.65",
-    "@trpc/client": "^10.41.0",
+    "@trpc/client": "^10.44.1",
     "@trpc/server": "^10.41.0",
     "@types/react": "^18.2.31",
     "@types/react-dom": "^18.2.14",
