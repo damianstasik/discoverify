@@ -1,12 +1,52 @@
 {
   "name": "discoverify",
-  "workspaces": ["backend", "frontend", "scripts"],
+  "private": true,
   "scripts": {
-    "dev": "turbo run dev",
-    "build:backend": "turbo build --filter=backend"
+    "dev": "next dev",
+    "build": "next build"
+  },
+  "dependencies": {
+    "@headlessui/react": "^1.7.17",
+    "@headlessui/tailwindcss": "^0.2.0",
+    "@radix-ui/react-popover": "^1.0.7",
+    "@radix-ui/react-slider": "^1.1.2",
+    "@slimr/mdi-paths": "^2.1.43",
+    "@spotify/web-api-ts-sdk": "^1.1.2",
+    "@tailwindcss/forms": "^0.5.7",
+    "@tanstack/react-query": "^5.8.1",
+    "@tanstack/react-table": "^8.10.7",
+    "@tanstack/react-virtual": "^3.0.0-beta.65",
+    "@types/node": "20.10.4",
+    "@types/react": "^18.2.42",
+    "@types/react-dom": "^18.2.17",
+    "@types/spotify-web-playback-sdk": "^0.1.19",
+    "async": "^3.2.5",
+    "autoprefixer": "^10.4.16",
+    "date-fns": "^2.30.0",
+    "fast-fuzzy": "^1.12.0",
+    "immer": "^10.0.3",
+    "jose": "^5.1.0",
+    "lodash": "^4.17.21",
+    "mitt": "^3.0.1",
+    "mobx": "^6.12.0",
+    "mobx-react-lite": "^4.0.5",
+    "next": "^14.0.4",
+    "notistack": "3.0.1",
+    "object-sizeof": "^2.6.3",
+    "postcss": "^8.4.32",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-virtuoso": "^4.6.2",
+    "recoil": "^0.7.7",
+    "spotify-web-api-node": "^5.0.2",
+    "tailwind-lerp-colors": "^1.2.1",
+    "tailwind-merge": "^1.14.0",
+    "tailwindcss": "^3.3.6",
+    "typescript": "^5.3.3",
+    "use-debounce": "^9.0.4",
+    "virtua": "^0.17.5"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.3.1",
-    "turbo": "^1.10.16"
+    "@biomejs/biome": "1.4.1"
   }
 }
