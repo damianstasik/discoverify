@@ -16,7 +16,7 @@
     "@trpc/server": "^10.41.0",
     "@types/react": "^18.2.31",
     "@types/react-dom": "^18.2.14",
-    "@types/spotify-web-playback-sdk": "^0.1.18",
+    "@types/spotify-web-playback-sdk": "^0.1.19",
     "@vitejs/plugin-react": "^4.1.0",
     "autoprefixer": "^10.4.16",
     "backend": "*",
