@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { startTransition, useEffect } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import {
@@ -14,7 +14,7 @@ import { Sidebar } from "./Sidebar";
 
 export function Layout() {
   const location = useLocation();
-  const setUser = useSetRecoilState(userAtom);
+  const [u, setUser] = useRecoilState(userAtom);
   const setSavedTracks = useSetRecoilState(savedTracksAtom);
 
   useSaveTrackHook();
@@ -37,7 +37,8 @@ export function Layout() {
     };
   }, []);
 
-  const { mutate } = useMutation(refreshAccessToken, {
+  const { mutate } = useMutation({
+    mutationFn: refreshAccessToken,
     // onSuccess(freshToken) {
     //   startTransition(() => {
     //     setToken(freshToken);
@@ -45,25 +46,37 @@ export function Layout() {
     // },
   });
 
-  const { data: user } = useQuery({
+  const {
+    data: user,
+    error,
+    isLoading,
+  } = useQuery({
     queryFn: getCurrentUser,
     queryKey: ["user"],
-    suspense: true,
     refetchOnMount: true,
     refetchOnReconnect: true,
     refetchOnWindowFocus: true,
     refetchIntervalInBackground: true,
     refetchInterval: 60 * 60 * 1000,
-    useErrorBoundary: false,
-    onSuccess(data) {
-      setUser(data);
-    },
-    onError() {
+  });
+
+  useEffect(() => {
+    if (user) {
+      setUser(user);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (error) {
       // check error type, if token is expired run the mutation and update token that will rerun this query
       // need to do this with startTransition to avoid triggering suspense
       mutate();
-    },
-  });
+    }
+  }, [error, mutate]);
+
+  if (isLoading || !u) {
+    return null;
+  }
 
   if (!user) {
     return <Navigate to="/login" state={location} replace />;

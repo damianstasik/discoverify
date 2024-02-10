@@ -11,25 +11,22 @@ export function usePlayPauseTrackHook(trackIds: string[]) {
   const eventBus = useEventBus();
   const deviceId = useRecoilValue(deviceIdAtom);
 
-  const { mutate: play } = useMutation(playTrack, {
+  const { mutate: play } = useMutation({
+    mutationFn: playTrack,
     onError() {
       player.resetLoadingTrackId();
     },
   });
 
-  const { mutate: pause } = useMutation(
-    () => {
-      return trpc.track.pause.mutate(deviceId);
+  const { mutate: pause } = useMutation({
+    mutationFn: () => trpc.track.pause.mutate(deviceId),
+    onSuccess() {
+      player.resetPlayingTrackId();
     },
-    {
-      onSuccess() {
-        player.resetPlayingTrackId();
-      },
-      onSettled() {
-        player.resetLoadingTrackId();
-      },
+    onSettled() {
+      player.resetLoadingTrackId();
     },
-  );
+  });
 
   const handler = useCallback(
     ({ uri, isPlaying }) => {

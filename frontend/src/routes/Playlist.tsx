@@ -96,7 +96,9 @@ export function Playlist() {
   const params = useParams<"id">();
   const { state } = useLocation();
 
-  const { data, isFetching } = useQuery(["playlist", params.id!], getPlaylist, {
+  const { data, isFetching } = useQuery({
+    queryKey: ["playlist", params.id!],
+    queryFn: getPlaylist,
     placeholderData: state,
   });
 
@@ -104,7 +106,10 @@ export function Playlist() {
     data: tracks,
     fetchNextPage,
     hasNextPage,
-  } = useInfiniteQuery(["playlistTracks", params.id!], getPlaylistTracks, {
+  } = useInfiniteQuery({
+    queryKey: ["playlistTracks", params.id!],
+    queryFn: getPlaylistTracks,
+    initialPageParam: 0,
     getNextPageParam: (lastPage) => lastPage.nextPage,
   });
 

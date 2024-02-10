@@ -1,11 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
+import { useEffect } from "react";
 import { Navigate, useSearchParams } from "react-router-dom";
 import { trpc } from "../trpc";
 
 const authorizeQuery: Query<"auth.authorize", [key: string, code: string]> =
-  async ({ queryKey, signal }) => {
-    await trpc.auth.authorize.query(queryKey[1], { signal });
+  async ({ queryKey }) => {
+    await trpc.auth.authorize.query(queryKey[1]);
     return queryKey[1];
   };
 
@@ -15,16 +16,22 @@ export function Authorize() {
 
   const code = searchParams.get("code");
 
-  const { isSuccess } = useQuery(["authorize", code!], authorizeQuery, {
-    enabled: !!code,
-    suspense: true,
-    useErrorBoundary: false,
-    onError(e) {
+  const { isSuccess, error, isLoading } = useQuery({
+    queryKey: ["authorize", code!],
+    queryFn: authorizeQuery,
+  });
+
+  useEffect(() => {
+    if (error) {
       enqueueSnackbar("Authorization error", {
         variant: "error",
       });
-    },
-  });
+    }
+  }, [error]);
+
+  if (isLoading) {
+    return null;
+  }
 
   return <Navigate to={isSuccess ? "/recommendations" : "/login"} />;
 }

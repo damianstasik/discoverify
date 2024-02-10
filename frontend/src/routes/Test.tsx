@@ -63,9 +63,9 @@ export function Test() {
   const deferredQuery = useDeferredValue(query);
   const q = searchParams.get("q");
 
-  const { data, isLoading } = useQuery(
-    ["lays", token, q],
-    async ({ queryKey }) => {
+  const { data, isLoading } = useQuery({
+    queryKey: ["lays", token, q],
+    queryFn: async ({ queryKey }) => {
       const res = await fetch(
         `${
           import.meta.env.VITE_API_URL
@@ -80,16 +80,14 @@ export function Test() {
 
       return body;
     },
-    { enabled: !!q },
-  );
+    enabled: !!q,
+  });
 
-  const { data: autosongs, isLoading: isLoadingAutocomplete } = useQuery(
-    ["search", token, deferredQuery],
-    autocompleteQuery,
-    {
-      enabled: !!deferredQuery,
-    },
-  );
+  const { data: autosongs, isLoading: isLoadingAutocomplete } = useQuery({
+    queryKey: ["search", token, deferredQuery],
+    queryFn: autocompleteQuery,
+    enabled: !!deferredQuery,
+  });
 
   return (
     <>

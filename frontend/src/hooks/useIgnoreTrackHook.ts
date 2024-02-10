@@ -15,7 +15,8 @@ export function useIgnoreTrackHook() {
   const token = useRecoilValue(tokenState);
   const eventBus = useEventBus();
 
-  const { mutate } = useMutation(ignoreTrack, {
+  const { mutate } = useMutation({
+    mutationFn: ignoreTrack,
     onSuccess(_, { id, isIgnored }) {
       queryClient.setQueryData<InfiniteData<any>>(
         ["liked", token],

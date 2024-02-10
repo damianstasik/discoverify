@@ -126,7 +126,10 @@ const statsQuery: Query<"user.stats", [key: string]> = async ({ signal }) => {
 };
 
 export default function Dashboard() {
-  const { data, isLoading } = useQuery(["stats"], statsQuery);
+  const { data, isLoading } = useQuery({
+    queryKey: ["stats"],
+    queryFn: statsQuery,
+  });
 
   return (
     <div className="p-3 grid gap-4 grid-cols-3">

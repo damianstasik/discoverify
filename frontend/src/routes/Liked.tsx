@@ -96,13 +96,12 @@ const likedQuery: Query<"track.saved"> = async ({ pageParam = 1, signal }) => {
 };
 
 export function Liked() {
-  const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery(
-    ["liked"],
-    likedQuery,
-    {
-      getNextPageParam: (lastPage) => lastPage.nextPage,
-    },
-  );
+  const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery({
+    queryKey: ["liked"],
+    queryFn: likedQuery,
+    getNextPageParam: (lastPage) => lastPage.nextPage,
+    initialPageParam: 0,
+  });
 
   const flatData = useMemo(
     () => data?.pages?.flatMap((page) => page.tracks) ?? [],

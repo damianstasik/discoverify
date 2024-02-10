@@ -108,18 +108,17 @@ function TimeRangeOption({
 export function TopTracks() {
   const [timeRange, setTimeRange] = useState("short_term");
 
-  const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery(
-    ["top-tracks", timeRange],
-    async function topTracksQuery({ pageParam = 1 }) {
+  const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery({
+    queryKey: ["top-tracks", timeRange],
+    queryFn: async function topTracksQuery({ pageParam }) {
       return trpc.track.top.query({
         timeRange,
         page: pageParam,
       });
     },
-    {
-      getNextPageParam: (lastPage) => lastPage.nextPage,
-    },
-  );
+    getNextPageParam: (lastPage) => lastPage.nextPage,
+    initialPageParam: 1,
+  });
 
   const flatData = useMemo(
     () => data?.pages?.flatMap((page) => page.tracks) ?? [],

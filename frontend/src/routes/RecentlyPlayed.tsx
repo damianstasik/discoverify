@@ -91,9 +91,9 @@ const columns = [
 ];
 
 export function RecentlyPlayed() {
-  const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery(
-    ["recently-played"],
-    async function recentlyPlayedQuery({ signal }) {
+  const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery({
+    queryKey: ["recently-played"],
+    queryFn: async function recentlyPlayedQuery({ signal }) {
       return trpc.track.recentlyPlayed.query(
         { page: 1 },
         {
@@ -101,10 +101,9 @@ export function RecentlyPlayed() {
         },
       );
     },
-    {
-      getNextPageParam: () => null,
-    },
-  );
+    getNextPageParam: () => null,
+    initialPageParam: 0,
+  });
 
   const flatData = useMemo(
     () => data?.pages?.flatMap((page) => page.tracks) ?? [],

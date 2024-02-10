@@ -80,13 +80,18 @@ export const Player = observer(() => {
     volume,
   });
 
-  useQuery<number>(["volume", deviceId], async () => player!.getVolume(), {
+  const { data: vol } = useQuery({
+    queryKey: ["volume", deviceId],
+    queryFn: async () => player!.getVolume(),
     enabled: player !== null && pl.isPlaying() && !isChangingVolume,
     refetchInterval: 2500,
-    onSuccess(data) {
-      setVolume(data);
-    },
   });
+
+  useEffect(() => {
+    if (typeof vol !== "undefined") {
+      setVolume(vol);
+    }
+  }, [vol]);
 
   const handlePrevious = useCallback(() => {
     player?.previousTrack();
@@ -141,16 +146,14 @@ export const Player = observer(() => {
 
   const [isQueueOpen, setIsQueueOpen] = useRecoilState(queueVisibilityAtom);
 
-  const { data: queue } = useQuery(
-    ["queue"],
-    async ({ signal }) => {
+  const { data: queue } = useQuery({
+    queryKey: ["queue"],
+    queryFn: async ({ signal }) => {
       const queue = await trpc.player.queue.query(undefined, { signal });
       return queue;
     },
-    {
-      enabled: isQueueOpen,
-    },
-  );
+    enabled: isQueueOpen,
+  });
 
   const eventBus = useEventBus();
   const savedTracks = useRecoilValue(savedTracksAtom);
