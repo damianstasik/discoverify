@@ -10,7 +10,7 @@
   "dependencies": {
     "@fastify/cookie": "^9.1.0",
     "@fastify/cors": "^8.4.0",
-    "@fastify/static": "^6.11.2",
+    "@fastify/static": "^7.0.3",
     "@fastify/websocket": "^8.2.0",
     "@prisma/client": "^5.4.2",
     "@trpc/server": "^10.41.0",
