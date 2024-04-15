@@ -2,7 +2,7 @@
   "name": "frontend",
   "private": true,
   "dependencies": {
-    "@headlessui/react": "^1.7.18",
+    "@headlessui/react": "^1.7.19",
     "@headlessui/tailwindcss": "^0.2.0",
     "@mdi/js": "^7.3.67",
     "@radix-ui/react-popover": "^1.0.7",
