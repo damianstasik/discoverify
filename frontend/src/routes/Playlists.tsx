@@ -38,13 +38,12 @@ const columns = [
 ];
 
 export function Playlists() {
-  const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery(
-    ["playlists"],
-    playlistApi.getPlaylists,
-    {
-      getNextPageParam: (lastPage) => lastPage.nextPage,
-    },
-  );
+  const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery({
+    queryKey: ["playlists"],
+    queryFn: playlistApi.getPlaylists,
+    getNextPageParam: (lastPage) => lastPage.nextPage,
+    initialPageParam: 0,
+  });
 
   const flatData = useMemo(
     () => data?.pages?.flatMap((page) => page.playlists) ?? [],

@@ -80,18 +80,19 @@ const columns = [
 export function Album() {
   const { id } = useParams<{ albumId: string }>();
 
-  const { data } = useQuery(["album", id], ({ signal }) =>
-    trpc.album.byId.query(id, { signal }),
-  );
+  const { data } = useQuery({
+    queryKey: ["album", id],
+    queryFn: ({ signal }) => trpc.album.byId.query(id, { signal }),
+  });
 
   const {
     data: tracks,
     fetchNextPage,
     hasNextPage,
     isFetching,
-  } = useInfiniteQuery(
-    ["tracks", id],
-    ({ signal, pageParam = 1 }) =>
+  } = useInfiniteQuery({
+    queryKey: ["tracks", id],
+    queryFn: ({ signal, pageParam }) =>
       trpc.track.byAlbumId.query(
         {
           albumId: id,
@@ -99,10 +100,9 @@ export function Album() {
         },
         { signal },
       ),
-    {
-      getNextPageParam: (lastPage) => lastPage.nextPage,
-    },
-  );
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => lastPage.nextPage,
+  });
 
   const flatData = useMemo(
     () => tracks?.pages?.flatMap((page) => page.tracks) ?? [],

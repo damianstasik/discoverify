@@ -5,8 +5,10 @@ import { useEventBus } from "../components/EventBus";
 
 export function useSaveTrackHook() {
   const eventBus = useEventBus();
-  const { mutate: saveTrackMutation } = useMutation(saveTrack);
-  const { mutate: unsaveTrackMutation } = useMutation(unsaveTrack);
+  const { mutate: saveTrackMutation } = useMutation({ mutationFn: saveTrack });
+  const { mutate: unsaveTrackMutation } = useMutation({
+    mutationFn: unsaveTrack,
+  });
 
   useEffect(() => {
     const handle = ({ id, isSaved }) => {

@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { createColumnHelper } from "@tanstack/react-table";
 import { useMemo } from "react";
 import { useParams } from "react-router-dom";
@@ -86,15 +86,14 @@ const columns = [
 export function ArtistTopTracks() {
   const params = useParams();
 
-  const { data, isFetching } = useQuery(
-    ["artist-top-tracks", params.id],
-    async function artistTopTracksQuery({ queryKey, signal }) {
+  const { data, isFetching } = useSuspenseQuery({
+    queryKey: ["artist-top-tracks", params.id],
+    queryFn: async function artistTopTracksQuery({ queryKey, signal }) {
       const tracks = await trpc.artist.topTracks.query(queryKey[1], { signal });
 
       return tracks;
     },
-    { suspense: true },
-  );
+  });
 
   const ids = useMemo(() => (data || []).map((t) => t.uri), [data]);
 

@@ -87,10 +87,10 @@ const columns = [
 export function RelatedArtistsTopTracks() {
   const { id } = useParams<{ id: string }>();
 
-  const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery(
-    ["related-artists-top-tracks", id],
-    async function relatedArtistsTopTracksQuery({
-      pageParam = 0,
+  const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery({
+    queryKey: ["related-artists-top-tracks", id],
+    queryFn: async function relatedArtistsTopTracksQuery({
+      pageParam,
       queryKey,
       signal,
     }) {
@@ -103,11 +103,10 @@ export function RelatedArtistsTopTracks() {
       );
       return tracks;
     },
-    {
-      getNextPageParam: (lastPage, pages) =>
-        lastPage.hasNextPage ? pages.length : false,
-    },
-  );
+    getNextPageParam: (lastPage, pages) =>
+      lastPage.hasNextPage ? pages.length : false,
+    initialPageParam: 0,
+  });
 
   const rows = useMemo(
     () => data?.pages?.flatMap((page) => page.data) ?? [],

@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { createColumnHelper } from "@tanstack/react-table";
 import { Link, useParams } from "react-router-dom";
 import { ArtistsColumn } from "../components/ArtistsColumn";
@@ -38,9 +38,9 @@ const columns = [
 export function ArtistAlbums() {
   const params = useParams();
 
-  const { data, isFetching } = useQuery(
-    ["artist-albums", params.id],
-    async function artistAlbumsQuery({ signal, queryKey }) {
+  const { data, isFetching } = useSuspenseQuery({
+    queryKey: ["artist-albums", params.id],
+    queryFn: async function artistAlbumsQuery({ signal, queryKey }) {
       const albums = await trpc.artist.albums.query(
         { id: queryKey[1], type: "album" },
         {
@@ -50,8 +50,7 @@ export function ArtistAlbums() {
 
       return albums;
     },
-    { suspense: true },
-  );
+  });
 
   return (
     <>
