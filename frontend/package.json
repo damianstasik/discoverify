@@ -21,7 +21,7 @@
     "autoprefixer": "^10.4.16",
     "backend": "*",
     "date-fns": "^2.30.0",
-    "immer": "^10.0.3",
+    "immer": "^10.1.1",
     "mitt": "^3.0.1",
     "mobx": "^6.10.2",
     "mobx-react-lite": "^4.0.5",
