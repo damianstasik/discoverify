@@ -3,7 +3,7 @@
   "private": true,
   "dependencies": {
     "@headlessui/react": "^1.7.18",
-    "@headlessui/tailwindcss": "^0.2.0",
+    "@headlessui/tailwindcss": "^0.2.1",
     "@mdi/js": "^7.3.67",
     "@radix-ui/react-popover": "^1.0.7",
     "@radix-ui/react-slider": "^1.1.2",
